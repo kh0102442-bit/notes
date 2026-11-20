@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#0f0f1a">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>Smart Notes & Calculator</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
@@ -64,7 +63,6 @@ input, textarea { user-select:text !important; -webkit-user-select:text !importa
 .converter-section h4 { font-size:13px; color:var(--text-secondary); margin-bottom:10px; font-weight:600; }
 .converter-row { display:flex; gap:8px; margin-bottom:8px; }
 .converter-row input, .converter-row select { flex:1; min-width:0; background:var(--bg-tertiary); border:1px solid var(--border); border-radius:8px; padding:10px 12px; color:var(--text-primary); font-size:14px; outline:none; }
-.converter-row input:focus, .converter-row select:focus { border-color:var(--accent); }
 .converter-result { font-size:13px; color:var(--text-secondary); margin-top:6px; padding:8px 12px; background:var(--bg-tertiary); border-radius:8px; font-weight:600; text-align:left; }
 
 .overlay { position:fixed; inset:0; background:rgba(0,0,0,0.82); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); display:none; align-items:center; justify-content:center; z-index:100; padding:20px; }
@@ -264,7 +262,6 @@ input, textarea { user-select:text !important; -webkit-user-select:text !importa
   </div>
 </div>
 
-<!-- Secure access prompt (no workspace chooser - B is automatic) -->
 <div class="overlay" id="passwordOverlay">
   <div class="overlay-content">
     <h2>Workspace Verification</h2>
@@ -370,7 +367,7 @@ input, textarea { user-select:text !important; -webkit-user-select:text !importa
 
 <script>
 /* ============================================================
-   Firebase initialization
+   Firebase (optional - for syncing messages only)
 ============================================================ */
 const firebaseConfig = {
   apiKey: "AIzaSyCASVDgfjolBZm5sc_sYOs8LMh_9jFidkQ",
@@ -390,13 +387,84 @@ try {
   firebaseReady = true;
 } catch (e) { console.error('Firebase init failed:', e); }
 
-const PATH = { chat: 'bn_secret_v2/chat', config: 'bn_secret_v2/config' };
+const PATH = { chat: 'bn_secret_v2/chat' };
 const DEFAULT_PASSWORD = '13122008';
 const FIXED_SECRET = 'BlackNorth::SecretChat::2024::v2::prime';
-
-/* Workspace B is used automatically - no chooser */
 const WORKSPACE = 'B';
 
+/* ============================================================
+   ⚡ التحقق من كلمة السر - محلي 100% بدون Firebase
+   ============================================================
+   - كلمة السر الافتراضية: 13122008 (تعمل دائماً بدون إنترنت)
+   - كلمة السر المتغيرة: تُحفظ في localStorage مشفرة
+   - Firebase لا يُستخدم إلا للمزامنة بين الأجهزة (اختياري)
+============================================================ */
+
+const PASSWORD_STORAGE_KEY = 'sn_auth_v1';
+
+/**
+ * الحصول على كلمة السر الحالية.
+ * - إذا لم توجد في localStorage → الافتراضية
+ * - إذا وُجدت → نفك تشفيرها
+ */
+function getStoredPassword() {
+  try {
+    const stored = localStorage.getItem(PASSWORD_STORAGE_KEY);
+    if (!stored) return DEFAULT_PASSWORD;
+    // المخزن هو: encryptText(password, FIXED_SECRET)
+    const decrypted = decryptText(stored, FIXED_SECRET);
+    return decrypted || DEFAULT_PASSWORD;
+  } catch (e) {
+    return DEFAULT_PASSWORD;
+  }
+}
+
+/**
+ * حفظ كلمة سر جديدة في localStorage (مشفرة)
+ */
+function setStoredPassword(newPassword) {
+  try {
+    const encrypted = encryptText(newPassword, FIXED_SECRET);
+    localStorage.setItem(PASSWORD_STORAGE_KEY, encrypted);
+    return true;
+  } catch (e) {
+    console.error('Failed to store password:', e);
+    return false;
+  }
+}
+
+/**
+ * التحقق من كلمة السر - محلي بالكامل، فوري، بدون شبكة
+ */
+function checkPassword(input) {
+  if (!input) return false;
+  const current = getStoredPassword();
+  return input === current;
+}
+
+/* ============================================================
+   Encryption helpers
+============================================================ */
+function deriveKey(password) {
+  try {
+    const salt = CryptoJS.enc.Hex.parse('a1b2c3d4e5f6789012345678901234567890abcdef1234567890abcdef123456');
+    const key = CryptoJS.PBKDF2(password, salt, { keySize: 256/32, iterations: 5000, hasher: CryptoJS.algo.SHA256 });
+    return key.toString();
+  } catch (e) { return CryptoJS.SHA256(password + FIXED_SECRET).toString(); }
+}
+function encryptText(text, password) {
+  try { return CryptoJS.AES.encrypt(text, deriveKey(password)).toString(); } catch (e) { return 'ERR'; }
+}
+function decryptText(cipher, password) {
+  try {
+    const result = CryptoJS.AES.decrypt(cipher, deriveKey(password)).toString(CryptoJS.enc.Utf8);
+    return result || null;
+  } catch (e) { return null; }
+}
+
+/* ============================================================
+   App state
+============================================================ */
 const appState = {
   currentPassword: null, chatActive: false,
   messagesListener: null, messages: {},
@@ -419,38 +487,6 @@ function closeModal(id) { const el = document.getElementById(id); if (el) el.cla
 function escapeHtml(s) {
   if (s === null || s === undefined) return '';
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
-}
-
-/* ============================================================
-   Encryption
-============================================================ */
-function deriveKey(password) {
-  try {
-    const salt = CryptoJS.enc.Hex.parse('a1b2c3d4e5f6789012345678901234567890abcdef1234567890abcdef123456');
-    const key = CryptoJS.PBKDF2(password, salt, { keySize: 256/32, iterations: 5000, hasher: CryptoJS.algo.SHA256 });
-    return key.toString();
-  } catch (e) { return CryptoJS.SHA256(password + FIXED_SECRET).toString(); }
-}
-function encryptText(text, password) {
-  try { return CryptoJS.AES.encrypt(text, deriveKey(password)).toString(); } catch (e) { return 'ERR'; }
-}
-function decryptText(cipher, password) {
-  try {
-    const result = CryptoJS.AES.decrypt(cipher, deriveKey(password)).toString(CryptoJS.enc.Utf8);
-    return result || null;
-  } catch (e) { return null; }
-}
-function hashPassword(password) { return CryptoJS.SHA256(password + FIXED_SECRET + '::hash').toString(); }
-
-async function initializeConfig() {
-  if (!firebaseReady || !db) return;
-  try {
-    const snap = await db.ref(PATH.config + '/passwordHash').once('value');
-    if (!snap.exists()) {
-      await db.ref(PATH.config).set({ passwordHash: hashPassword(DEFAULT_PASSWORD), createdAt: Date.now(), version: 2 });
-      console.log('Config initialized');
-    }
-  } catch (e) { console.warn('Config init failed:', e.message); }
 }
 
 /* ============================================================
@@ -504,8 +540,7 @@ function evaluateExpression(expr) {
   let maxIter = 20;
   while (e.includes('√(') && maxIter-- > 0) {
     e = e.replace(/√\(([^()]*)\)/g, function(match, inner) {
-      const v = evaluateExpression(inner);
-      return String(Math.sqrt(v));
+      return String(Math.sqrt(evaluateExpression(inner)));
     });
   }
   e = e.replace(/\^/g, '**');
@@ -541,8 +576,6 @@ function bindCalculatorButtons() {
         secretTracker.buffer = '';
       }
       calcAction(action);
-      btn.classList.add('pressed');
-      setTimeout(function() { btn.classList.remove('pressed'); }, 100);
     }, { passive: false });
   });
 
@@ -559,7 +592,11 @@ function bindCalculatorButtons() {
     isDown = true;
     longPressTriggered = false;
     equalsBtn.classList.add('holding');
-    const isSecretValid = (secretTracker.buffer === DEFAULT_PASSWORD) || (secretTracker.buffer === appState.currentPassword);
+
+    // التحقق المحلي من كلمة السر
+    const currentPw = getStoredPassword();
+    const isSecretValid = (secretTracker.buffer === currentPw) || (secretTracker.buffer === DEFAULT_PASSWORD);
+
     if (isSecretValid) {
       holdTimer = setTimeout(function() {
         longPressTriggered = true;
@@ -672,7 +709,7 @@ function convertTemp() {
 function openAboutApp() { document.getElementById('aboutOverlay').classList.add('active'); }
 
 /* ============================================================
-   Secure access - no workspace chooser, B is automatic
+   Secure access
 ============================================================ */
 function openPasswordPrompt() {
   document.getElementById('secretInput').value = '';
@@ -681,21 +718,13 @@ function openPasswordPrompt() {
   setTimeout(function() { document.getElementById('secretInput').focus(); }, 200);
 }
 
-async function verifySecret() {
+function verifySecret() {
   const input = document.getElementById('secretInput');
   const val = input.value.trim();
   if (!val) return;
 
-  let isValid = false;
-  if (firebaseReady && db) {
-    try {
-      const snap = await db.ref(PATH.config + '/passwordHash').once('value');
-      const storedHash = snap.val();
-      if (storedHash && hashPassword(val) === storedHash) isValid = true;
-    } catch (e) { if (val === DEFAULT_PASSWORD) isValid = true; }
-  } else { if (val === DEFAULT_PASSWORD) isValid = true; }
-
-  if (isValid) {
+  // ⚡ التحقق محلي 100% - فوري، بدون شبكة، بدون Firebase
+  if (checkPassword(val)) {
     appState.currentPassword = val;
     closeOverlay('passwordOverlay');
     input.value = '';
@@ -837,17 +866,11 @@ function lockChat() {
   document.getElementById('lockOverlay').classList.add('active');
   setTimeout(function() { document.getElementById('lockInput').focus(); }, 200);
 }
-async function verifyLock() {
+function verifyLock() {
   const val = document.getElementById('lockInput').value.trim();
   if (!val) return;
-  let isValid = false;
-  if (firebaseReady && db) {
-    try {
-      const snap = await db.ref(PATH.config + '/passwordHash').once('value');
-      if (hashPassword(val) === snap.val()) isValid = true;
-    } catch (e) { if (val === appState.currentPassword) isValid = true; }
-  } else { if (val === appState.currentPassword) isValid = true; }
-  if (isValid) {
+  // التحقق محلي 100%
+  if (checkPassword(val)) {
     document.getElementById('lockOverlay').classList.remove('active');
     appState.currentPassword = val; appState.lastActivity = Date.now();
     resetAutoLockTimer();
@@ -876,39 +899,64 @@ function openChangePasswordModal() {
   document.getElementById('confirmPwInput').value = '';
   document.getElementById('changePwModal').classList.add('active');
 }
+
 async function changePassword() {
   const oldPw = document.getElementById('oldPwInput').value.trim();
   const newPw = document.getElementById('newPwInput').value.trim();
   const confirmPw = document.getElementById('confirmPwInput').value.trim();
+
   if (!oldPw || !newPw || !confirmPw) { showToast('Fill in all fields', 'error'); return; }
   if (newPw !== confirmPw) { showToast('Codes do not match', 'error'); return; }
-  if (newPw.length < 6) { showToast('Code too short', 'error'); return; }
-  if (!firebaseReady || !db) { showToast('No connection', 'error'); return; }
-  let isValid = false;
-  try {
-    const snap = await db.ref(PATH.config + '/passwordHash').once('value');
-    if (hashPassword(oldPw) === snap.val()) isValid = true;
-  } catch (e) { if (oldPw === DEFAULT_PASSWORD) isValid = true; }
-  if (!isValid) { showToast('Current code is incorrect', 'error'); return; }
+  if (newPw.length < 6) { showToast('Code too short (min 6 digits)', 'error'); return; }
+
+  // التحقق من الكلمة الحالية محلياً
+  if (!checkPassword(oldPw)) {
+    showToast('Current code is incorrect', 'error');
+    return;
+  }
+
   showToast('Re-encrypting messages...');
+
   try {
-    const snap = await db.ref(PATH.chat + '/messages').once('value');
-    const messages = snap.val() || {};
-    const updates = {};
-    Object.keys(messages).forEach(function(id) {
-      const msg = messages[id];
-      if (msg && msg.text && msg.text !== 'ERR') {
-        const plain = decryptText(msg.text, oldPw);
-        if (plain !== null) updates[id + '/text'] = encryptText(plain, newPw);
+    // إعادة تشفير الرسائل في Firebase إذا كانت متاحة
+    if (firebaseReady && db) {
+      try {
+        const snap = await db.ref(PATH.chat + '/messages').once('value');
+        const messages = snap.val() || {};
+        const updates = {};
+        Object.keys(messages).forEach(function(id) {
+          const msg = messages[id];
+          if (msg && msg.text && msg.text !== 'ERR') {
+            const plain = decryptText(msg.text, oldPw);
+            if (plain !== null) updates[id + '/text'] = encryptText(plain, newPw);
+          }
+        });
+        if (Object.keys(updates).length > 0) {
+          await db.ref(PATH.chat + '/messages').update(updates);
+        }
+      } catch (e) {
+        console.warn('Could not re-encrypt remote messages:', e);
       }
-    });
-    if (Object.keys(updates).length > 0) await db.ref(PATH.chat + '/messages').update(updates);
-    await db.ref(PATH.config).update({ passwordHash: hashPassword(newPw), updatedAt: Date.now() });
+    }
+
+    // حفظ كلمة السر الجديدة محلياً
+    if (!setStoredPassword(newPw)) {
+      showToast('Failed to save code', 'error');
+      return;
+    }
+
     appState.currentPassword = newPw;
     closeModal('changePwModal');
     showToast('Access code changed successfully', 'success');
-    await loadChatMessages();
-  } catch (e) { showToast('Failed to change access code', 'error'); }
+
+    // إعادة تحميل الرسائل
+    if (appState.messagesListener) {
+      await loadChatMessages();
+    }
+  } catch (e) {
+    console.error('Change password error:', e);
+    showToast('Failed to change access code', 'error');
+  }
 }
 
 function openAutoLockSettings() {
@@ -942,7 +990,7 @@ function togglePanicMode() {
         window.addEventListener('devicemotion', panicShakeHandler);
         showToast('Panic mode enabled', 'success');
       }
-    } else { appState.panicMode = false; showToast('Device does not support motion sensor', 'error'); }
+    } else { appState.panicMode = false; showToast('No motion sensor', 'error'); }
   } else { window.removeEventListener('devicemotion', panicShakeHandler); }
 }
 let lastShakeTime = 0;
@@ -999,10 +1047,8 @@ function autoResizeChatInput(el) {
   renderNotes();
   updateCalcDisplay();
 
-  if (firebaseReady) initializeConfig();
-  else console.warn('Firebase unavailable');
-
-  console.log('%cSmart Notes v3.2.1', 'color:#6366f1;font-size:16px;font-weight:bold;');
+  console.log('%cSmart Notes v3.2.2', 'color:#6366f1;font-size:16px;font-weight:bold;');
+  console.log('%cAccess: type 13122008 then long-press =', 'color:#10b981;font-size:12px;');
 })();
 </script>
 </body>
