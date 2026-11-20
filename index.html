@@ -10,1137 +10,171 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
 :root {
-  --bg-primary: #0f0f1a;
-  --bg-secondary: #1a1a2e;
-  --bg-tertiary: #24243e;
-  --bg-elevated: #2a2a45;
-  --text-primary: #ffffff;
-  --text-secondary: #9a9ab0;
-  --text-muted: #6a6a80;
-  --accent: #6366f1;
-  --accent-light: #818cf8;
-  --accent-glow: rgba(99,102,241,0.25);
-  --success: #10b981;
-  --danger: #ef4444;
-  --warning: #f59e0b;
-  --border: rgba(255,255,255,0.07);
-  --border-strong: rgba(255,255,255,0.14);
-  --shadow-sm: 0 2px 8px rgba(0,0,0,0.3);
-  --shadow-md: 0 8px 24px rgba(0,0,0,0.4);
+  --bg-primary: #0f0f1a; --bg-secondary: #1a1a2e; --bg-tertiary: #24243e; --bg-elevated: #2a2a45;
+  --text-primary: #ffffff; --text-secondary: #9a9ab0; --text-muted: #6a6a80;
+  --accent: #6366f1; --accent-light: #818cf8; --success: #10b981; --danger: #ef4444; --warning: #f59e0b;
+  --border: rgba(255,255,255,0.07); --border-strong: rgba(255,255,255,0.14);
   --shadow-lg: 0 16px 48px rgba(0,0,0,0.5);
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 18px;
-  --radius-xl: 24px;
 }
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Tahoma, sans-serif;
-  -webkit-tap-highlight-color: transparent;
-  -webkit-touch-callout: none;
-}
-
-html, body {
-  height: 100%;
-  overflow: hidden;
-  position: fixed;
-  width: 100%;
-  overscroll-behavior: none;
-}
-
-body {
-  background: var(--bg-primary);
-  color: var(--text-primary);
-  font-size: 15px;
-  line-height: 1.5;
-  user-select: none;
-  -webkit-user-select: none;
-}
-
-input, textarea {
-  user-select: text !important;
-  -webkit-user-select: text !important;
-}
-
-/* ========== الشاشة الرئيسية المتنكرة ========== */
-#disguiseApp {
-  position: fixed;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  background: var(--bg-primary);
-  z-index: 10;
-}
-
-.app-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 14px 18px;
-  padding-top: calc(14px + env(safe-area-inset-top, 0px));
-  background: var(--bg-secondary);
-  border-bottom: 1px solid var(--border);
-  flex-shrink: 0;
-}
-
-.app-title {
-  font-size: 17px;
-  font-weight: 700;
-  color: var(--text-primary);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  letter-spacing: 0.2px;
-}
-
-.app-title i {
-  color: var(--accent);
-}
-
-.header-menu-btn {
-  width: 38px;
-  height: 38px;
-  background: transparent;
-  border: none;
-  color: var(--text-secondary);
-  font-size: 17px;
-  cursor: pointer;
-  border-radius: var(--radius-sm);
-  transition: background 0.15s;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.header-menu-btn:active {
-  background: var(--bg-tertiary);
-  color: var(--text-primary);
-}
-
-.tab-bar {
-  display: flex;
-  background: var(--bg-secondary);
-  border-bottom: 1px solid var(--border);
-  flex-shrink: 0;
-}
-
-.tab-btn {
-  flex: 1;
-  padding: 11px 6px;
-  background: transparent;
-  border: none;
-  color: var(--text-muted);
-  font-size: 11px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: color 0.15s;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  border-bottom: 2px solid transparent;
-  position: relative;
-}
-
-.tab-btn i {
-  font-size: 17px;
-}
-
-.tab-btn.active {
-  color: var(--accent);
-  border-bottom-color: var(--accent);
-}
-
-.view-container {
-  flex: 1;
-  overflow: hidden;
-  position: relative;
-  min-height: 0;
-}
-
-.view {
-  position: absolute;
-  inset: 0;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-  display: none;
-  padding: 16px;
-}
-
-.view.active {
-  display: block;
-}
-
-/* ========== الآلة الحاسبة ========== */
-#calcView {
-  display: none;
-  flex-direction: column;
-  padding: 0;
-  overflow: hidden;
-}
-
-#calcView.active {
-  display: flex;
-}
-
-.calc-display {
-  background: linear-gradient(180deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
-  padding: 20px 20px 18px;
-  text-align: left;
-  direction: ltr;
-  flex-shrink: 0;
-  border-bottom: 1px solid var(--border);
-  min-height: 110px;
-}
-
-.calc-expression {
-  font-size: 15px;
-  color: var(--text-muted);
-  min-height: 22px;
-  word-break: break-all;
-  margin-bottom: 6px;
-  font-weight: 500;
-}
-
-.calc-result {
-  font-size: 40px;
-  font-weight: 700;
-  color: var(--text-primary);
-  word-break: break-all;
-  min-height: 52px;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-}
-
-.calc-buttons {
-  flex: 1;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-auto-rows: 1fr;
-  gap: 8px;
-  padding: 12px;
-  min-height: 0;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-}
-
-.calc-btn {
-  background: var(--bg-tertiary);
-  border: none;
-  color: var(--text-primary);
-  font-size: 20px;
-  font-weight: 600;
-  border-radius: var(--radius-md);
-  cursor: pointer;
-  transition: background 0.12s, transform 0.08s;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 52px;
-  touch-action: manipulation;
-  user-select: none;
-}
-
-.calc-btn:active {
-  background: var(--accent);
-  transform: scale(0.96);
-}
-
-.calc-btn.op {
-  background: var(--bg-secondary);
-  color: var(--accent-light);
-  font-weight: 700;
-}
-
-.calc-btn.equals {
-  background: var(--accent);
-  color: white;
-  grid-column: span 2;
-  font-weight: 700;
-}
-
-.calc-btn.equals.holding {
-  background: var(--warning);
-  transform: scale(0.97);
-}
-
-.calc-btn.clear {
-  color: var(--danger);
-  font-weight: 700;
-}
-
-.calc-btn.fn {
-  background: var(--bg-secondary);
-  color: var(--text-secondary);
-  font-size: 15px;
-  font-weight: 600;
-}
-
-/* ========== المذكرات ========== */
-.notes-toolbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 14px;
-  gap: 10px;
-}
-
-.notes-toolbar h3 {
-  font-size: 15px;
-  color: var(--text-secondary);
-  font-weight: 600;
-}
-
-.add-note-btn {
-  background: var(--accent);
-  border: none;
-  color: white;
-  padding: 9px 14px;
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  font-size: 13px;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  transition: background 0.15s;
-}
-
-.add-note-btn:active {
-  background: var(--accent-light);
-}
-
-.note-card {
-  background: var(--bg-secondary);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  padding: 14px 16px;
-  margin-bottom: 10px;
-  cursor: pointer;
-  transition: background 0.15s, border-color 0.15s;
-  position: relative;
-}
-
-.note-card:active {
-  background: var(--bg-tertiary);
-  border-color: var(--border-strong);
-}
-
-.note-title {
-  font-size: 14px;
-  font-weight: 700;
-  margin-bottom: 5px;
-  color: var(--text-primary);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.note-preview {
-  font-size: 12.5px;
-  color: var(--text-secondary);
-  line-height: 1.5;
-  max-height: 38px;
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-}
-
-.note-date {
-  font-size: 10.5px;
-  color: var(--text-muted);
-  margin-top: 7px;
-}
-
-.empty-state {
-  text-align: center;
-  padding: 60px 20px;
-  color: var(--text-muted);
-}
-
-.empty-state i {
-  font-size: 42px;
-  opacity: 0.35;
-  margin-bottom: 14px;
-  display: block;
-}
-
-.empty-state div {
-  font-size: 13px;
-}
-
-/* ========== المحول ========== */
-.converter-section {
-  background: var(--bg-secondary);
-  border-radius: var(--radius-md);
-  padding: 16px;
-  margin-bottom: 12px;
-  border: 1px solid var(--border);
-}
-
-.converter-section h4 {
-  font-size: 13px;
-  color: var(--text-secondary);
-  margin-bottom: 10px;
-  font-weight: 600;
-}
-
-.converter-row {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 8px;
-}
-
-.converter-row input,
-.converter-row select {
-  flex: 1;
-  min-width: 0;
-  background: var(--bg-tertiary);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  padding: 10px 12px;
-  color: var(--text-primary);
-  font-size: 14px;
-  outline: none;
-  transition: border-color 0.15s;
-}
-
-.converter-row input:focus,
-.converter-row select:focus {
-  border-color: var(--accent);
-}
-
-.converter-result {
-  font-size: 13px;
-  color: var(--text-secondary);
-  margin-top: 6px;
-  padding: 8px 12px;
-  background: var(--bg-tertiary);
-  border-radius: var(--radius-sm);
-  font-weight: 600;
-  direction: ltr;
-  text-align: left;
-}
-
-/* ========== Overlay عام ========== */
-.overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.82);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  display: none;
-  align-items: center;
-  justify-content: center;
-  z-index: 100;
-  padding: 20px;
-}
-
-.overlay.active {
-  display: flex;
-  animation: fadeIn 0.18s ease;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-.overlay-content {
-  background: var(--bg-secondary);
-  border-radius: var(--radius-xl);
-  padding: 26px 22px;
-  width: 100%;
-  max-width: 400px;
-  border: 1px solid var(--border-strong);
-  box-shadow: var(--shadow-lg);
-  animation: slideUp 0.25s ease;
-  max-height: 90vh;
-  overflow-y: auto;
-}
-
-@keyframes slideUp {
-  from { transform: translateY(24px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
-}
-
-.overlay-content h2 {
-  font-size: 18px;
-  margin-bottom: 6px;
-  color: var(--text-primary);
-  font-weight: 700;
-}
-
-.overlay-subtitle {
-  font-size: 12.5px;
-  color: var(--text-secondary);
-  margin-bottom: 18px;
-  line-height: 1.55;
-}
-
-/* اختيار مساحة العمل */
-.workspace-options {
-  display: flex;
-  gap: 10px;
-  margin-top: 6px;
-}
-
-.workspace-card {
-  flex: 1;
-  background: var(--bg-tertiary);
-  border: 2px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: 20px 10px;
-  text-align: center;
-  cursor: pointer;
-  transition: border-color 0.15s, background 0.15s, transform 0.1s;
-  touch-action: manipulation;
-}
-
-.workspace-card:active {
-  transform: scale(0.96);
-  border-color: var(--accent);
-}
-
-.workspace-card .ws-icon {
-  font-size: 26px;
-  color: var(--accent-light);
-  margin-bottom: 8px;
-  display: block;
-}
-
-.workspace-card .ws-label {
-  font-size: 14px;
-  font-weight: 700;
-  margin-bottom: 3px;
-}
-
-.workspace-card .ws-sub {
-  font-size: 10.5px;
-  color: var(--text-muted);
-}
-
-/* إدخال كلمة السر */
-.secret-input-wrap {
-  margin-top: 16px;
-}
-
-.secret-input-wrap label {
-  display: block;
-  font-size: 11.5px;
-  color: var(--text-secondary);
-  margin-bottom: 7px;
-}
-
-.secret-input {
-  width: 100%;
-  background: var(--bg-tertiary);
-  border: 2px solid var(--border);
-  border-radius: var(--radius-md);
-  padding: 16px;
-  color: var(--text-primary);
-  font-size: 22px;
-  text-align: center;
-  letter-spacing: 6px;
-  outline: none;
-  direction: ltr;
-  font-weight: 700;
-  transition: border-color 0.15s;
-}
-
-.secret-input:focus {
-  border-color: var(--accent);
-}
-
-.secret-input.error {
-  border-color: var(--danger);
-  animation: shake 0.35s;
-}
-
-@keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-6px); }
-  75% { transform: translateX(6px); }
-}
-
-.secret-verify-btn {
-  width: 100%;
-  margin-top: 12px;
-  padding: 14px;
-  background: var(--accent);
-  border: none;
-  border-radius: var(--radius-md);
-  color: white;
-  font-size: 15px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: background 0.15s, transform 0.08s;
-  touch-action: manipulation;
-}
-
-.secret-verify-btn:active {
-  background: var(--accent-light);
-  transform: scale(0.98);
-}
-
-.secret-hint {
-  font-size: 11px;
-  color: var(--text-muted);
-  text-align: center;
-  margin-top: 10px;
-  min-height: 14px;
-}
-
-/* ========== الشات السري ========== */
-#secretChatView {
-  position: fixed;
-  inset: 0;
-  background: var(--bg-primary);
-  display: none;
-  flex-direction: column;
-  z-index: 200;
-  padding-top: env(safe-area-inset-top, 0px);
-}
-
-#secretChatView.active {
-  display: flex;
-  animation: fadeIn 0.18s ease;
-}
-
-.chat-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 12px 14px;
-  background: var(--bg-secondary);
-  border-bottom: 1px solid var(--border);
-  flex-shrink: 0;
-}
-
-.chat-header-left {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  min-width: 0;
-  flex: 1;
-}
-
-.chat-back-btn {
-  width: 36px;
-  height: 36px;
-  background: transparent;
-  border: none;
-  color: var(--text-secondary);
-  font-size: 17px;
-  cursor: pointer;
-  border-radius: var(--radius-sm);
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  touch-action: manipulation;
-}
-
-.chat-back-btn:active {
-  background: var(--bg-tertiary);
-}
-
-.chat-title {
-  min-width: 0;
-  flex: 1;
-}
-
-.chat-title h3 {
-  font-size: 14.5px;
-  font-weight: 700;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.chat-title p {
-  font-size: 11px;
-  color: var(--text-muted);
-  margin-top: 1px;
-}
-
-.chat-header-btn {
-  width: 36px;
-  height: 36px;
-  background: transparent;
-  border: none;
-  color: var(--text-secondary);
-  font-size: 16px;
-  cursor: pointer;
-  border-radius: var(--radius-sm);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  touch-action: manipulation;
-}
-
-.chat-header-btn:active {
-  background: var(--bg-tertiary);
-}
-
-.chat-messages {
-  flex: 1;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-  padding: 14px 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  background: var(--bg-primary);
-  min-height: 0;
-}
-
-.note-message {
-  padding: 10px 12px;
-  border-radius: var(--radius-md);
-  position: relative;
-  max-width: 88%;
-  font-size: 14px;
-  line-height: 1.55;
-  word-wrap: break-word;
-  white-space: pre-wrap;
-  align-self: flex-start;
-  animation: msgIn 0.15s ease;
-  cursor: pointer;
-}
-
-@keyframes msgIn {
-  from { opacity: 0; transform: translateY(4px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.note-message.mine {
-  background: rgba(99,102,241,0.12);
-  border-right: 3px solid var(--accent);
-}
-
-.note-message.theirs {
-  background: rgba(16,185,129,0.10);
-  border-right: 3px solid var(--success);
-}
-
-.msg-meta {
-  font-size: 9.5px;
-  color: var(--text-muted);
-  margin-top: 4px;
-  display: flex;
-  gap: 6px;
-  align-items: center;
-  opacity: 0.75;
-}
-
-.msg-sender {
-  font-weight: 700;
-  color: var(--text-secondary);
-}
-
-.msg-actions {
-  position: absolute;
-  top: 4px;
-  left: 4px;
-  display: none;
-  gap: 3px;
-}
-
-.note-message.show-actions .msg-actions {
-  display: flex;
-}
-
-.msg-action-btn {
-  width: 24px;
-  height: 24px;
-  background: var(--bg-elevated);
-  border: none;
-  border-radius: var(--radius-sm);
-  color: var(--text-secondary);
-  font-size: 10px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  touch-action: manipulation;
-}
-
-.msg-action-btn:active {
-  background: var(--danger);
-  color: white;
-}
-
-.chat-date-sep {
-  text-align: center;
-  font-size: 10px;
-  color: var(--text-muted);
-  margin: 8px 0 4px;
-  opacity: 0.6;
-}
-
-.chat-empty {
-  text-align: center;
-  padding: 50px 20px;
-  color: var(--text-muted);
-  font-size: 13px;
-}
-
-.chat-empty i {
-  font-size: 32px;
-  display: block;
-  margin-bottom: 12px;
-  opacity: 0.35;
-}
-
-.chat-input-area {
-  padding: 10px 12px;
-  padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px));
-  background: var(--bg-secondary);
-  border-top: 1px solid var(--border);
-  flex-shrink: 0;
-  display: flex;
-  gap: 8px;
-  align-items: flex-end;
-}
-
-.chat-input {
-  flex: 1;
-  background: var(--bg-tertiary);
-  border: 1px solid var(--border);
-  border-radius: 20px;
-  padding: 11px 15px;
-  color: var(--text-primary);
-  font-size: 14px;
-  outline: none;
-  resize: none;
-  max-height: 100px;
-  min-height: 42px;
-  line-height: 1.4;
-  font-family: inherit;
-  transition: border-color 0.15s;
-}
-
-.chat-input:focus {
-  border-color: var(--accent);
-}
-
-.chat-send-btn {
-  width: 42px;
-  height: 42px;
-  background: var(--accent);
-  border: none;
-  border-radius: 50%;
-  color: white;
-  font-size: 15px;
-  cursor: pointer;
-  flex-shrink: 0;
-  transition: background 0.15s, transform 0.08s;
-  touch-action: manipulation;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.chat-send-btn:active {
-  background: var(--accent-light);
-  transform: scale(0.92);
-}
-
-/* ========== قفل الشات ========== */
-.lock-overlay {
-  position: fixed;
-  inset: 0;
-  background: var(--bg-primary);
-  display: none;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  z-index: 300;
-  padding: 30px;
-}
-
-.lock-overlay.active {
-  display: flex;
-}
-
-.lock-icon {
-  font-size: 42px;
-  color: var(--accent);
-  margin-bottom: 18px;
-}
-
-.lock-overlay p {
-  color: var(--text-secondary);
-  font-size: 13px;
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-/* ========== إعدادات الشات ========== */
-.chat-settings-menu {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.7);
-  display: none;
-  align-items: center;
-  justify-content: center;
-  z-index: 250;
-  padding: 20px;
-}
-
-.chat-settings-menu.active {
-  display: flex;
-  animation: fadeIn 0.15s ease;
-}
-
-.chat-settings-panel {
-  background: var(--bg-secondary);
-  border-radius: var(--radius-lg);
-  padding: 8px;
-  width: 100%;
-  max-width: 320px;
-  border: 1px solid var(--border-strong);
-  box-shadow: var(--shadow-lg);
-}
-
-.settings-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 13px 14px;
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  transition: background 0.15s;
-  font-size: 14px;
-  color: var(--text-primary);
-  touch-action: manipulation;
-}
-
-.settings-item:active {
-  background: var(--bg-tertiary);
-}
-
-.settings-item i {
-  width: 20px;
-  color: var(--accent-light);
-  font-size: 14px;
-  text-align: center;
-}
-
-.settings-item.danger i {
-  color: var(--danger);
-}
-
-.settings-item.danger {
-  color: var(--danger);
-}
-
-/* ========== Toast ========== */
-.toast {
-  position: fixed;
-  bottom: 30px;
-  left: 50%;
-  transform: translateX(-50%) translateY(100px);
-  background: var(--bg-elevated);
-  color: var(--text-primary);
-  padding: 11px 18px;
-  border-radius: var(--radius-md);
-  font-size: 13px;
-  border: 1px solid var(--border-strong);
-  box-shadow: var(--shadow-md);
-  z-index: 500;
-  transition: transform 0.25s ease, opacity 0.25s ease;
-  opacity: 0;
-  pointer-events: none;
-  max-width: 90vw;
-  text-align: center;
-}
-
-.toast.show {
-  transform: translateX(-50%) translateY(0);
-  opacity: 1;
-}
-
-.toast.success { border-color: var(--success); }
-.toast.error { border-color: var(--danger); }
-
-/* ========== Modals ========== */
-.modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.8);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-  display: none;
-  align-items: center;
-  justify-content: center;
-  z-index: 400;
-  padding: 20px;
-}
-
-.modal-overlay.active {
-  display: flex;
-  animation: fadeIn 0.15s ease;
-}
-
-.modal-box {
-  background: var(--bg-secondary);
-  border-radius: var(--radius-lg);
-  padding: 22px;
-  width: 100%;
-  max-width: 400px;
-  border: 1px solid var(--border-strong);
-  max-height: 85vh;
-  overflow-y: auto;
-  animation: slideUp 0.2s ease;
-}
-
-.modal-box h3 {
-  font-size: 16px;
-  margin-bottom: 14px;
-  font-weight: 700;
-}
-
-.modal-input {
-  width: 100%;
-  background: var(--bg-tertiary);
-  border: 1.5px solid var(--border);
-  border-radius: var(--radius-sm);
-  padding: 11px 13px;
-  color: var(--text-primary);
-  font-size: 14px;
-  outline: none;
-  margin-bottom: 10px;
-  transition: border-color 0.15s;
-}
-
-.modal-input:focus {
-  border-color: var(--accent);
-}
-
-.modal-actions {
-  display: flex;
-  gap: 8px;
-  margin-top: 8px;
-}
-
-.modal-btn {
-  flex: 1;
-  padding: 12px;
-  border: none;
-  border-radius: var(--radius-sm);
-  font-size: 14px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: background 0.15s, transform 0.08s;
-  touch-action: manipulation;
-}
-
-.modal-btn.primary {
-  background: var(--accent);
-  color: white;
-}
-
-.modal-btn.primary:active {
-  background: var(--accent-light);
-  transform: scale(0.98);
-}
-
-.modal-btn.secondary {
-  background: var(--bg-tertiary);
-  color: var(--text-secondary);
-}
-
-.modal-btn.secondary:active {
-  background: var(--bg-elevated);
-}
-
-.modal-btn.danger {
-  background: var(--danger);
-  color: white;
-}
-
-.modal-btn:active {
-  transform: scale(0.97);
-}
-
-/* ========== استجابة ========== */
-@media (max-width: 400px) {
-  .calc-result { font-size: 34px; }
-  .calc-btn { font-size: 18px; min-height: 46px; }
-  .note-message { max-width: 92%; }
-  .app-title { font-size: 15px; }
-}
-
-@media (max-height: 600px) {
-  .calc-display { min-height: 80px; padding: 14px 16px; }
-  .calc-result { font-size: 30px; min-height: 40px; }
-  .calc-btn { min-height: 44px; font-size: 17px; }
-}
-
-::-webkit-scrollbar { width: 4px; height: 4px; }
-::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 2px; }
-::-webkit-scrollbar-track { background: transparent; }
-
-/* ========== مؤشر الاتصال ========== */
-.connection-indicator {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  font-size: 10px;
-  color: var(--text-muted);
-  margin-left: auto;
-}
-
-.conn-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--text-muted);
-  transition: background 0.3s;
-}
-
-.conn-dot.online { background: var(--success); box-shadow: 0 0 6px var(--success); }
-.conn-dot.offline { background: var(--danger); }
+* { margin:0; padding:0; box-sizing:border-box; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Tahoma,sans-serif; -webkit-tap-highlight-color:transparent; -webkit-touch-callout:none; }
+html, body { height:100%; overflow:hidden; position:fixed; width:100%; overscroll-behavior:none; }
+body { background:var(--bg-primary); color:var(--text-primary); font-size:15px; line-height:1.5; user-select:none; -webkit-user-select:none; }
+input, textarea { user-select:text !important; -webkit-user-select:text !important; }
+
+#disguiseApp { position:fixed; inset:0; display:flex; flex-direction:column; background:var(--bg-primary); z-index:10; }
+.app-header { display:flex; align-items:center; justify-content:space-between; padding:14px 18px; padding-top:calc(14px + env(safe-area-inset-top,0px)); background:var(--bg-secondary); border-bottom:1px solid var(--border); flex-shrink:0; }
+.app-title { font-size:17px; font-weight:700; display:flex; align-items:center; gap:8px; }
+.app-title i { color:var(--accent); }
+.header-menu-btn { width:38px; height:38px; background:transparent; border:none; color:var(--text-secondary); font-size:17px; cursor:pointer; border-radius:8px; display:flex; align-items:center; justify-content:center; }
+.header-menu-btn:active { background:var(--bg-tertiary); }
+.tab-bar { display:flex; background:var(--bg-secondary); border-bottom:1px solid var(--border); flex-shrink:0; }
+.tab-btn { flex:1; padding:11px 6px; background:transparent; border:none; color:var(--text-muted); font-size:11px; font-weight:600; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:4px; border-bottom:2px solid transparent; }
+.tab-btn i { font-size:17px; }
+.tab-btn.active { color:var(--accent); border-bottom-color:var(--accent); }
+.view-container { flex:1; overflow:hidden; position:relative; min-height:0; }
+.view { position:absolute; inset:0; overflow-y:auto; -webkit-overflow-scrolling:touch; display:none; padding:16px; }
+.view.active { display:block; }
+#calcView { display:none; flex-direction:column; padding:0; overflow:hidden; }
+#calcView.active { display:flex; }
+.calc-display { background:linear-gradient(180deg,var(--bg-secondary) 0%,var(--bg-primary) 100%); padding:20px 20px 18px; text-align:left; direction:ltr; flex-shrink:0; border-bottom:1px solid var(--border); min-height:110px; }
+.calc-expression { font-size:15px; color:var(--text-muted); min-height:22px; word-break:break-all; margin-bottom:6px; font-weight:500; }
+.calc-result { font-size:40px; font-weight:700; min-height:52px; display:flex; align-items:center; justify-content:flex-end; word-break:break-all; }
+.calc-buttons { flex:1; display:grid; grid-template-columns:repeat(4,1fr); grid-auto-rows:1fr; gap:8px; padding:12px; min-height:0; overflow-y:auto; }
+.calc-btn { background:var(--bg-tertiary); border:none; color:var(--text-primary); font-size:20px; font-weight:600; border-radius:12px; cursor:pointer; display:flex; align-items:center; justify-content:center; min-height:52px; touch-action:manipulation; user-select:none; transition:background 0.12s, transform 0.08s; }
+.calc-btn:active { background:var(--accent); transform:scale(0.96); }
+.calc-btn.op { background:var(--bg-secondary); color:var(--accent-light); font-weight:700; }
+.calc-btn.equals { background:var(--accent); color:white; grid-column:span 2; font-weight:700; }
+.calc-btn.equals.holding { background:var(--warning); transform:scale(0.97); }
+.calc-btn.clear { color:var(--danger); font-weight:700; }
+.calc-btn.fn { background:var(--bg-secondary); color:var(--text-secondary); font-size:15px; font-weight:600; }
+
+.notes-toolbar { display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; gap:10px; }
+.notes-toolbar h3 { font-size:15px; color:var(--text-secondary); font-weight:600; }
+.add-note-btn { background:var(--accent); border:none; color:white; padding:9px 14px; border-radius:8px; cursor:pointer; font-size:13px; font-weight:600; display:flex; align-items:center; gap:6px; }
+.note-card { background:var(--bg-secondary); border:1px solid var(--border); border-radius:12px; padding:14px 16px; margin-bottom:10px; cursor:pointer; }
+.note-card:active { background:var(--bg-tertiary); }
+.note-title { font-size:14px; font-weight:700; margin-bottom:5px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.note-preview { font-size:12.5px; color:var(--text-secondary); line-height:1.5; max-height:38px; overflow:hidden; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+.note-date { font-size:10.5px; color:var(--text-muted); margin-top:7px; }
+.empty-state { text-align:center; padding:60px 20px; color:var(--text-muted); }
+.empty-state i { font-size:42px; opacity:0.35; margin-bottom:14px; display:block; }
+.empty-state div { font-size:13px; }
+
+.converter-section { background:var(--bg-secondary); border-radius:12px; padding:16px; margin-bottom:12px; border:1px solid var(--border); }
+.converter-section h4 { font-size:13px; color:var(--text-secondary); margin-bottom:10px; font-weight:600; }
+.converter-row { display:flex; gap:8px; margin-bottom:8px; }
+.converter-row input, .converter-row select { flex:1; min-width:0; background:var(--bg-tertiary); border:1px solid var(--border); border-radius:8px; padding:10px 12px; color:var(--text-primary); font-size:14px; outline:none; }
+.converter-row input:focus, .converter-row select:focus { border-color:var(--accent); }
+.converter-result { font-size:13px; color:var(--text-secondary); margin-top:6px; padding:8px 12px; background:var(--bg-tertiary); border-radius:8px; font-weight:600; direction:ltr; text-align:left; }
+
+.overlay { position:fixed; inset:0; background:rgba(0,0,0,0.82); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); display:none; align-items:center; justify-content:center; z-index:100; padding:20px; }
+.overlay.active { display:flex; animation:fadeIn 0.18s ease; }
+@keyframes fadeIn { from{opacity:0} to{opacity:1} }
+.overlay-content { background:var(--bg-secondary); border-radius:24px; padding:26px 22px; width:100%; max-width:400px; border:1px solid var(--border-strong); box-shadow:var(--shadow-lg); animation:slideUp 0.25s ease; max-height:90vh; overflow-y:auto; }
+@keyframes slideUp { from{transform:translateY(24px); opacity:0} to{transform:translateY(0); opacity:1} }
+.overlay-content h2 { font-size:18px; margin-bottom:6px; font-weight:700; }
+.overlay-subtitle { font-size:12.5px; color:var(--text-secondary); margin-bottom:18px; line-height:1.55; }
+.workspace-options { display:flex; gap:10px; margin-top:6px; }
+.workspace-card { flex:1; background:var(--bg-tertiary); border:2px solid var(--border); border-radius:18px; padding:20px 10px; text-align:center; cursor:pointer; touch-action:manipulation; }
+.workspace-card:active { transform:scale(0.96); border-color:var(--accent); }
+.workspace-card .ws-icon { font-size:26px; color:var(--accent-light); margin-bottom:8px; display:block; }
+.workspace-card .ws-label { font-size:14px; font-weight:700; margin-bottom:3px; }
+.workspace-card .ws-sub { font-size:10.5px; color:var(--text-muted); }
+.secret-input-wrap { margin-top:16px; }
+.secret-input-wrap label { display:block; font-size:11.5px; color:var(--text-secondary); margin-bottom:7px; }
+.secret-input { width:100%; background:var(--bg-tertiary); border:2px solid var(--border); border-radius:12px; padding:16px; color:var(--text-primary); font-size:22px; text-align:center; letter-spacing:6px; outline:none; direction:ltr; font-weight:700; }
+.secret-input:focus { border-color:var(--accent); }
+.secret-input.error { border-color:var(--danger); animation:shake 0.35s; }
+@keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
+.secret-verify-btn { width:100%; margin-top:12px; padding:14px; background:var(--accent); border:none; border-radius:12px; color:white; font-size:15px; font-weight:700; cursor:pointer; touch-action:manipulation; }
+.secret-verify-btn:active { background:var(--accent-light); transform:scale(0.98); }
+.secret-hint { font-size:11px; color:var(--text-muted); text-align:center; margin-top:10px; min-height:14px; }
+
+#secretChatView { position:fixed; inset:0; background:var(--bg-primary); display:none; flex-direction:column; z-index:200; padding-top:env(safe-area-inset-top,0px); }
+#secretChatView.active { display:flex; animation:fadeIn 0.18s ease; }
+.chat-header { display:flex; align-items:center; justify-content:space-between; padding:12px 14px; background:var(--bg-secondary); border-bottom:1px solid var(--border); flex-shrink:0; }
+.chat-header-left { display:flex; align-items:center; gap:10px; min-width:0; flex:1; }
+.chat-back-btn { width:36px; height:36px; background:transparent; border:none; color:var(--text-secondary); font-size:17px; cursor:pointer; border-radius:8px; flex-shrink:0; display:flex; align-items:center; justify-content:center; }
+.chat-back-btn:active { background:var(--bg-tertiary); }
+.chat-title { min-width:0; flex:1; }
+.chat-title h3 { font-size:14.5px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.chat-title p { font-size:11px; color:var(--text-muted); margin-top:1px; }
+.chat-header-btn { width:36px; height:36px; background:transparent; border:none; color:var(--text-secondary); font-size:16px; cursor:pointer; border-radius:8px; display:flex; align-items:center; justify-content:center; }
+.chat-header-btn:active { background:var(--bg-tertiary); }
+.chat-messages { flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; padding:14px 12px; display:flex; flex-direction:column; gap:6px; min-height:0; }
+.note-message { padding:10px 12px; border-radius:12px; position:relative; max-width:88%; font-size:14px; line-height:1.55; word-wrap:break-word; white-space:pre-wrap; align-self:flex-start; cursor:pointer; }
+.note-message.mine { background:rgba(99,102,241,0.12); border-right:3px solid var(--accent); }
+.note-message.theirs { background:rgba(16,185,129,0.10); border-right:3px solid var(--success); }
+.msg-meta { font-size:9.5px; color:var(--text-muted); margin-top:4px; display:flex; gap:6px; align-items:center; opacity:0.75; }
+.msg-sender { font-weight:700; color:var(--text-secondary); }
+.msg-actions { position:absolute; top:4px; left:4px; display:none; gap:3px; }
+.note-message.show-actions .msg-actions { display:flex; }
+.msg-action-btn { width:24px; height:24px; background:var(--bg-elevated); border:none; border-radius:8px; color:var(--text-secondary); font-size:10px; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+.msg-action-btn:active { background:var(--danger); color:white; }
+.chat-date-sep { text-align:center; font-size:10px; color:var(--text-muted); margin:8px 0 4px; opacity:0.6; }
+.chat-empty { text-align:center; padding:50px 20px; color:var(--text-muted); font-size:13px; }
+.chat-empty i { font-size:32px; display:block; margin-bottom:12px; opacity:0.35; }
+.chat-input-area { padding:10px 12px; padding-bottom:calc(10px + env(safe-area-inset-bottom,0px)); background:var(--bg-secondary); border-top:1px solid var(--border); flex-shrink:0; display:flex; gap:8px; align-items:flex-end; }
+.chat-input { flex:1; background:var(--bg-tertiary); border:1px solid var(--border); border-radius:20px; padding:11px 15px; color:var(--text-primary); font-size:14px; outline:none; resize:none; max-height:100px; min-height:42px; line-height:1.4; font-family:inherit; }
+.chat-input:focus { border-color:var(--accent); }
+.chat-send-btn { width:42px; height:42px; background:var(--accent); border:none; border-radius:50%; color:white; font-size:15px; cursor:pointer; flex-shrink:0; display:flex; align-items:center; justify-content:center; }
+.chat-send-btn:active { background:var(--accent-light); transform:scale(0.92); }
+
+.lock-overlay { position:fixed; inset:0; background:var(--bg-primary); display:none; flex-direction:column; align-items:center; justify-content:center; z-index:300; padding:30px; }
+.lock-overlay.active { display:flex; }
+.lock-icon { font-size:42px; color:var(--accent); margin-bottom:18px; }
+.lock-overlay p { color:var(--text-secondary); font-size:13px; text-align:center; margin-bottom:20px; }
+
+.chat-settings-menu { position:fixed; inset:0; background:rgba(0,0,0,0.7); display:none; align-items:center; justify-content:center; z-index:250; padding:20px; }
+.chat-settings-menu.active { display:flex; }
+.chat-settings-panel { background:var(--bg-secondary); border-radius:18px; padding:8px; width:100%; max-width:320px; border:1px solid var(--border-strong); }
+.settings-item { display:flex; align-items:center; gap:12px; padding:13px 14px; border-radius:8px; cursor:pointer; font-size:14px; color:var(--text-primary); }
+.settings-item:active { background:var(--bg-tertiary); }
+.settings-item i { width:20px; color:var(--accent-light); font-size:14px; text-align:center; }
+.settings-item.danger i, .settings-item.danger { color:var(--danger); }
+
+.toast { position:fixed; bottom:30px; left:50%; transform:translateX(-50%) translateY(100px); background:var(--bg-elevated); color:var(--text-primary); padding:11px 18px; border-radius:12px; font-size:13px; border:1px solid var(--border-strong); z-index:500; transition:transform 0.25s, opacity 0.25s; opacity:0; pointer-events:none; max-width:90vw; text-align:center; }
+.toast.show { transform:translateX(-50%) translateY(0); opacity:1; }
+.toast.success { border-color:var(--success); }
+.toast.error { border-color:var(--danger); }
+
+.modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.8); backdrop-filter:blur(6px); display:none; align-items:center; justify-content:center; z-index:400; padding:20px; }
+.modal-overlay.active { display:flex; animation:fadeIn 0.15s; }
+.modal-box { background:var(--bg-secondary); border-radius:18px; padding:22px; width:100%; max-width:400px; border:1px solid var(--border-strong); max-height:85vh; overflow-y:auto; }
+.modal-box h3 { font-size:16px; margin-bottom:14px; font-weight:700; }
+.modal-input { width:100%; background:var(--bg-tertiary); border:1.5px solid var(--border); border-radius:8px; padding:11px 13px; color:var(--text-primary); font-size:14px; outline:none; margin-bottom:10px; }
+.modal-input:focus { border-color:var(--accent); }
+.modal-actions { display:flex; gap:8px; margin-top:8px; }
+.modal-btn { flex:1; padding:12px; border:none; border-radius:8px; font-size:14px; font-weight:700; cursor:pointer; touch-action:manipulation; }
+.modal-btn.primary { background:var(--accent); color:white; }
+.modal-btn.secondary { background:var(--bg-tertiary); color:var(--text-secondary); }
+.modal-btn.danger { background:var(--danger); color:white; }
+.modal-btn:active { transform:scale(0.97); }
+
+.connection-indicator { display:inline-flex; align-items:center; gap:5px; font-size:10px; color:var(--text-muted); }
+.conn-dot { width:6px; height:6px; border-radius:50%; background:var(--text-muted); }
+.conn-dot.online { background:var(--success); box-shadow:0 0 6px var(--success); }
+.conn-dot.offline { background:var(--danger); }
+
+@media (max-width:400px) { .calc-result{font-size:34px} .calc-btn{font-size:18px; min-height:46px} .note-message{max-width:92%} }
+@media (max-height:600px) { .calc-display{min-height:80px; padding:14px 16px} .calc-result{font-size:30px; min-height:40px} .calc-btn{min-height:44px; font-size:17px} }
+::-webkit-scrollbar { width:4px; }
+::-webkit-scrollbar-thumb { background:var(--border-strong); border-radius:2px; }
 </style>
 </head>
 <body>
 
-<!-- ================== التطبيق المتنكر ================== -->
 <div id="disguiseApp">
   <div class="app-header">
-    <div class="app-title">
-      <i class="fas fa-calculator"></i>
-      <span>Smart Notes</span>
-    </div>
-    <button class="header-menu-btn" onclick="openAboutApp()" type="button">
-      <i class="fas fa-ellipsis-v"></i>
-    </button>
+    <div class="app-title"><i class="fas fa-calculator"></i><span>Smart Notes</span></div>
+    <button class="header-menu-btn" onclick="openAboutApp()" type="button"><i class="fas fa-ellipsis-v"></i></button>
   </div>
-
   <div class="tab-bar">
-    <button class="tab-btn active" data-tab="calc" onclick="switchTab('calc')" type="button">
-      <i class="fas fa-calculator"></i>
-      <span>الحاسبة</span>
-    </button>
-    <button class="tab-btn" data-tab="notes" onclick="switchTab('notes')" type="button">
-      <i class="fas fa-sticky-note"></i>
-      <span>المذكرات</span>
-    </button>
-    <button class="tab-btn" data-tab="convert" onclick="switchTab('convert')" type="button">
-      <i class="fas fa-exchange-alt"></i>
-      <span>المحول</span>
-    </button>
+    <button class="tab-btn active" data-tab="calc" onclick="switchTab('calc')" type="button"><i class="fas fa-calculator"></i><span>الحاسبة</span></button>
+    <button class="tab-btn" data-tab="notes" onclick="switchTab('notes')" type="button"><i class="fas fa-sticky-note"></i><span>المذكرات</span></button>
+    <button class="tab-btn" data-tab="convert" onclick="switchTab('convert')" type="button"><i class="fas fa-exchange-alt"></i><span>المحول</span></button>
   </div>
-
   <div class="view-container">
-    <!-- ===== الآلة الحاسبة ===== -->
     <div class="view active" id="calcView">
       <div class="calc-display">
         <div class="calc-expression" id="calcExpression"></div>
@@ -1151,99 +185,59 @@ input, textarea {
         <button class="calc-btn fn" data-action="(" type="button">(</button>
         <button class="calc-btn fn" data-action=")" type="button">)</button>
         <button class="calc-btn fn" data-action="back" type="button">⌫</button>
-
         <button class="calc-btn fn" data-action="sqrt" type="button">√</button>
         <button class="calc-btn fn" data-action="^" type="button">xʸ</button>
         <button class="calc-btn fn" data-action="%" type="button">%</button>
         <button class="calc-btn op" data-action="/" type="button">÷</button>
-
         <button class="calc-btn" data-action="7" type="button">7</button>
         <button class="calc-btn" data-action="8" type="button">8</button>
         <button class="calc-btn" data-action="9" type="button">9</button>
         <button class="calc-btn op" data-action="*" type="button">×</button>
-
         <button class="calc-btn" data-action="4" type="button">4</button>
         <button class="calc-btn" data-action="5" type="button">5</button>
         <button class="calc-btn" data-action="6" type="button">6</button>
         <button class="calc-btn op" data-action="-" type="button">−</button>
-
         <button class="calc-btn" data-action="1" type="button">1</button>
         <button class="calc-btn" data-action="2" type="button">2</button>
         <button class="calc-btn" data-action="3" type="button">3</button>
         <button class="calc-btn op" data-action="+" type="button">+</button>
-
         <button class="calc-btn" data-action="0" type="button">0</button>
         <button class="calc-btn" data-action="." type="button">.</button>
         <button class="calc-btn equals" data-action="=" id="equalsBtn" type="button">=</button>
       </div>
     </div>
-
-    <!-- ===== المذكرات ===== -->
     <div class="view" id="notesView">
       <div class="notes-toolbar">
         <h3>ملاحظاتي</h3>
-        <button class="add-note-btn" onclick="openNoteEditor()" type="button">
-          <i class="fas fa-plus"></i>
-          جديدة
-        </button>
+        <button class="add-note-btn" onclick="openNoteEditor()" type="button"><i class="fas fa-plus"></i> جديدة</button>
       </div>
       <div id="notesList"></div>
     </div>
-
-    <!-- ===== المحول ===== -->
     <div class="view" id="convertView">
       <div class="converter-section">
         <h4>الطول</h4>
         <div class="converter-row">
           <input type="number" id="lenInput" placeholder="0" oninput="convertLength()">
-          <select id="lenFrom" onchange="convertLength()">
-            <option value="m">متر</option>
-            <option value="km">كيلومتر</option>
-            <option value="cm">سنتيمتر</option>
-            <option value="mi">ميل</option>
-          </select>
-          <select id="lenTo" onchange="convertLength()">
-            <option value="cm">سنتيمتر</option>
-            <option value="m">متر</option>
-            <option value="km">كيلومتر</option>
-            <option value="mi">ميل</option>
-          </select>
+          <select id="lenFrom" onchange="convertLength()"><option value="m">متر</option><option value="km">كيلومتر</option><option value="cm">سنتيمتر</option><option value="mi">ميل</option></select>
+          <select id="lenTo" onchange="convertLength()"><option value="cm">سنتيمتر</option><option value="m">متر</option><option value="km">كيلومتر</option><option value="mi">ميل</option></select>
         </div>
         <div class="converter-result" id="lenResult">= 0</div>
       </div>
-
       <div class="converter-section">
         <h4>الوزن</h4>
         <div class="converter-row">
           <input type="number" id="wInput" placeholder="0" oninput="convertWeight()">
-          <select id="wFrom" onchange="convertWeight()">
-            <option value="kg">كيلوجرام</option>
-            <option value="g">جرام</option>
-            <option value="lb">باوند</option>
-          </select>
-          <select id="wTo" onchange="convertWeight()">
-            <option value="g">جرام</option>
-            <option value="kg">كيلوجرام</option>
-            <option value="lb">باوند</option>
-          </select>
+          <select id="wFrom" onchange="convertWeight()"><option value="kg">كيلوجرام</option><option value="g">جرام</option><option value="lb">باوند</option></select>
+          <select id="wTo" onchange="convertWeight()"><option value="g">جرام</option><option value="kg">كيلوجرام</option><option value="lb">باوند</option></select>
         </div>
         <div class="converter-result" id="wResult">= 0</div>
       </div>
-
       <div class="converter-section">
         <h4>الحرارة</h4>
         <div class="converter-row">
           <input type="number" id="tempInput" placeholder="0" oninput="convertTemp()">
-          <select id="tempFrom" onchange="convertTemp()">
-            <option value="c">مئوية</option>
-            <option value="f">فهرنهايت</option>
-            <option value="k">كلفن</option>
-          </select>
-          <select id="tempTo" onchange="convertTemp()">
-            <option value="f">فهرنهايت</option>
-            <option value="c">مئوية</option>
-            <option value="k">كلفن</option>
-          </select>
+          <select id="tempFrom" onchange="convertTemp()"><option value="c">مئوية</option><option value="f">فهرنهايت</option><option value="k">كلفن</option></select>
+          <select id="tempTo" onchange="convertTemp()"><option value="f">فهرنهايت</option><option value="c">مئوية</option><option value="k">كلفن</option></select>
         </div>
         <div class="converter-result" id="tempResult">= 0</div>
       </div>
@@ -1251,7 +245,6 @@ input, textarea {
   </div>
 </div>
 
-<!-- ================== نافذة حول ================== -->
 <div class="overlay" id="aboutOverlay">
   <div class="overlay-content">
     <h2>Smart Notes & Calculator</h2>
@@ -1265,7 +258,6 @@ input, textarea {
   </div>
 </div>
 
-<!-- ================== محرر الملاحظات ================== -->
 <div class="modal-overlay" id="noteEditorModal">
   <div class="modal-box">
     <h3 id="noteEditorTitle">ملاحظة جديدة</h3>
@@ -1278,7 +270,6 @@ input, textarea {
   </div>
 </div>
 
-<!-- ================== اختيار مساحة العمل ================== -->
 <div class="overlay" id="workspaceOverlay">
   <div class="overlay-content">
     <h2>إعدادات متقدمة</h2>
@@ -1299,7 +290,6 @@ input, textarea {
   </div>
 </div>
 
-<!-- ================== إدخال كلمة السر ================== -->
 <div class="overlay" id="passwordOverlay">
   <div class="overlay-content">
     <h2 id="pwTitle">التحقق</h2>
@@ -1314,13 +304,10 @@ input, textarea {
   </div>
 </div>
 
-<!-- ================== الشات السري ================== -->
 <div id="secretChatView">
   <div class="chat-header">
     <div class="chat-header-left">
-      <button class="chat-back-btn" onclick="exitChat()" type="button">
-        <i class="fas fa-arrow-right"></i>
-      </button>
+      <button class="chat-back-btn" onclick="exitChat()" type="button"><i class="fas fa-arrow-right"></i></button>
       <div class="chat-title">
         <h3 id="chatTitle">مشروع جديد</h3>
         <p id="chatSubtitle">آخر تعديل الآن</p>
@@ -1331,23 +318,16 @@ input, textarea {
         <span class="conn-dot offline" id="connDot"></span>
         <span id="connText">غير متصل</span>
       </span>
-      <button class="chat-header-btn" onclick="openChatSettings()" type="button">
-        <i class="fas fa-ellipsis-v"></i>
-      </button>
+      <button class="chat-header-btn" onclick="openChatSettings()" type="button"><i class="fas fa-ellipsis-v"></i></button>
     </div>
   </div>
-
   <div class="chat-messages" id="chatMessages"></div>
-
   <div class="chat-input-area">
     <textarea class="chat-input" id="chatInput" placeholder="أضف سطراً..." rows="1" oninput="autoResizeChatInput(this)"></textarea>
-    <button class="chat-send-btn" onclick="sendChatMessage()" type="button">
-      <i class="fas fa-paper-plane"></i>
-    </button>
+    <button class="chat-send-btn" onclick="sendChatMessage()" type="button"><i class="fas fa-paper-plane"></i></button>
   </div>
 </div>
 
-<!-- ================== قفل الشات ================== -->
 <div class="lock-overlay" id="lockOverlay">
   <i class="fas fa-lock lock-icon"></i>
   <p>أدخل رمز التحقق للمتابعة</p>
@@ -1355,33 +335,16 @@ input, textarea {
   <button class="secret-verify-btn" style="width:240px;" onclick="verifyLock()" type="button">فتح</button>
 </div>
 
-<!-- ================== إعدادات الشات ================== -->
 <div class="chat-settings-menu" id="chatSettingsMenu">
   <div class="chat-settings-panel">
-    <div class="settings-item" onclick="openChangePasswordModal()">
-      <i class="fas fa-key"></i>
-      <span>تغيير كلمة السر</span>
-    </div>
-    <div class="settings-item" onclick="openAutoLockSettings()">
-      <i class="fas fa-clock"></i>
-      <span>القفل التلقائي</span>
-    </div>
-    <div class="settings-item" onclick="togglePanicMode()">
-      <i class="fas fa-bolt"></i>
-      <span id="panicLabel">تفعيل وضع الطوارئ</span>
-    </div>
-    <div class="settings-item danger" onclick="clearAllMessages()">
-      <i class="fas fa-trash"></i>
-      <span>مسح كل الرسائل</span>
-    </div>
-    <div class="settings-item" onclick="closeChatSettings()">
-      <i class="fas fa-times"></i>
-      <span>إغلاق</span>
-    </div>
+    <div class="settings-item" onclick="openChangePasswordModal()"><i class="fas fa-key"></i><span>تغيير كلمة السر</span></div>
+    <div class="settings-item" onclick="openAutoLockSettings()"><i class="fas fa-clock"></i><span>القفل التلقائي</span></div>
+    <div class="settings-item" onclick="togglePanicMode()"><i class="fas fa-bolt"></i><span id="panicLabel">تفعيل وضع الطوارئ</span></div>
+    <div class="settings-item danger" onclick="clearAllMessages()"><i class="fas fa-trash"></i><span>مسح كل الرسائل</span></div>
+    <div class="settings-item" onclick="closeChatSettings()"><i class="fas fa-times"></i><span>إغلاق</span></div>
   </div>
 </div>
 
-<!-- ================== تغيير كلمة السر ================== -->
 <div class="modal-overlay" id="changePwModal">
   <div class="modal-box">
     <h3>تغيير كلمة السر</h3>
@@ -1395,7 +358,6 @@ input, textarea {
   </div>
 </div>
 
-<!-- ================== القفل التلقائي ================== -->
 <div class="modal-overlay" id="autoLockModal">
   <div class="modal-box">
     <h3>القفل التلقائي</h3>
@@ -1414,7 +376,6 @@ input, textarea {
   </div>
 </div>
 
-<!-- ================== تأكيد ================== -->
 <div class="modal-overlay" id="confirmModal">
   <div class="modal-box">
     <h3 id="confirmTitle">تأكيد</h3>
@@ -1428,14 +389,13 @@ input, textarea {
 
 <div class="toast" id="toast"></div>
 
-<!-- ================== مكتبات ================== -->
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
 
 <script>
 /* ============================================================
-   الإعدادات الأساسية
+   Firebase
 ============================================================ */
 const firebaseConfig = {
   apiKey: "AIzaSyCASVDgfjolBZm5sc_sYOs8LMh_9jFidkQ",
@@ -1449,68 +409,38 @@ const firebaseConfig = {
 
 let db = null;
 let firebaseReady = false;
-
 try {
   firebase.initializeApp(firebaseConfig);
   db = firebase.database();
   firebaseReady = true;
-} catch (e) {
-  console.error('Firebase init failed:', e);
-}
+} catch (e) { console.error('Firebase init failed:', e); }
 
-const PATH = {
-  chat: 'bn_secret_v2/chat',
-  config: 'bn_secret_v2/config'
-};
-
+const PATH = { chat: 'bn_secret_v2/chat', config: 'bn_secret_v2/config' };
 const DEFAULT_PASSWORD = '13122008';
 const FIXED_SECRET = 'BlackNorth::SecretChat::2024::v2::prime';
 
-/* حالة التطبيق */
 const appState = {
-  workspace: null,
-  currentPassword: null,
-  chatActive: false,
-  messagesListener: null,
-  messages: {},
-  autoLockTimeout: null,
-  autoLockDuration: parseInt(localStorage.getItem('bn_autolock') || '300'),
-  lastActivity: Date.now(),
-  panicMode: false,
-  heartbeatInterval: null,
+  workspace: null, currentPassword: null, chatActive: false,
+  messagesListener: null, messages: {},
+  autoLockTimeout: null, autoLockDuration: parseInt(localStorage.getItem('bn_autolock') || '300'),
+  lastActivity: Date.now(), panicMode: false, heartbeatInterval: null,
   lockOnHide: localStorage.getItem('bn_lock_on_hide') === 'true'
 };
 
 /* ============================================================
-   أدوات مساعدة عامة
+   أدوات عامة
 ============================================================ */
 function showToast(msg, type) {
-  const t = document.getElementById('toast');
-  if (!t) return;
-  t.textContent = msg;
-  t.className = 'toast show ' + (type || '');
+  const t = document.getElementById('toast'); if (!t) return;
+  t.textContent = msg; t.className = 'toast show ' + (type || '');
   clearTimeout(t._timer);
   t._timer = setTimeout(function() { t.className = 'toast ' + (type || ''); }, 2200);
 }
-
-function closeOverlay(id) {
-  const el = document.getElementById(id);
-  if (el) el.classList.remove('active');
-}
-
-function closeModal(id) {
-  const el = document.getElementById(id);
-  if (el) el.classList.remove('active');
-}
-
+function closeOverlay(id) { const el = document.getElementById(id); if (el) el.classList.remove('active'); }
+function closeModal(id) { const el = document.getElementById(id); if (el) el.classList.remove('active'); }
 function escapeHtml(s) {
   if (s === null || s === undefined) return '';
-  return String(s)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 }
 
 /* ============================================================
@@ -1519,59 +449,30 @@ function escapeHtml(s) {
 function deriveKey(password) {
   try {
     const salt = CryptoJS.enc.Hex.parse('a1b2c3d4e5f6789012345678901234567890abcdef1234567890abcdef123456');
-    const key = CryptoJS.PBKDF2(password, salt, {
-      keySize: 256 / 32,
-      iterations: 5000,
-      hasher: CryptoJS.algo.SHA256
-    });
+    const key = CryptoJS.PBKDF2(password, salt, { keySize: 256/32, iterations: 5000, hasher: CryptoJS.algo.SHA256 });
     return key.toString();
-  } catch (e) {
-    return CryptoJS.SHA256(password + FIXED_SECRET).toString();
-  }
+  } catch (e) { return CryptoJS.SHA256(password + FIXED_SECRET).toString(); }
 }
-
 function encryptText(text, password) {
-  try {
-    const key = deriveKey(password);
-    return CryptoJS.AES.encrypt(text, key).toString();
-  } catch (e) {
-    return 'ERR';
-  }
+  try { return CryptoJS.AES.encrypt(text, deriveKey(password)).toString(); } catch (e) { return 'ERR'; }
 }
-
 function decryptText(cipher, password) {
   try {
-    const key = deriveKey(password);
-    const bytes = CryptoJS.AES.decrypt(cipher, key);
-    const result = bytes.toString(CryptoJS.enc.Utf8);
+    const result = CryptoJS.AES.decrypt(cipher, deriveKey(password)).toString(CryptoJS.enc.Utf8);
     return result || null;
-  } catch (e) {
-    return null;
-  }
+  } catch (e) { return null; }
 }
+function hashPassword(password) { return CryptoJS.SHA256(password + FIXED_SECRET + '::hash').toString(); }
 
-function hashPassword(password) {
-  return CryptoJS.SHA256(password + FIXED_SECRET + '::hash').toString();
-}
-
-/* ============================================================
-   التهيئة - إنشاء كلمة السر الافتراضية
-============================================================ */
 async function initializeConfig() {
   if (!firebaseReady || !db) return;
   try {
     const snap = await db.ref(PATH.config + '/passwordHash').once('value');
     if (!snap.exists()) {
-      await db.ref(PATH.config).set({
-        passwordHash: hashPassword(DEFAULT_PASSWORD),
-        createdAt: Date.now(),
-        version: 2
-      });
-      console.log('✅ Config initialized with default password');
+      await db.ref(PATH.config).set({ passwordHash: hashPassword(DEFAULT_PASSWORD), createdAt: Date.now(), version: 2 });
+      console.log('Config initialized');
     }
-  } catch (e) {
-    console.warn('Config init failed (offline?):', e.message);
-  }
+  } catch (e) { console.warn('Config init failed:', e.message); }
 }
 
 /* ============================================================
@@ -1580,34 +481,20 @@ async function initializeConfig() {
 function switchTab(tab) {
   document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
   document.querySelectorAll('.view').forEach(function(v) { v.classList.remove('active'); });
-
   const btn = document.querySelector('.tab-btn[data-tab="' + tab + '"]');
   if (btn) btn.classList.add('active');
-
-  if (tab === 'calc') {
-    const v = document.getElementById('calcView');
-    if (v) v.classList.add('active');
-  }
-  if (tab === 'notes') {
-    const v = document.getElementById('notesView');
-    if (v) v.classList.add('active');
-    renderNotes();
-  }
-  if (tab === 'convert') {
-    const v = document.getElementById('convertView');
-    if (v) v.classList.add('active');
-  }
+  if (tab === 'calc') { const v = document.getElementById('calcView'); if (v) v.classList.add('active'); }
+  if (tab === 'notes') { const v = document.getElementById('notesView'); if (v) v.classList.add('active'); renderNotes(); }
+  if (tab === 'convert') { const v = document.getElementById('convertView'); if (v) v.classList.add('active'); }
 }
 
 /* ============================================================
-   الآلة الحاسبة
+   الآلة الحاسبة - منطق منفصل تماماً
 ============================================================ */
-const calcState = {
-  expression: '',
-  display: '0',
-  lastResult: null,
-  secretBuffer: ''
-};
+const calcState = { expression: '', display: '0', lastResult: null };
+
+// متتبع مستقل لكلمة السر - لا علاقة له بالحاسبة
+const secretTracker = { buffer: '', lastPress: 0 };
 
 function updateCalcDisplay() {
   const exprEl = document.getElementById('calcExpression');
@@ -1618,195 +505,148 @@ function updateCalcDisplay() {
 
 function calcAction(action) {
   const s = calcState;
-
-  if (action === 'C') {
-    s.expression = '';
-    s.display = '0';
-    s.lastResult = null;
-    s.secretBuffer = '';
-    updateCalcDisplay();
-    return;
-  }
-
-  if (action === 'back') {
-    s.expression = s.expression.slice(0, -1);
-    if (s.expression === '') s.display = '0';
-    updateCalcDisplay();
-    return;
-  }
-
+  if (action === 'C') { s.expression = ''; s.display = '0'; s.lastResult = null; updateCalcDisplay(); return; }
+  if (action === 'back') { s.expression = s.expression.slice(0, -1); if (s.expression === '') s.display = '0'; updateCalcDisplay(); return; }
   if (action === '=') {
     if (!s.expression) return;
     try {
       const result = evaluateExpression(s.expression);
-      s.display = String(result);
-      s.lastResult = result;
-      s.expression = '';
+      s.display = String(result); s.lastResult = result; s.expression = '';
       updateCalcDisplay();
-    } catch (e) {
-      s.display = 'Error';
-      updateCalcDisplay();
-    }
+    } catch (e) { s.display = '0'; s.expression = ''; updateCalcDisplay(); }
     return;
   }
-
-  if (action === 'sqrt') {
-    s.expression += '√(';
-    updateCalcDisplay();
-    return;
-  }
-
-  if (action === '^') {
-    s.expression += '^';
-    updateCalcDisplay();
-    return;
-  }
-
-  // إذا كانت خانة النتيجة موجودة وبدأنا بكتابة رقم جديد
-  if (/[0-9.]/.test(action) && s.display !== '0' && s.lastResult !== null) {
-    s.expression = '';
-    s.display = '0';
-    s.lastResult = null;
-  }
-
-  // تتبع الأرقام السرية
-  if (/[0-9]/.test(action)) {
-    s.secretBuffer += action;
-    if (s.secretBuffer.length > 20) {
-      s.secretBuffer = s.secretBuffer.slice(-20);
-    }
-  }
-
+  if (action === 'sqrt') { s.expression += '√('; updateCalcDisplay(); return; }
+  if (action === '^') { s.expression += '^'; updateCalcDisplay(); return; }
+  if (/[0-9.]/.test(action) && s.display !== '0' && s.lastResult !== null) { s.expression = ''; s.display = '0'; s.lastResult = null; }
   s.expression += action;
   updateCalcDisplay();
 }
 
 function evaluateExpression(expr) {
-  let e = expr
-    .replace(/×/g, '*')
-    .replace(/÷/g, '/')
-    .replace(/−/g, '-');
-
-  // استبدال √( بجذر
-  e = e.replace(/√\(([^()]+)\)/g, function(match, inner) {
-    return 'Math.sqrt(' + evaluateExpression(inner) + ')';
-  });
-
-  e = e.replace(/\^/g, '**');
-
-  // التحقق الأمني
-  const safeCheck = e.replace(/\*\*/g, '*').replace(/Math\.sqrt/g, '');
-  if (!/^[0-9+\-*/().%\s]+$/.test(safeCheck)) {
-    throw new Error('Invalid expression');
+  let e = expr.replace(/×/g,'*').replace(/÷/g,'/').replace(/−/g,'-');
+  // حل الأقواس المتداخلة بشكل متكرر
+  let maxIter = 20;
+  while (e.includes('√(') && maxIter-- > 0) {
+    e = e.replace(/√\(([^()]*)\)/g, function(match, inner) {
+      const v = evaluateExpression(inner);
+      return String(Math.sqrt(v));
+    });
   }
-
+  e = e.replace(/\^/g, '**');
+  const safeCheck = e.replace(/\*\*/g, '*');
+  if (!/^[0-9+\-*/().%\s]+$/.test(safeCheck)) throw new Error('Invalid');
   const result = Function('"use strict";return (' + e + ')')();
-  if (!isFinite(result)) throw new Error('Invalid result');
+  if (!isFinite(result)) throw new Error('Invalid');
   return Math.round(result * 1e10) / 1e10;
 }
 
 /* ============================================================
-   ربط أزرار الحاسبة (event delegation آمن للهواتف والكمبيوتر)
+   ربط الأزرار - استخدام pointer events (يعمل على كل الأجهزة)
 ============================================================ */
 function bindCalculatorButtons() {
   const container = document.getElementById('calcButtons');
   if (!container) return;
 
-  // منع السلوك الافتراضي
+  // منع قائمة السياق
   container.addEventListener('contextmenu', function(e) { e.preventDefault(); });
 
-  // استخدام pointerdown للأجهزة اللمسية والماوس
-  container.addEventListener('click', function(e) {
-    const btn = e.target.closest('.calc-btn');
-    if (!btn) return;
+  // ربط كل زر على حدة (أضمن من delegation على الهواتف)
+  const allBtns = container.querySelectorAll('.calc-btn[data-action]');
+  allBtns.forEach(function(btn) {
     const action = btn.getAttribute('data-action');
-    if (action === null) return;
     if (action === '=') return; // يُعالَج منفصلاً
-    calcAction(action);
-  });
 
-  // زر = - نقر عادي
-  const equalsBtn = document.getElementById('equalsBtn');
-  if (equalsBtn) {
-    let holdTimer = null;
-    let holdStart = 0;
-    let isHolding = false;
-    let longPressTriggered = false;
-
-    function startHold(e) {
+    // استخدام pointerdown للاستجابة الفورية
+    btn.addEventListener('pointerdown', function(e) {
       e.preventDefault();
       e.stopPropagation();
-      holdStart = Date.now();
-      isHolding = true;
-      longPressTriggered = false;
 
-      // التحقق من الرقم السري
-      if (calcState.secretBuffer === DEFAULT_PASSWORD || calcState.secretBuffer === appState.currentPassword) {
-        equalsBtn.classList.add('holding');
-        holdTimer = setTimeout(function() {
-          longPressTriggered = true;
-          equalsBtn.classList.remove('holding');
-          calcState.secretBuffer = '';
-          navigator.vibrate && navigator.vibrate(40);
-          openWorkspaceSelector();
-        }, 1800);
+      // تتبع كلمة السر - مستقل تماماً
+      if (/[0-9]/.test(action)) {
+        const now = Date.now();
+        // إذا مر أكثر من 4 ثوانٍ، ابدأ من جديد
+        if (now - secretTracker.lastPress > 4000) secretTracker.buffer = '';
+        secretTracker.lastPress = now;
+        secretTracker.buffer += action;
+        if (secretTracker.buffer.length > 20) secretTracker.buffer = secretTracker.buffer.slice(-20);
+      } else if (action === 'C') {
+        secretTracker.buffer = '';
       }
+
+      // تنفيذ عمل الحاسبة
+      calcAction(action);
+
+      // تأثير بصري
+      btn.classList.add('pressed');
+      setTimeout(function() { btn.classList.remove('pressed'); }, 100);
+    }, { passive: false });
+  });
+
+  // زر = - معالجة خاصة
+  const equalsBtn = document.getElementById('equalsBtn');
+  if (!equalsBtn) return;
+
+  let holdTimer = null;
+  let longPressTriggered = false;
+  let isDown = false;
+
+  function startEquals(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    isDown = true;
+    longPressTriggered = false;
+    equalsBtn.classList.add('holding');
+
+    // تحقق من كلمة السر
+    const isSecretValid = (secretTracker.buffer === DEFAULT_PASSWORD) ||
+                          (secretTracker.buffer === appState.currentPassword);
+
+    if (isSecretValid) {
+      holdTimer = setTimeout(function() {
+        longPressTriggered = true;
+        equalsBtn.classList.remove('holding');
+        secretTracker.buffer = '';
+        if (navigator.vibrate) navigator.vibrate([30, 30, 30]);
+        openWorkspaceSelector();
+      }, 1500);
     }
-
-    function cancelHold(e) {
-      if (holdTimer) {
-        clearTimeout(holdTimer);
-        holdTimer = null;
-      }
-      equalsBtn.classList.remove('holding');
-
-      // إذا لم يكن ضغطاً طويلاً، نفّذ =
-      if (!longPressTriggered && isHolding) {
-        isHolding = false;
-        calcAction('=');
-      }
-      isHolding = false;
-    }
-
-    // Mouse events
-    equalsBtn.addEventListener('mousedown', startHold);
-    equalsBtn.addEventListener('mouseup', cancelHold);
-    equalsBtn.addEventListener('mouseleave', cancelHold);
-
-    // Touch events
-    equalsBtn.addEventListener('touchstart', startHold, { passive: false });
-    equalsBtn.addEventListener('touchend', function(e) {
-      e.preventDefault();
-      cancelHold(e);
-    });
-    equalsBtn.addEventListener('touchcancel', cancelHold);
   }
+
+  function endEquals(e) {
+    if (!isDown) return;
+    isDown = false;
+    if (holdTimer) { clearTimeout(holdTimer); holdTimer = null; }
+    equalsBtn.classList.remove('holding');
+    // إذا لم يكن ضغطاً مطولاً، نفّذ =
+    if (!longPressTriggered) {
+      calcAction('=');
+    }
+  }
+
+  equalsBtn.addEventListener('pointerdown', startEquals, { passive: false });
+  equalsBtn.addEventListener('pointerup', endEquals);
+  equalsBtn.addEventListener('pointerleave', function(e) {
+    if (isDown) { isDown = false; if (holdTimer) clearTimeout(holdTimer); equalsBtn.classList.remove('holding'); }
+  });
+  equalsBtn.addEventListener('pointercancel', function(e) {
+    if (isDown) { isDown = false; if (holdTimer) clearTimeout(holdTimer); equalsBtn.classList.remove('holding'); }
+  });
 }
 
 /* ============================================================
    المذكرات
 ============================================================ */
 let notes = [];
-try {
-  notes = JSON.parse(localStorage.getItem('bn_notes') || '[]');
-  if (!Array.isArray(notes)) notes = [];
-} catch (e) { notes = []; }
-
+try { notes = JSON.parse(localStorage.getItem('bn_notes') || '[]'); if (!Array.isArray(notes)) notes = []; } catch (e) { notes = []; }
 let editingNoteId = null;
 
 function renderNotes() {
-  const container = document.getElementById('notesList');
-  if (!container) return;
-
+  const container = document.getElementById('notesList'); if (!container) return;
   if (notes.length === 0) {
-    container.innerHTML = '<div class="empty-state">' +
-      '<i class="fas fa-sticky-note"></i>' +
-      '<div>لا توجد ملاحظات بعد</div>' +
-      '<div style="font-size:11px;margin-top:6px;opacity:0.7;">اضغط "جديدة" لإنشاء ملاحظة</div>' +
-      '</div>';
+    container.innerHTML = '<div class="empty-state"><i class="fas fa-sticky-note"></i><div>لا توجد ملاحظات بعد</div></div>';
     return;
   }
-
   container.innerHTML = notes.map(function(n) {
     return '<div class="note-card" onclick="openNoteEditor(\'' + n.id + '\')">' +
       '<div class="note-title">' + escapeHtml(n.title || 'بدون عنوان') + '</div>' +
@@ -1818,10 +658,8 @@ function renderNotes() {
 
 function openNoteEditor(id) {
   editingNoteId = id || null;
-  const modal = document.getElementById('noteEditorModal');
   const titleEl = document.getElementById('noteEditorTitle');
   if (titleEl) titleEl.textContent = id ? 'تعديل الملاحظة' : 'ملاحظة جديدة';
-
   if (id) {
     const note = notes.find(function(n) { return n.id === id; });
     if (note) {
@@ -1832,40 +670,20 @@ function openNoteEditor(id) {
     document.getElementById('noteTitleInput').value = '';
     document.getElementById('noteContentInput').value = '';
   }
-
-  modal.classList.add('active');
-  setTimeout(function() {
-    const inp = document.getElementById('noteTitleInput');
-    if (inp) inp.focus();
-  }, 100);
+  document.getElementById('noteEditorModal').classList.add('active');
+  setTimeout(function() { document.getElementById('noteTitleInput').focus(); }, 100);
 }
 
 function saveNote() {
   const title = document.getElementById('noteTitleInput').value.trim();
   const content = document.getElementById('noteContentInput').value.trim();
-
-  if (!title && !content) {
-    closeModal('noteEditorModal');
-    return;
-  }
-
+  if (!title && !content) { closeModal('noteEditorModal'); return; }
   if (editingNoteId) {
     const idx = notes.findIndex(function(n) { return n.id === editingNoteId; });
-    if (idx >= 0) {
-      notes[idx].title = title || 'بدون عنوان';
-      notes[idx].content = content;
-      notes[idx].updatedAt = Date.now();
-    }
+    if (idx >= 0) { notes[idx].title = title || 'بدون عنوان'; notes[idx].content = content; notes[idx].updatedAt = Date.now(); }
   } else {
-    notes.unshift({
-      id: 'note_' + Date.now(),
-      title: title || 'بدون عنوان',
-      content: content,
-      createdAt: Date.now(),
-      updatedAt: Date.now()
-    });
+    notes.unshift({ id: 'note_' + Date.now(), title: title || 'بدون عنوان', content: content, createdAt: Date.now(), updatedAt: Date.now() });
   }
-
   localStorage.setItem('bn_notes', JSON.stringify(notes));
   closeModal('noteEditorModal');
   renderNotes();
@@ -1877,46 +695,26 @@ function saveNote() {
 ============================================================ */
 const lengthRates = { m: 1, km: 1000, cm: 0.01, mi: 1609.344 };
 const weightRates = { kg: 1, g: 0.001, lb: 0.453592 };
-
 function convertLength() {
   const v = parseFloat(document.getElementById('lenInput').value) || 0;
-  const from = lengthRates[document.getElementById('lenFrom').value];
-  const to = lengthRates[document.getElementById('lenTo').value];
-  const r = v * from / to;
+  const r = v * lengthRates[document.getElementById('lenFrom').value] / lengthRates[document.getElementById('lenTo').value];
   document.getElementById('lenResult').textContent = '= ' + (Math.round(r * 1e6) / 1e6);
 }
-
 function convertWeight() {
   const v = parseFloat(document.getElementById('wInput').value) || 0;
-  const from = weightRates[document.getElementById('wFrom').value];
-  const to = weightRates[document.getElementById('wTo').value];
-  const r = v * from / to;
+  const r = v * weightRates[document.getElementById('wFrom').value] / weightRates[document.getElementById('wTo').value];
   document.getElementById('wResult').textContent = '= ' + (Math.round(r * 1e6) / 1e6);
 }
-
 function convertTemp() {
   const v = parseFloat(document.getElementById('tempInput').value) || 0;
   const from = document.getElementById('tempFrom').value;
   const to = document.getElementById('tempTo').value;
-  let c;
-  if (from === 'c') c = v;
-  else if (from === 'f') c = (v - 32) * 5/9;
-  else c = v - 273.15;
-
-  let r;
-  if (to === 'c') r = c;
-  else if (to === 'f') r = c * 9/5 + 32;
-  else r = c + 273.15;
-
+  let c = from === 'c' ? v : from === 'f' ? (v - 32) * 5/9 : v - 273.15;
+  let r = to === 'c' ? c : to === 'f' ? c * 9/5 + 32 : c + 273.15;
   document.getElementById('tempResult').textContent = '= ' + (Math.round(r * 100) / 100);
 }
 
-/* ============================================================
-   حول التطبيق
-============================================================ */
-function openAboutApp() {
-  document.getElementById('aboutOverlay').classList.add('active');
-}
+function openAboutApp() { document.getElementById('aboutOverlay').classList.add('active'); }
 
 /* ============================================================
    الوصول السري
@@ -1924,202 +722,124 @@ function openAboutApp() {
 function openWorkspaceSelector() {
   const ws = document.getElementById('workspaceOverlay');
   if (ws) ws.classList.add('active');
-  navigator.vibrate && navigator.vibrate(30);
 }
-
 function selectWorkspace(ws) {
   appState.workspace = ws;
   closeOverlay('workspaceOverlay');
   openPasswordPrompt(ws);
 }
-
 function openPasswordPrompt(ws) {
   document.getElementById('pwTitle').textContent = 'التحقق';
-  document.getElementById('pwSubtitle').textContent = ws === 'A' ?
-    'مساحة العمل A - تحقق من الحساب' :
-    'مساحة العمل B - تحقق من الحساب';
+  document.getElementById('pwSubtitle').textContent = ws === 'A' ? 'مساحة العمل A - تحقق من الحساب' : 'مساحة العمل B - تحقق من الحساب';
   document.getElementById('secretInput').value = '';
   document.getElementById('secretHint').textContent = '';
   document.getElementById('passwordOverlay').classList.add('active');
-  setTimeout(function() {
-    const inp = document.getElementById('secretInput');
-    if (inp) inp.focus();
-  }, 200);
+  setTimeout(function() { document.getElementById('secretInput').focus(); }, 200);
 }
 
 async function verifySecret() {
   const input = document.getElementById('secretInput');
   const val = input.value.trim();
-
   if (!val) return;
 
   let isValid = false;
-
-  // محاولة التحقق من Firebase أولاً
   if (firebaseReady && db) {
     try {
       const snap = await db.ref(PATH.config + '/passwordHash').once('value');
       const storedHash = snap.val();
-      if (storedHash && hashPassword(val) === storedHash) {
-        isValid = true;
-      }
-    } catch (e) {
-      // فشل الاتصال - جرّب القيمة الافتراضية
-      if (val === DEFAULT_PASSWORD) isValid = true;
-    }
-  } else {
-    if (val === DEFAULT_PASSWORD) isValid = true;
-  }
+      if (storedHash && hashPassword(val) === storedHash) isValid = true;
+    } catch (e) { if (val === DEFAULT_PASSWORD) isValid = true; }
+  } else { if (val === DEFAULT_PASSWORD) isValid = true; }
 
   if (isValid) {
     appState.currentPassword = val;
     closeOverlay('passwordOverlay');
     input.value = '';
-    calcState.secretBuffer = '';
+    secretTracker.buffer = '';
     setTimeout(function() { enterSecretChat(); }, 200);
   } else {
     input.classList.add('error');
-    // B هي المساحة المخفية - سلوك صامت تماماً
-    if (appState.workspace === 'B') {
-      setTimeout(function() {
-        closeOverlay('passwordOverlay');
-        input.value = '';
-        input.classList.remove('error');
-        // إظهار الرقم كأنه نتيجة حساب عادية
-        calcState.display = val;
-        calcState.lastResult = parseFloat(val) || 0;
-        calcState.secretBuffer = val;
-        updateCalcDisplay();
-      }, 400);
-    } else {
-      setTimeout(function() {
-        closeOverlay('passwordOverlay');
-        input.value = '';
-        input.classList.remove('error');
-      }, 400);
-    }
-    navigator.vibrate && navigator.vibrate([25, 25, 25]);
+    setTimeout(function() {
+      closeOverlay('passwordOverlay');
+      input.value = '';
+      input.classList.remove('error');
+      if (appState.workspace === 'B') {
+        calcState.display = val; calcState.lastResult = parseFloat(val) || 0;
+        secretTracker.buffer = val; updateCalcDisplay();
+      }
+    }, 400);
+    if (navigator.vibrate) navigator.vibrate([25, 25, 25]);
   }
 }
 
 /* ============================================================
-   الشات السري
+   الشات
 ============================================================ */
 async function enterSecretChat() {
   if (!appState.currentPassword) return;
-
   appState.chatActive = true;
   document.getElementById('secretChatView').classList.add('active');
-
   const titles = { A: 'مشروع جديد', B: 'مسودة العمل' };
   document.getElementById('chatTitle').textContent = titles[appState.workspace] || 'مذكرة';
   document.getElementById('chatSubtitle').textContent = 'آخر تعديل الآن';
-
   await loadChatMessages();
   setupAutoLock();
   startHeartbeat();
 }
 
 async function loadChatMessages() {
-  const container = document.getElementById('chatMessages');
-  if (!container) return;
-
+  const container = document.getElementById('chatMessages'); if (!container) return;
   container.innerHTML = '<div class="chat-empty"><i class="fas fa-circle-notch fa-spin"></i>جاري التحميل...</div>';
-
-  if (appState.messagesListener) {
-    try { appState.messagesListener.off(); } catch (e) {}
-    appState.messagesListener = null;
-  }
-
+  if (appState.messagesListener) { try { appState.messagesListener.off(); } catch (e) {} appState.messagesListener = null; }
   if (!firebaseReady || !db) {
-    container.innerHTML = '<div class="chat-empty"><i class="fas fa-wifi"></i>لا يوجد اتصال بالإنترنت</div>';
+    container.innerHTML = '<div class="chat-empty"><i class="fas fa-wifi"></i>لا يوجد اتصال</div>';
     return;
   }
-
-  const ref = db.ref(PATH.chat + '/messages');
-  appState.messagesListener = ref.on('value', function(snapshot) {
+  appState.messagesListener = db.ref(PATH.chat + '/messages').on('value', function(snapshot) {
     appState.messages = snapshot.val() || {};
     renderChatMessages();
     updateConnectionStatus(true);
-  }, function(err) {
-    console.error('Messages listener error:', err);
-    updateConnectionStatus(false);
-  });
+  }, function(err) { updateConnectionStatus(false); });
 }
 
 function updateConnectionStatus(online) {
-  const dot = document.getElementById('connDot');
-  const txt = document.getElementById('connText');
-  if (dot) {
-    dot.className = 'conn-dot ' + (online ? 'online' : 'offline');
-  }
-  if (txt) {
-    txt.textContent = online ? 'متصل' : 'غير متصل';
-  }
+  const dot = document.getElementById('connDot'); const txt = document.getElementById('connText');
+  if (dot) dot.className = 'conn-dot ' + (online ? 'online' : 'offline');
+  if (txt) txt.textContent = online ? 'متصل' : 'غير متصل';
 }
 
 function renderChatMessages() {
-  const container = document.getElementById('chatMessages');
-  if (!container) return;
-
+  const container = document.getElementById('chatMessages'); if (!container) return;
   const messages = appState.messages;
-
   if (!messages || Object.keys(messages).length === 0) {
-    container.innerHTML = '<div class="chat-empty">' +
-      '<i class="fas fa-pen"></i>' +
-      'ابدأ الكتابة...' +
-      '</div>';
+    container.innerHTML = '<div class="chat-empty"><i class="fas fa-pen"></i>ابدأ الكتابة...</div>';
     return;
   }
-
-  const list = Object.entries(messages)
-    .map(function(entry) { return Object.assign({ id: entry[0] }, entry[1]); })
-    .sort(function(a, b) { return (a.time || 0) - (b.time || 0); });
-
-  let lastDay = '';
-  let html = '';
-
+  const list = Object.entries(messages).map(function(e) { return Object.assign({ id: e[0] }, e[1]); }).sort(function(a,b) { return (a.time || 0) - (b.time || 0); });
+  let lastDay = ''; let html = '';
   list.forEach(function(msg) {
     const plain = decryptText(msg.text, appState.currentPassword);
     if (plain === null) {
       html += '<div class="note-message theirs" style="opacity:0.4;font-style:italic;">[رسالة غير قابلة للقراءة]</div>';
       return;
     }
-
     const day = new Date(msg.time).toLocaleDateString('ar-EG', { dateStyle: 'medium' });
-    if (day !== lastDay) {
-      html += '<div class="chat-date-sep">' + day + '</div>';
-      lastDay = day;
-    }
-
+    if (day !== lastDay) { html += '<div class="chat-date-sep">' + day + '</div>'; lastDay = day; }
     const isMine = msg.sender === appState.workspace;
     const senderLabel = msg.sender === 'A' ? 'A' : 'B';
     const time = new Date(msg.time).toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' });
-
     html += '<div class="note-message ' + (isMine ? 'mine' : 'theirs') + '" data-msg-id="' + msg.id + '" onclick="toggleMsgActions(this)">' +
-      '<div class="msg-actions">' +
-        '<button class="msg-action-btn" onclick="event.stopPropagation();deleteChatMessage(\'' + msg.id + '\')" type="button">' +
-          '<i class="fas fa-trash"></i>' +
-        '</button>' +
-      '</div>' +
+      '<div class="msg-actions"><button class="msg-action-btn" onclick="event.stopPropagation();deleteChatMessage(\'' + msg.id + '\')" type="button"><i class="fas fa-trash"></i></button></div>' +
       escapeHtml(plain) +
-      '<div class="msg-meta">' +
-        '<span class="msg-sender">' + senderLabel + '</span>' +
-        '<span>' + time + '</span>' +
-      '</div>' +
-    '</div>';
+      '<div class="msg-meta"><span class="msg-sender">' + senderLabel + '</span><span>' + time + '</span></div>' +
+      '</div>';
   });
-
   container.innerHTML = html;
-  setTimeout(function() {
-    container.scrollTop = container.scrollHeight;
-  }, 50);
+  setTimeout(function() { container.scrollTop = container.scrollHeight; }, 50);
 }
 
 function toggleMsgActions(el) {
-  document.querySelectorAll('.note-message.show-actions').forEach(function(m) {
-    if (m !== el) m.classList.remove('show-actions');
-  });
+  document.querySelectorAll('.note-message.show-actions').forEach(function(m) { if (m !== el) m.classList.remove('show-actions'); });
   el.classList.toggle('show-actions');
 }
 
@@ -2127,37 +847,16 @@ async function sendChatMessage() {
   const input = document.getElementById('chatInput');
   const text = input.value.trim();
   if (!text || !appState.currentPassword) return;
-
-  if (!firebaseReady || !db) {
-    showToast('لا يوجد اتصال', 'error');
-    return;
-  }
-
+  if (!firebaseReady || !db) { showToast('لا يوجد اتصال', 'error'); return; }
   const encrypted = encryptText(text, appState.currentPassword);
-  if (encrypted === 'ERR') {
-    showToast('فشل التشفير', 'error');
-    return;
-  }
-
+  if (encrypted === 'ERR') { showToast('فشل التشفير', 'error'); return; }
   const msgId = db.ref(PATH.chat + '/messages').push().key;
-  const msg = {
-    sender: appState.workspace,
-    text: encrypted,
-    time: Date.now(),
-    type: 'text'
-  };
-
-  // مسح فوري للحقل
-  input.value = '';
-  input.style.height = '42px';
-
+  const msg = { sender: appState.workspace, text: encrypted, time: Date.now(), type: 'text' };
+  input.value = ''; input.style.height = '42px';
   try {
     await db.ref(PATH.chat + '/messages/' + msgId).set(msg);
-    navigator.vibrate && navigator.vibrate(12);
-  } catch (e) {
-    showToast('فشل الإرسال - تحقق من الاتصال', 'error');
-  }
-
+    if (navigator.vibrate) navigator.vibrate(12);
+  } catch (e) { showToast('فشل الإرسال', 'error'); }
   appState.lastActivity = Date.now();
   resetAutoLockTimer();
 }
@@ -2165,140 +864,70 @@ async function sendChatMessage() {
 function deleteChatMessage(msgId) {
   showConfirm('حذف الرسالة', 'هل تريد حذف هذه الرسالة نهائياً؟', async function() {
     closeModal('confirmModal');
-    try {
-      await db.ref(PATH.chat + '/messages/' + msgId).remove();
-      showToast('تم الحذف', 'success');
-    } catch (e) {
-      showToast('فشل الحذف', 'error');
-    }
+    try { await db.ref(PATH.chat + '/messages/' + msgId).remove(); showToast('تم الحذف', 'success'); }
+    catch (e) { showToast('فشل الحذف', 'error'); }
   });
 }
 
-/* ============================================================
-   الخروج من الشات
-============================================================ */
 function exitChat() {
   appState.chatActive = false;
   document.getElementById('secretChatView').classList.remove('active');
   document.getElementById('chatSettingsMenu').classList.remove('active');
   document.getElementById('lockOverlay').classList.remove('active');
-
-  if (appState.messagesListener) {
-    try { appState.messagesListener.off(); } catch (e) {}
-    appState.messagesListener = null;
-  }
-
-  appState.messages = {};
-  appState.currentPassword = null;
-  appState.workspace = null;
-  appState.lastActivity = 0;
-  appState.panicMode = false;
-
-  if (appState.autoLockTimeout) {
-    clearTimeout(appState.autoLockTimeout);
-    appState.autoLockTimeout = null;
-  }
-  if (appState.heartbeatInterval) {
-    clearInterval(appState.heartbeatInterval);
-    appState.heartbeatInterval = null;
-  }
-
+  if (appState.messagesListener) { try { appState.messagesListener.off(); } catch (e) {} appState.messagesListener = null; }
+  appState.messages = {}; appState.currentPassword = null; appState.workspace = null;
+  appState.lastActivity = 0; appState.panicMode = false;
+  if (appState.autoLockTimeout) { clearTimeout(appState.autoLockTimeout); appState.autoLockTimeout = null; }
+  if (appState.heartbeatInterval) { clearInterval(appState.heartbeatInterval); appState.heartbeatInterval = null; }
   document.getElementById('chatInput').value = '';
   document.getElementById('chatInput').style.height = '42px';
-
   switchTab('calc');
 }
 
-/* ============================================================
-   القفل التلقائي
-============================================================ */
-function setupAutoLock() {
-  resetAutoLockTimer();
-}
-
+function setupAutoLock() { resetAutoLockTimer(); }
 function resetAutoLockTimer() {
   if (appState.autoLockTimeout) clearTimeout(appState.autoLockTimeout);
   if (!appState.autoLockDuration || appState.autoLockDuration === 0) return;
-
-  appState.autoLockTimeout = setTimeout(function() {
-    if (appState.chatActive) {
-      lockChat();
-    }
-  }, appState.autoLockDuration * 1000);
+  appState.autoLockTimeout = setTimeout(function() { if (appState.chatActive) lockChat(); }, appState.autoLockDuration * 1000);
 }
-
 function lockChat() {
   if (!appState.chatActive) return;
   document.getElementById('lockInput').value = '';
   document.getElementById('lockOverlay').classList.add('active');
-  setTimeout(function() {
-    const inp = document.getElementById('lockInput');
-    if (inp) inp.focus();
-  }, 200);
+  setTimeout(function() { document.getElementById('lockInput').focus(); }, 200);
 }
-
 async function verifyLock() {
   const val = document.getElementById('lockInput').value.trim();
   if (!val) return;
-
   let isValid = false;
   if (firebaseReady && db) {
     try {
       const snap = await db.ref(PATH.config + '/passwordHash').once('value');
-      const storedHash = snap.val();
-      if (storedHash && hashPassword(val) === storedHash) {
-        isValid = true;
-      }
-    } catch (e) {
-      if (val === appState.currentPassword) isValid = true;
-    }
-  } else {
-    if (val === appState.currentPassword) isValid = true;
-  }
-
+      if (hashPassword(val) === snap.val()) isValid = true;
+    } catch (e) { if (val === appState.currentPassword) isValid = true; }
+  } else { if (val === appState.currentPassword) isValid = true; }
   if (isValid) {
     document.getElementById('lockOverlay').classList.remove('active');
-    appState.currentPassword = val;
-    appState.lastActivity = Date.now();
+    appState.currentPassword = val; appState.lastActivity = Date.now();
     resetAutoLockTimer();
   } else {
     document.getElementById('lockInput').value = '';
-    navigator.vibrate && navigator.vibrate([25, 25, 25]);
+    if (navigator.vibrate) navigator.vibrate([25, 25, 25]);
   }
 }
 
-/* ============================================================
-   Heartbeat
-============================================================ */
 function startHeartbeat() {
   if (appState.heartbeatInterval) clearInterval(appState.heartbeatInterval);
-
   async function update() {
-    if (!appState.chatActive || !appState.currentPassword) return;
-    if (!firebaseReady || !db) return;
-    try {
-      await db.ref(PATH.chat + '/presence/' + appState.workspace).set({
-        online: true,
-        lastSeen: Date.now()
-      });
-    } catch (e) {}
+    if (!appState.chatActive || !appState.currentPassword || !firebaseReady || !db) return;
+    try { await db.ref(PATH.chat + '/presence/' + appState.workspace).set({ online: true, lastSeen: Date.now() }); } catch (e) {}
   }
-
   update();
   appState.heartbeatInterval = setInterval(update, 20000);
 }
 
-/* ============================================================
-   إعدادات الشات
-============================================================ */
-function openChatSettings() {
-  document.getElementById('chatSettingsMenu').classList.add('active');
-}
-
-function closeChatSettings() {
-  document.getElementById('chatSettingsMenu').classList.remove('active');
-}
-
+function openChatSettings() { document.getElementById('chatSettingsMenu').classList.add('active'); }
+function closeChatSettings() { document.getElementById('chatSettingsMenu').classList.remove('active'); }
 function openChangePasswordModal() {
   closeChatSettings();
   document.getElementById('oldPwInput').value = '';
@@ -2306,83 +935,39 @@ function openChangePasswordModal() {
   document.getElementById('confirmPwInput').value = '';
   document.getElementById('changePwModal').classList.add('active');
 }
-
 async function changePassword() {
   const oldPw = document.getElementById('oldPwInput').value.trim();
   const newPw = document.getElementById('newPwInput').value.trim();
   const confirmPw = document.getElementById('confirmPwInput').value.trim();
-
-  if (!oldPw || !newPw || !confirmPw) {
-    showToast('املأ كل الحقول', 'error');
-    return;
-  }
-
-  if (newPw !== confirmPw) {
-    showToast('كلمتا السر غير متطابقتين', 'error');
-    return;
-  }
-
-  if (newPw.length < 6) {
-    showToast('كلمة السر قصيرة جداً', 'error');
-    return;
-  }
-
-  if (!firebaseReady || !db) {
-    showToast('لا يوجد اتصال', 'error');
-    return;
-  }
-
+  if (!oldPw || !newPw || !confirmPw) { showToast('املأ كل الحقول', 'error'); return; }
+  if (newPw !== confirmPw) { showToast('كلمتا السر غير متطابقتين', 'error'); return; }
+  if (newPw.length < 6) { showToast('كلمة السر قصيرة جداً', 'error'); return; }
+  if (!firebaseReady || !db) { showToast('لا يوجد اتصال', 'error'); return; }
   let isValid = false;
   try {
     const snap = await db.ref(PATH.config + '/passwordHash').once('value');
-    const storedHash = snap.val();
-    if (storedHash && hashPassword(oldPw) === storedHash) {
-      isValid = true;
-    }
-  } catch (e) {
-    if (oldPw === DEFAULT_PASSWORD) isValid = true;
-  }
-
-  if (!isValid) {
-    showToast('كلمة السر الحالية خاطئة', 'error');
-    return;
-  }
-
+    if (hashPassword(oldPw) === snap.val()) isValid = true;
+  } catch (e) { if (oldPw === DEFAULT_PASSWORD) isValid = true; }
+  if (!isValid) { showToast('كلمة السر الحالية خاطئة', 'error'); return; }
   showToast('جاري إعادة التشفير...');
-
   try {
     const snap = await db.ref(PATH.chat + '/messages').once('value');
     const messages = snap.val() || {};
     const updates = {};
-
     Object.keys(messages).forEach(function(id) {
       const msg = messages[id];
       if (msg && msg.text && msg.text !== 'ERR') {
         const plain = decryptText(msg.text, oldPw);
-        if (plain !== null) {
-          updates[id + '/text'] = encryptText(plain, newPw);
-        }
+        if (plain !== null) updates[id + '/text'] = encryptText(plain, newPw);
       }
     });
-
-    if (Object.keys(updates).length > 0) {
-      await db.ref(PATH.chat + '/messages').update(updates);
-    }
-
-    await db.ref(PATH.config).update({
-      passwordHash: hashPassword(newPw),
-      updatedAt: Date.now()
-    });
-
+    if (Object.keys(updates).length > 0) await db.ref(PATH.chat + '/messages').update(updates);
+    await db.ref(PATH.config).update({ passwordHash: hashPassword(newPw), updatedAt: Date.now() });
     appState.currentPassword = newPw;
     closeModal('changePwModal');
     showToast('تم تغيير كلمة السر بنجاح', 'success');
-
     await loadChatMessages();
-  } catch (e) {
-    console.error('Change password error:', e);
-    showToast('فشل تغيير كلمة السر', 'error');
-  }
+  } catch (e) { showToast('فشل تغيير كلمة السر', 'error'); }
 }
 
 function openAutoLockSettings() {
@@ -2390,7 +975,6 @@ function openAutoLockSettings() {
   document.getElementById('autoLockSelect').value = String(appState.autoLockDuration);
   document.getElementById('autoLockModal').classList.add('active');
 }
-
 function saveAutoLock() {
   const val = parseInt(document.getElementById('autoLockSelect').value);
   appState.autoLockDuration = val;
@@ -2403,85 +987,50 @@ function saveAutoLock() {
 function togglePanicMode() {
   closeChatSettings();
   appState.panicMode = !appState.panicMode;
-  document.getElementById('panicLabel').textContent = appState.panicMode ?
-    'إيقاف وضع الطوارئ' : 'تفعيل وضع الطوارئ';
-
+  document.getElementById('panicLabel').textContent = appState.panicMode ? 'إيقاف وضع الطوارئ' : 'تفعيل وضع الطوارئ';
   if (appState.panicMode) {
     if (window.DeviceMotionEvent) {
       if (typeof DeviceMotionEvent.requestPermission === 'function') {
         DeviceMotionEvent.requestPermission().then(function(response) {
           if (response === 'granted') {
             window.addEventListener('devicemotion', panicShakeHandler);
-            showToast('وضع الطوارئ مفعل - اهز الجهاز', 'success');
-          } else {
-            appState.panicMode = false;
-            showToast('لم يتم منح الصلاحية', 'error');
-          }
-        }).catch(function() {
-          appState.panicMode = false;
-          showToast('فشل تفعيل المستشعر', 'error');
-        });
+            showToast('وضع الطوارئ مفعل', 'success');
+          } else { appState.panicMode = false; showToast('لم يتم منح الصلاحية', 'error'); }
+        }).catch(function() { appState.panicMode = false; showToast('فشل تفعيل المستشعر', 'error'); });
       } else {
         window.addEventListener('devicemotion', panicShakeHandler);
-        showToast('وضع الطوارئ مفعل - اهز الجهاز', 'success');
+        showToast('وضع الطوارئ مفعل', 'success');
       }
-    } else {
-      appState.panicMode = false;
-      showToast('الجهاز لا يدعم مستشعر الحركة', 'error');
-    }
-  } else {
-    window.removeEventListener('devicemotion', panicShakeHandler);
-  }
+    } else { appState.panicMode = false; showToast('الجهاز لا يدعم المستشعر', 'error'); }
+  } else { window.removeEventListener('devicemotion', panicShakeHandler); }
 }
-
 let lastShakeTime = 0;
 function panicShakeHandler(e) {
   if (!appState.panicMode) return;
-  const acc = e.accelerationIncludingGravity;
-  if (!acc) return;
-
+  const acc = e.accelerationIncludingGravity; if (!acc) return;
   const magnitude = Math.abs(acc.x || 0) + Math.abs(acc.y || 0) + Math.abs(acc.z || 0);
   const now = Date.now();
-
-  if (magnitude > 35 && now - lastShakeTime > 1000) {
-    lastShakeTime = now;
-    exitChat();
-    showToast('تم تفعيل الطوارئ', '');
-  }
+  if (magnitude > 35 && now - lastShakeTime > 1000) { lastShakeTime = now; exitChat(); showToast('تم تفعيل الطوارئ', ''); }
 }
 
 function clearAllMessages() {
   closeChatSettings();
   showConfirm('مسح كل الرسائل', 'سيتم حذف جميع الرسائل نهائياً. هل أنت متأكد؟', async function() {
     closeModal('confirmModal');
-    try {
-      await db.ref(PATH.chat + '/messages').remove();
-      showToast('تم مسح كل الرسائل', 'success');
-    } catch (e) {
-      showToast('فشل المسح', 'error');
-    }
+    try { await db.ref(PATH.chat + '/messages').remove(); showToast('تم مسح كل الرسائل', 'success'); }
+    catch (e) { showToast('فشل المسح', 'error'); }
   });
 }
 
-/* ============================================================
-   تأكيد
-============================================================ */
 let confirmCallback = null;
-
 function showConfirm(title, text, callback) {
   document.getElementById('confirmTitle').textContent = title;
   document.getElementById('confirmText').textContent = text;
   confirmCallback = callback;
-  document.getElementById('confirmYesBtn').onclick = function() {
-    if (confirmCallback) confirmCallback();
-    confirmCallback = null;
-  };
+  document.getElementById('confirmYesBtn').onclick = function() { if (confirmCallback) confirmCallback(); confirmCallback = null; };
   document.getElementById('confirmModal').classList.add('active');
 }
 
-/* ============================================================
-   أدوات إضافية
-============================================================ */
 function autoResizeChatInput(el) {
   el.style.height = 'auto';
   el.style.height = Math.min(el.scrollHeight, 100) + 'px';
@@ -2493,47 +1042,30 @@ function autoResizeChatInput(el) {
    التهيئة
 ============================================================ */
 (function init() {
-  // ربط أزرار الحاسبة
   bindCalculatorButtons();
 
-  // ربط حقل الشات بـ Enter
   const chatInput = document.getElementById('chatInput');
   if (chatInput) {
     chatInput.addEventListener('keydown', function(e) {
-      if (e.key === 'Enter' && !e.shiftKey) {
-        e.preventDefault();
-        sendChatMessage();
-      }
+      if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendChatMessage(); }
     });
   }
 
-  // منع قائمة السياق على عناصر حساسة
   document.addEventListener('contextmenu', function(e) {
-    if (e.target.classList.contains('secret-input') ||
-        e.target.closest('.secret-input')) {
-      e.preventDefault();
-    }
+    if (e.target.classList.contains('secret-input') || e.target.closest('.secret-input')) e.preventDefault();
   });
 
-  // قفل عند إخفاء التطبيق (اختياري)
   document.addEventListener('visibilitychange', function() {
-    if (document.hidden && appState.chatActive && appState.lockOnHide) {
-      lockChat();
-    }
+    if (document.hidden && appState.chatActive && appState.lockOnHide) lockChat();
   });
 
-  // عرض المذكرات
   renderNotes();
   updateCalcDisplay();
 
-  // تهيئة Firebase
-  if (firebaseReady) {
-    initializeConfig();
-  } else {
-    console.warn('⚠️ Firebase غير متاح - التطبيق سيعمل محلياً فقط');
-  }
+  if (firebaseReady) initializeConfig();
+  else console.warn('⚠️ Firebase غير متاح');
 
-  console.log('%cSmart Notes v3.2.1', 'color:#6366f1;font-size:16px;font-weight:bold;padding:4px;');
+  console.log('%cSmart Notes v3.2.1', 'color:#6366f1;font-size:16px;font-weight:bold;');
 })();
 </script>
 </body>
