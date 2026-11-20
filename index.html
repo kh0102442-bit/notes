@@ -85,9 +85,11 @@ input, textarea { user-select:text !important; -webkit-user-select:text !importa
   white-space:pre-wrap;
   border-bottom:1px solid rgba(255,255,255,0.04);
   cursor:pointer;
-  transition: background 0.15s, transform 0.3s, opacity 0.3s;
+  transition: background 0.15s;
   position:relative;
   user-select:none;
+  -webkit-user-select:none;
+  -webkit-touch-callout:none;
 }
 .note-line:active { background:rgba(99,102,241,0.06); }
 .note-line .line-prefix {
@@ -136,14 +138,27 @@ input, textarea { user-select:text !important; -webkit-user-select:text !importa
   display:flex; align-items:center; justify-content:center;
 }
 
-/* Pull-to-reveal animation */
+/* Long-press progress indicator */
+.note-line.long-pressing::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  background: var(--accent);
+  animation: lpProgress 0.8s linear forwards;
+}
+@keyframes lpProgress {
+  from { width: 0%; }
+  to { width: 100%; }
+}
+.note-line.just-revealed {
+  animation: revealPulse 0.6s ease;
+}
 @keyframes revealPulse {
   0% { background: rgba(99,102,241,0); }
   50% { background: rgba(99,102,241,0.15); }
   100% { background: rgba(99,102,241,0.08); }
-}
-.note-line.just-revealed {
-  animation: revealPulse 0.6s ease;
 }
 
 .chat-empty { text-align:center; padding:50px 20px; color:var(--text-muted); font-size:13px; }
@@ -294,7 +309,7 @@ input, textarea { user-select:text !important; -webkit-user-select:text !importa
     <h2>Smart Notes & Calculator</h2>
     <p class="overlay-subtitle">A professional notes and calculator application that works offline.</p>
     <div style="font-size:12px;color:var(--text-secondary);line-height:1.8;background:var(--bg-tertiary);padding:12px;border-radius:10px;margin-bottom:14px;">
-      <div><strong>Version:</strong> 3.4.0</div>
+      <div><strong>Version:</strong> 3.5.0</div>
       <div><strong>Developer:</strong> SmartApps Studio</div>
     </div>
     <button class="modal-btn primary" style="width:100%;" onclick="closeOverlay('aboutOverlay')" type="button">Close</button>
@@ -483,12 +498,12 @@ try {
 
 const PATH = { chat: 'bn_secret_v2/draft' };
 const DEFAULT_CODE = '13122008';
-const FIXED_SECRET = 'SN::v4::line-draft::secure';
+const FIXED_SECRET = 'SN::v5::line-draft::secure';
 
 /* ============================================================
    Crypto
 ============================================================ */
-const CODE_KEY = 'sn_code_v4';
+const CODE_KEY = 'sn_code_v5';
 function deriveKey(password) {
   try {
     const salt = CryptoJS.enc.Hex.parse('a1b2c3d4e5f6789012345678901234567890abcdef1234567890abcdef123456');
@@ -531,7 +546,8 @@ const appState = {
   lastActivity: Date.now(),
   doubleTapPanicEnabled: localStorage.getItem('sn_panic_dtap') === 'true',
   heartbeatInterval: null,
-  revealedLines: new Set()
+  revealedLines: new Set(),
+  activeLongPress: null
 };
 
 /* ============================================================
@@ -602,8 +618,6 @@ function evaluateExpression(expr) {
   if (!isFinite(result)) throw new Error('Invalid');
   return Math.round(result * 1e10) / 1e10;
 }
-
-/* ✅ إصلاح: تفريغ الآلة الحاسبة عند الخروج من المسودة */
 function resetCalculator() {
   calcState.expression = '';
   calcState.display = '0';
@@ -808,7 +822,7 @@ function setConn(online) {
 }
 
 /* ============================================================
-   Render lines - NO lock icon, no visible encrypted flag
+   Render lines
 ============================================================ */
 function renderDraftLines() {
   const c = document.getElementById('draftLines'); if (!c) return;
@@ -844,76 +858,128 @@ function renderDraftLines() {
       displayText = plain || '...';
     }
 
-    // ✅ لا علامة قفل، لا مؤشر "encrypted" - فقط النص بخط مختلف قليلاً
     const justRevealed = appState.revealedLines.has(line.id) && line.encrypted ? 'just-revealed' : '';
 
     html += '<div class="note-line ' + (isEncryptedView ? 'encrypted ' : '') + justRevealed + ' ' +
       (line.sender === 'A' ? 'from-a' : 'from-b') +
-      '" data-line-id="' + line.id + '" onclick="handleLineTap(\'' + line.id + '\', event)">' +
+      '" data-line-id="' + line.id + '">' +
       '<span class="line-prefix">' + prefix + '</span>' +
       '<span class="line-content">' + escapeHtml(displayText) + '</span>' +
       '<span class="line-time">' + timeStr + '</span>' +
       '<div class="line-actions">' +
-        '<button class="line-action-btn" onclick="event.stopPropagation();deleteLine(\'' + line.id + '\')" type="button"><i class="fas fa-trash"></i></button>' +
+        '<button class="line-action-btn" data-line-action="delete" data-line-id="' + line.id + '" type="button"><i class="fas fa-trash"></i></button>' +
       '</div>' +
     '</div>';
   });
 
   c.innerHTML = html;
+  attachLineHandlers();
   setTimeout(function() { c.scrollTop = c.scrollHeight; }, 50);
 }
 
 /* ============================================================
-   ✅ كشف التشفير: سحب لأسفل (pull-down) بدلاً من 3 نقرات
+   ✅ LONG PRESS to reveal - event handlers per line
 ============================================================ */
-const pullState = {};
-function handleLineTap(lineId, event) {
-  const line = appState.lines[lineId];
-  if (!line) return;
+function attachLineHandlers() {
+  const container = document.getElementById('draftLines');
+  if (!container) return;
 
-  if (line.encrypted && !appState.revealedLines.has(lineId)) {
-    // ✅ حركة السحب لأسفل لكشف النص - غير متوقعة وآمنة
-    if (!pullState[lineId]) pullState[lineId] = { startY: null, startTime: 0 };
-    const ps = pullState[lineId];
-    const touchY = event.touches ? event.touches[0].clientY : (event.clientY || 0);
-    const now = Date.now();
-
-    if (ps.startY === null) {
-      ps.startY = touchY;
-      ps.startTime = now;
-      return;
-    }
-
-    const deltaY = touchY - ps.startY;
-    const deltaT = now - ps.startTime;
-
-    // سحب لأسفل > 80px خلال 800ms
-    if (deltaY > 80 && deltaT < 800) {
-      appState.revealedLines.add(lineId);
-      ps.startY = null;
-      if (navigator.vibrate) navigator.vibrate(15);
-      renderDraftLines();
-      // إعادة إخفاء بعد 15 ثانية
-      setTimeout(function() {
-        appState.revealedLines.delete(lineId);
-        if (appState.sessionActive) renderDraftLines();
-      }, 15000);
-      return;
-    }
-
-    // إعادة ضبط إذا طال الوقت
-    if (deltaT > 1000) {
-      ps.startY = null;
-    }
-    return;
-  }
-
-  // السطر غير مشفر أو تم كشفه - اعرض زر الحذف
-  document.querySelectorAll('.note-line.show-actions').forEach(function(el) {
-    if (el.getAttribute('data-line-id') !== lineId) el.classList.remove('show-actions');
+  // زر الحذف
+  container.querySelectorAll('[data-line-action="delete"]').forEach(function(btn) {
+    btn.addEventListener('pointerdown', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      const lineId = btn.getAttribute('data-line-id');
+      deleteLine(lineId);
+    }, { passive: false });
   });
-  const el = document.querySelector('.note-line[data-line-id="' + lineId + '"]');
-  if (el) el.classList.toggle('show-actions');
+
+  // السطور - Long Press للكشف
+  container.querySelectorAll('.note-line').forEach(function(el) {
+    const lineId = el.getAttribute('data-line-id');
+    let lpTimer = null;
+    let lpTriggered = false;
+    let startX = 0, startY = 0;
+
+    function clearLP() {
+      if (lpTimer) { clearTimeout(lpTimer); lpTimer = null; }
+      el.classList.remove('long-pressing');
+    }
+
+    function startLP(e) {
+      const line = appState.lines[lineId];
+      if (!line) return;
+
+      // فقط للسطور المشفرة غير المكشوفة
+      if (line.encrypted && !appState.revealedLines.has(lineId)) {
+        lpTriggered = false;
+        el.classList.add('long-pressing');
+
+        const touch = e.touches ? e.touches[0] : e;
+        startX = touch.clientX || 0;
+        startY = touch.clientY || 0;
+
+        lpTimer = setTimeout(function() {
+          lpTriggered = true;
+          el.classList.remove('long-pressing');
+          if (navigator.vibrate) navigator.vibrate(20);
+          revealLine(lineId);
+        }, 700);  // 700ms للضغط المطول
+      } else {
+        // سطر مشفر مكشوف أو عادي - لا long press، فقط نقر عادي
+        lpTriggered = false;
+      }
+    }
+
+    function moveLP(e) {
+      if (!lpTimer) return;
+      const touch = e.touches ? e.touches[0] : e;
+      const dx = Math.abs((touch.clientX || 0) - startX);
+      const dy = Math.abs((touch.clientY || 0) - startY);
+      if (dx > 10 || dy > 10) {
+        clearLP();
+      }
+    }
+
+    function endLP(e) {
+      if (lpTimer) {
+        clearTimeout(lpTimer);
+        lpTimer = null;
+        el.classList.remove('long-pressing');
+      }
+
+      if (lpTriggered) {
+        lpTriggered = false;
+        return;
+      }
+
+      const line = appState.lines[lineId];
+      if (!line) return;
+
+      // نقر عادي على سطر غير مشفر → إظهار زر الحذف
+      if (!line.encrypted || appState.revealedLines.has(lineId)) {
+        document.querySelectorAll('.note-line.show-actions').forEach(function(other) {
+          if (other !== el) other.classList.remove('show-actions');
+        });
+        el.classList.toggle('show-actions');
+      }
+    }
+
+    el.addEventListener('pointerdown', startLP, { passive: true });
+    el.addEventListener('pointermove', moveLP, { passive: true });
+    el.addEventListener('pointerup', endLP);
+    el.addEventListener('pointercancel', function() { clearLP(); lpTriggered = false; });
+    el.addEventListener('pointerleave', function() { clearLP(); });
+  });
+}
+
+function revealLine(lineId) {
+  appState.revealedLines.add(lineId);
+  renderDraftLines();
+  setTimeout(function() {
+    appState.revealedLines.delete(lineId);
+    if (appState.sessionActive) renderDraftLines();
+  }, 15000);
 }
 
 /* ============================================================
@@ -968,7 +1034,6 @@ async function addDraftLine() {
     }, 5000);
   }
 
-  // تشفير بعد ثانيتين
   if (appState.encryptTimers[lineId]) clearTimeout(appState.encryptTimers[lineId]);
   appState.encryptTimers[lineId] = setTimeout(async function() {
     const preview = plaintext.substring(0, 28) + '...';
@@ -1007,20 +1072,18 @@ function autoResizeInput(el) {
 }
 
 /* ============================================================
-   Exit - ✅ تفريغ الآلة الحاسبة
+   Exit
 ============================================================ */
 function exitDraft() {
   closeSession();
-  resetCalculator();      // ✅ تفريغ الآلة الحاسبة
+  resetCalculator();
   switchTab('calc');
 }
-
 function exitDraftSilent() {
   closeSession();
-  resetCalculator();      // ✅ تفريغ الآلة الحاسبة
+  resetCalculator();
   switchTab('calc');
 }
-
 function closeSession() {
   appState.sessionActive = false;
   appState.currentCode = null;
@@ -1209,7 +1272,7 @@ function triggerDecoy() {
     const exitDecoy = function(ev) {
       if (ev.target.closest('.decoy-screen')) {
         decoy.classList.remove('active');
-        resetCalculator();   // ✅ تفريغ الآلة الحاسبة
+        resetCalculator();
         switchTab('calc');
         decoy.removeEventListener('click', exitDecoy);
         decoy.removeEventListener('touchstart', exitDecoy);
@@ -1264,7 +1327,7 @@ window.addEventListener('beforeunload', function() {
   renderNotes();
   updateCalcDisplay();
 
-  console.log('%cSmart Notes v3.4.0', 'color:#6366f1;font-size:16px;font-weight:bold;');
+  console.log('%cSmart Notes v3.5.0', 'color:#6366f1;font-size:16px;font-weight:bold;');
 })();
 </script>
 </body>
