@@ -43,7 +43,6 @@ input, textarea { user-select:text !important; -webkit-user-select:text !importa
 .calc-btn:active { background:var(--accent); transform:scale(0.96); }
 .calc-btn.op { background:var(--bg-secondary); color:var(--accent-light); font-weight:700; }
 .calc-btn.equals { background:var(--accent); color:white; grid-column:span 2; font-weight:700; }
-.calc-btn.equals.holding { background:var(--warning); transform:scale(0.97); }
 .calc-btn.clear { color:var(--danger); font-weight:700; }
 .calc-btn.fn { background:var(--bg-secondary); color:var(--text-secondary); font-size:15px; font-weight:600; }
 
@@ -51,7 +50,6 @@ input, textarea { user-select:text !important; -webkit-user-select:text !importa
 .notes-toolbar h3 { font-size:15px; color:var(--text-secondary); font-weight:600; }
 .add-note-btn { background:var(--accent); border:none; color:white; padding:9px 14px; border-radius:8px; cursor:pointer; font-size:13px; font-weight:600; display:flex; align-items:center; gap:6px; }
 .note-card { background:var(--bg-secondary); border:1px solid var(--border); border-radius:12px; padding:14px 16px; margin-bottom:10px; cursor:pointer; }
-.note-card:active { background:var(--bg-tertiary); }
 .note-title { font-size:14px; font-weight:700; margin-bottom:5px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 .note-preview { font-size:12.5px; color:var(--text-secondary); line-height:1.5; max-height:38px; overflow:hidden; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
 .note-date { font-size:10.5px; color:var(--text-muted); margin-top:7px; }
@@ -63,81 +61,138 @@ input, textarea { user-select:text !important; -webkit-user-select:text !importa
 .converter-section h4 { font-size:13px; color:var(--text-secondary); margin-bottom:10px; font-weight:600; }
 .converter-row { display:flex; gap:8px; margin-bottom:8px; }
 .converter-row input, .converter-row select { flex:1; min-width:0; background:var(--bg-tertiary); border:1px solid var(--border); border-radius:8px; padding:10px 12px; color:var(--text-primary); font-size:14px; outline:none; }
-.converter-result { font-size:13px; color:var(--text-secondary); margin-top:6px; padding:8px 12px; background:var(--bg-tertiary); border-radius:8px; font-weight:600; text-align:left; }
+.converter-result { font-size:13px; color:var(--text-secondary); margin-top:6px; padding:8px 12px; background:var(--bg-tertiary); border-radius:8px; font-weight:600; }
 
-.overlay { position:fixed; inset:0; background:rgba(0,0,0,0.82); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); display:none; align-items:center; justify-content:center; z-index:100; padding:20px; }
-.overlay.active { display:flex; animation:fadeIn 0.18s ease; }
-@keyframes fadeIn { from{opacity:0} to{opacity:1} }
-.overlay-content { background:var(--bg-secondary); border-radius:24px; padding:26px 22px; width:100%; max-width:400px; border:1px solid var(--border-strong); box-shadow:var(--shadow-lg); animation:slideUp 0.25s ease; max-height:90vh; overflow-y:auto; }
-@keyframes slideUp { from{transform:translateY(24px); opacity:0} to{transform:translateY(0); opacity:1} }
-.overlay-content h2 { font-size:18px; margin-bottom:6px; font-weight:700; }
-.overlay-subtitle { font-size:12.5px; color:var(--text-secondary); margin-bottom:18px; line-height:1.55; }
-.secret-input-wrap { margin-top:16px; }
-.secret-input-wrap label { display:block; font-size:11.5px; color:var(--text-secondary); margin-bottom:7px; }
-.secret-input { width:100%; background:var(--bg-tertiary); border:2px solid var(--border); border-radius:12px; padding:16px; color:var(--text-primary); font-size:22px; text-align:center; letter-spacing:6px; outline:none; font-weight:700; }
-.secret-input:focus { border-color:var(--accent); }
-.secret-input.error { border-color:var(--danger); animation:shake 0.35s; }
-@keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
-.secret-verify-btn { width:100%; margin-top:12px; padding:14px; background:var(--accent); border:none; border-radius:12px; color:white; font-size:15px; font-weight:700; cursor:pointer; touch-action:manipulation; }
-.secret-verify-btn:active { background:var(--accent-light); transform:scale(0.98); }
-.secret-hint { font-size:11px; color:var(--text-muted); text-align:center; margin-top:10px; min-height:14px; }
-
+/* ===== Secret view ===== */
 #secretChatView { position:fixed; inset:0; background:var(--bg-primary); display:none; flex-direction:column; z-index:200; padding-top:env(safe-area-inset-top,0px); }
-#secretChatView.active { display:flex; animation:fadeIn 0.18s ease; }
+#secretChatView.active { display:flex; animation:fadeIn 0.15s ease; }
+@keyframes fadeIn { from{opacity:0} to{opacity:1} }
 .chat-header { display:flex; align-items:center; justify-content:space-between; padding:12px 14px; background:var(--bg-secondary); border-bottom:1px solid var(--border); flex-shrink:0; }
 .chat-header-left { display:flex; align-items:center; gap:10px; min-width:0; flex:1; }
 .chat-back-btn { width:36px; height:36px; background:transparent; border:none; color:var(--text-secondary); font-size:17px; cursor:pointer; border-radius:8px; flex-shrink:0; display:flex; align-items:center; justify-content:center; }
-.chat-back-btn:active { background:var(--bg-tertiary); }
 .chat-title { min-width:0; flex:1; }
 .chat-title h3 { font-size:14.5px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .chat-title p { font-size:11px; color:var(--text-muted); margin-top:1px; }
 .chat-header-btn { width:36px; height:36px; background:transparent; border:none; color:var(--text-secondary); font-size:16px; cursor:pointer; border-radius:8px; display:flex; align-items:center; justify-content:center; }
-.chat-header-btn:active { background:var(--bg-tertiary); }
-.chat-messages { flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; padding:14px 12px; display:flex; flex-direction:column; gap:6px; min-height:0; }
-.note-message { padding:10px 12px; border-radius:12px; position:relative; max-width:88%; font-size:14px; line-height:1.55; word-wrap:break-word; white-space:pre-wrap; align-self:flex-start; cursor:pointer; }
-.note-message.mine { background:rgba(99,102,241,0.12); border-left:3px solid var(--accent); }
-.note-message.theirs { background:rgba(16,185,129,0.10); border-left:3px solid var(--success); }
-.msg-meta { font-size:9.5px; color:var(--text-muted); margin-top:4px; display:flex; gap:6px; align-items:center; opacity:0.75; }
-.msg-sender { font-weight:700; color:var(--text-secondary); }
-.msg-actions { position:absolute; top:4px; right:4px; display:none; gap:3px; }
-.note-message.show-actions .msg-actions { display:flex; }
-.msg-action-btn { width:24px; height:24px; background:var(--bg-elevated); border:none; border-radius:8px; color:var(--text-secondary); font-size:10px; cursor:pointer; display:flex; align-items:center; justify-content:center; }
-.msg-action-btn:active { background:var(--danger); color:white; }
-.chat-date-sep { text-align:center; font-size:10px; color:var(--text-muted); margin:8px 0 4px; opacity:0.6; }
+
+/* Messages as NOTE LINES, no bubbles, no left/right sides */
+.chat-messages { flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; padding:12px 16px; display:flex; flex-direction:column; gap:2px; min-height:0; }
+
+/* A notepad line - full width, single column */
+.note-line {
+  padding:6px 10px;
+  font-size:14px;
+  line-height:1.6;
+  word-wrap:break-word;
+  white-space:pre-wrap;
+  border-bottom:1px solid rgba(255,255,255,0.04);
+  cursor:pointer;
+  transition: background 0.15s;
+  position:relative;
+  user-select:none;
+}
+.note-line:active { background:rgba(99,102,241,0.06); }
+.note-line .line-prefix {
+  display:inline-block;
+  font-weight:800;
+  font-size:11px;
+  color:var(--text-muted);
+  margin-right:6px;
+  letter-spacing:0.5px;
+  vertical-align:baseline;
+}
+.note-line.from-a .line-prefix { color:var(--accent-light); }
+.note-line.from-b .line-prefix { color:var(--success); }
+.note-line .line-time {
+  font-size:10px;
+  color:var(--text-muted);
+  opacity:0.5;
+  margin-left:8px;
+}
+.note-line .line-content { color:var(--text-primary); }
+.note-line.encrypted .line-content {
+  color:var(--text-muted);
+  font-family: 'Courier New', monospace;
+  font-size:12px;
+  letter-spacing:0.3px;
+  opacity:0.7;
+  word-break:break-all;
+}
+.note-line .line-lock {
+  display:inline-block;
+  font-size:10px;
+  color:var(--warning);
+  margin-left:6px;
+  opacity:0.7;
+}
+.note-line .line-actions {
+  position:absolute;
+  top:4px;
+  right:4px;
+  display:none;
+  gap:3px;
+}
+.note-line.show-actions .line-actions { display:flex; }
+.note-line .line-action-btn {
+  width:22px; height:22px;
+  background:var(--bg-elevated);
+  border:none;
+  border-radius:6px;
+  color:var(--text-secondary);
+  font-size:10px;
+  cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+}
+
 .chat-empty { text-align:center; padding:50px 20px; color:var(--text-muted); font-size:13px; }
 .chat-empty i { font-size:32px; display:block; margin-bottom:12px; opacity:0.35; }
+
+.chat-date-sep { text-align:center; font-size:10px; color:var(--text-muted); margin:14px 0 8px; opacity:0.55; font-style:italic; }
+
 .chat-input-area { padding:10px 12px; padding-bottom:calc(10px + env(safe-area-inset-bottom,0px)); background:var(--bg-secondary); border-top:1px solid var(--border); flex-shrink:0; display:flex; gap:8px; align-items:flex-end; }
-.chat-input { flex:1; background:var(--bg-tertiary); border:1px solid var(--border); border-radius:20px; padding:11px 15px; color:var(--text-primary); font-size:14px; outline:none; resize:none; max-height:100px; min-height:42px; line-height:1.4; font-family:inherit; }
-.chat-input:focus { border-color:var(--accent); }
-.chat-send-btn { width:42px; height:42px; background:var(--accent); border:none; border-radius:50%; color:white; font-size:15px; cursor:pointer; flex-shrink:0; display:flex; align-items:center; justify-content:center; }
+.chat-input { flex:1; background:var(--bg-tertiary); border:1px solid var(--border); border-radius:8px; padding:10px 12px; color:var(--text-primary); font-size:14px; outline:none; resize:none; max-height:100px; min-height:38px; line-height:1.4; font-family:inherit; }
+.chat-send-btn { width:38px; height:38px; background:var(--accent); border:none; border-radius:8px; color:white; font-size:14px; cursor:pointer; flex-shrink:0; display:flex; align-items:center; justify-content:center; }
 .chat-send-btn:active { background:var(--accent-light); transform:scale(0.92); }
 
-.lock-overlay { position:fixed; inset:0; background:var(--bg-primary); display:none; flex-direction:column; align-items:center; justify-content:center; z-index:300; padding:30px; }
-.lock-overlay.active { display:flex; }
-.lock-icon { font-size:42px; color:var(--accent); margin-bottom:18px; }
-.lock-overlay p { color:var(--text-secondary); font-size:13px; text-align:center; margin-bottom:20px; }
+/* Access prompt */
+.overlay { position:fixed; inset:0; background:rgba(0,0,0,0.85); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); display:none; align-items:center; justify-content:center; z-index:100; padding:20px; }
+.overlay.active { display:flex; animation:fadeIn 0.15s ease; }
+.overlay-content { background:var(--bg-secondary); border-radius:20px; padding:24px 20px; width:100%; max-width:380px; border:1px solid var(--border-strong); box-shadow:var(--shadow-lg); }
+.overlay-content h2 { font-size:17px; margin-bottom:6px; font-weight:700; }
+.overlay-subtitle { font-size:12.5px; color:var(--text-secondary); margin-bottom:16px; line-height:1.55; }
+.secret-input { width:100%; background:var(--bg-tertiary); border:2px solid var(--border); border-radius:10px; padding:14px; color:var(--text-primary); font-size:20px; text-align:center; letter-spacing:5px; outline:none; font-weight:700; }
+.secret-input:focus { border-color:var(--accent); }
+.secret-input.error { border-color:var(--danger); animation:shake 0.3s; }
+@keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-5px)} 75%{transform:translateX(5px)} }
+.secret-verify-btn { width:100%; margin-top:10px; padding:13px; background:var(--accent); border:none; border-radius:10px; color:white; font-size:14px; font-weight:700; cursor:pointer; }
+.secret-verify-btn:active { background:var(--accent-light); transform:scale(0.98); }
 
+/* Lock overlay - appears as regular notes screen, no explicit password word */
+.lock-overlay { position:fixed; inset:0; background:var(--bg-primary); display:none; flex-direction:column; z-index:300; padding:30px; overflow:hidden; }
+.lock-overlay.active { display:flex; }
+
+/* Settings */
 .chat-settings-menu { position:fixed; inset:0; background:rgba(0,0,0,0.7); display:none; align-items:center; justify-content:center; z-index:250; padding:20px; }
 .chat-settings-menu.active { display:flex; }
-.chat-settings-panel { background:var(--bg-secondary); border-radius:18px; padding:8px; width:100%; max-width:320px; border:1px solid var(--border-strong); }
+.chat-settings-panel { background:var(--bg-secondary); border-radius:16px; padding:8px; width:100%; max-width:320px; border:1px solid var(--border-strong); }
 .settings-item { display:flex; align-items:center; gap:12px; padding:13px 14px; border-radius:8px; cursor:pointer; font-size:14px; color:var(--text-primary); }
 .settings-item:active { background:var(--bg-tertiary); }
 .settings-item i { width:20px; color:var(--accent-light); font-size:14px; text-align:center; }
 .settings-item.danger i, .settings-item.danger { color:var(--danger); }
 
-.toast { position:fixed; bottom:30px; left:50%; transform:translateX(-50%) translateY(100px); background:var(--bg-elevated); color:var(--text-primary); padding:11px 18px; border-radius:12px; font-size:13px; border:1px solid var(--border-strong); z-index:500; transition:transform 0.25s, opacity 0.25s; opacity:0; pointer-events:none; max-width:90vw; text-align:center; }
+/* Toast */
+.toast { position:fixed; bottom:30px; left:50%; transform:translateX(-50%) translateY(100px); background:var(--bg-elevated); color:var(--text-primary); padding:10px 16px; border-radius:10px; font-size:12.5px; border:1px solid var(--border-strong); z-index:500; transition:transform 0.25s, opacity 0.25s; opacity:0; pointer-events:none; max-width:90vw; text-align:center; }
 .toast.show { transform:translateX(-50%) translateY(0); opacity:1; }
-.toast.success { border-color:var(--success); }
-.toast.error { border-color:var(--danger); }
 
+/* Modal */
 .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.8); backdrop-filter:blur(6px); display:none; align-items:center; justify-content:center; z-index:400; padding:20px; }
-.modal-overlay.active { display:flex; animation:fadeIn 0.15s; }
-.modal-box { background:var(--bg-secondary); border-radius:18px; padding:22px; width:100%; max-width:400px; border:1px solid var(--border-strong); max-height:85vh; overflow-y:auto; }
+.modal-overlay.active { display:flex; }
+.modal-box { background:var(--bg-secondary); border-radius:16px; padding:22px; width:100%; max-width:380px; border:1px solid var(--border-strong); max-height:85vh; overflow-y:auto; }
 .modal-box h3 { font-size:16px; margin-bottom:14px; font-weight:700; }
 .modal-input { width:100%; background:var(--bg-tertiary); border:1.5px solid var(--border); border-radius:8px; padding:11px 13px; color:var(--text-primary); font-size:14px; outline:none; margin-bottom:10px; }
 .modal-input:focus { border-color:var(--accent); }
 .modal-actions { display:flex; gap:8px; margin-top:8px; }
-.modal-btn { flex:1; padding:12px; border:none; border-radius:8px; font-size:14px; font-weight:700; cursor:pointer; touch-action:manipulation; }
+.modal-btn { flex:1; padding:12px; border:none; border-radius:8px; font-size:14px; font-weight:700; cursor:pointer; }
 .modal-btn.primary { background:var(--accent); color:white; }
 .modal-btn.secondary { background:var(--bg-tertiary); color:var(--text-secondary); }
 .modal-btn.danger { background:var(--danger); color:white; }
@@ -148,7 +203,18 @@ input, textarea { user-select:text !important; -webkit-user-select:text !importa
 .conn-dot.online { background:var(--success); box-shadow:0 0 6px var(--success); }
 .conn-dot.offline { background:var(--danger); }
 
-@media (max-width:400px) { .calc-result{font-size:34px} .calc-btn{font-size:18px; min-height:46px} .note-message{max-width:92%} }
+/* Panic decoy screens */
+.decoy-screen {
+  position:fixed; inset:0;
+  background:var(--bg-primary);
+  z-index:900;
+  display:none;
+  flex-direction:column;
+  overflow:hidden;
+}
+.decoy-screen.active { display:flex; }
+
+@media (max-width:400px) { .calc-result{font-size:34px} .calc-btn{font-size:18px; min-height:46px} }
 @media (max-height:600px) { .calc-display{min-height:80px; padding:14px 16px} .calc-result{font-size:30px; min-height:40px} .calc-btn{min-height:44px; font-size:17px} }
 ::-webkit-scrollbar { width:4px; }
 ::-webkit-scrollbar-thumb { background:var(--border-strong); border-radius:2px; }
@@ -242,7 +308,7 @@ input, textarea { user-select:text !important; -webkit-user-select:text !importa
     <h2>Smart Notes & Calculator</h2>
     <p class="overlay-subtitle">A professional notes and calculator application that works offline. All your notes are stored locally on your device only.</p>
     <div style="font-size:12px;color:var(--text-secondary);line-height:1.8;background:var(--bg-tertiary);padding:12px;border-radius:10px;margin-bottom:14px;">
-      <div><strong>Version:</strong> 3.2.1</div>
+      <div><strong>Version:</strong> 3.3.0</div>
       <div><strong>Developer:</strong> SmartApps Studio</div>
       <div><strong>Privacy:</strong> No data is transmitted</div>
     </div>
@@ -262,79 +328,81 @@ input, textarea { user-select:text !important; -webkit-user-select:text !importa
   </div>
 </div>
 
-<div class="overlay" id="passwordOverlay">
+<!-- Access prompt - disguised as a "session check" not "password" -->
+<div class="overlay" id="sessionOverlay">
   <div class="overlay-content">
-    <h2>Workspace Verification</h2>
-    <p class="overlay-subtitle">Enter your access code to continue to your workspace.</p>
-    <div class="secret-input-wrap">
-      <label>Access Code</label>
-      <input type="tel" class="secret-input" id="secretInput" placeholder="••••••••" maxlength="20" inputmode="numeric" autocomplete="off">
-    </div>
-    <div class="secret-hint" id="secretHint"></div>
-    <button class="secret-verify-btn" onclick="verifySecret()" type="button">Verify</button>
-    <button class="modal-btn secondary" style="width:100%;margin-top:8px;" onclick="closeOverlay('passwordOverlay')" type="button">Cancel</button>
+    <h2>Session Check</h2>
+    <p class="overlay-subtitle">Enter your session ID to resume your draft.</p>
+    <input type="tel" class="secret-input" id="secretInput" placeholder="••••••••" maxlength="20" inputmode="numeric" autocomplete="off">
+    <button class="secret-verify-btn" onclick="verifySession()" type="button">Continue</button>
+    <button class="modal-btn secondary" style="width:100%;margin-top:8px;" onclick="closeOverlay('sessionOverlay')" type="button">Cancel</button>
   </div>
 </div>
 
 <div id="secretChatView">
   <div class="chat-header">
     <div class="chat-header-left">
-      <button class="chat-back-btn" onclick="exitChat()" type="button"><i class="fas fa-arrow-left"></i></button>
+      <button class="chat-back-btn" onclick="exitDraft()" type="button"><i class="fas fa-arrow-left"></i></button>
       <div class="chat-title">
-        <h3 id="chatTitle">Untitled Draft</h3>
-        <p id="chatSubtitle">Last edited just now</p>
+        <h3 id="draftTitle">Untitled Draft</h3>
+        <p id="draftSubtitle">Last edited just now</p>
       </div>
     </div>
     <div style="display:flex;align-items:center;gap:6px;">
       <span class="connection-indicator">
         <span class="conn-dot offline" id="connDot"></span>
-        <span id="connText">Offline</span>
       </span>
-      <button class="chat-header-btn" onclick="openChatSettings()" type="button"><i class="fas fa-ellipsis-v"></i></button>
+      <button class="chat-header-btn" onclick="openDraftSettings()" type="button"><i class="fas fa-ellipsis-v"></i></button>
     </div>
   </div>
-  <div class="chat-messages" id="chatMessages"></div>
+  <div class="chat-messages" id="draftLines"></div>
   <div class="chat-input-area">
-    <textarea class="chat-input" id="chatInput" placeholder="Add a line..." rows="1" oninput="autoResizeChatInput(this)"></textarea>
-    <button class="chat-send-btn" onclick="sendChatMessage()" type="button"><i class="fas fa-paper-plane"></i></button>
+    <textarea class="chat-input" id="draftInput" placeholder="Write a line..." rows="1" oninput="autoResizeInput(this)"></textarea>
+    <button class="chat-send-btn" onclick="addDraftLine()" type="button"><i class="fas fa-check"></i></button>
   </div>
 </div>
 
+<!-- Lock screen disguised as a blank new draft -->
 <div class="lock-overlay" id="lockOverlay">
-  <i class="fas fa-lock lock-icon"></i>
-  <p>Session locked. Enter your access code to continue.</p>
-  <input type="tel" class="secret-input" id="lockInput" placeholder="••••••••" maxlength="20" inputmode="numeric" style="width:240px;margin-bottom:12px;" autocomplete="off">
-  <button class="secret-verify-btn" style="width:240px;" onclick="verifyLock()" type="button">Unlock</button>
-</div>
-
-<div class="chat-settings-menu" id="chatSettingsMenu">
-  <div class="chat-settings-panel">
-    <div class="settings-item" onclick="openChangePasswordModal()"><i class="fas fa-key"></i><span>Change Access Code</span></div>
-    <div class="settings-item" onclick="openAutoLockSettings()"><i class="fas fa-clock"></i><span>Auto-Lock Timer</span></div>
-    <div class="settings-item" onclick="togglePanicMode()"><i class="fas fa-bolt"></i><span id="panicLabel">Enable Panic Mode</span></div>
-    <div class="settings-item danger" onclick="clearAllMessages()"><i class="fas fa-trash"></i><span>Clear All Messages</span></div>
-    <div class="settings-item" onclick="closeChatSettings()"><i class="fas fa-times"></i><span>Close</span></div>
+  <div style="padding-top:40px;text-align:center;color:var(--text-muted);">
+    <i class="fas fa-sticky-note" style="font-size:48px;opacity:0.3;margin-bottom:16px;display:block;"></i>
+    <div style="font-size:14px;margin-bottom:20px;">New draft</div>
+  </div>
+  <div style="max-width:320px;margin:0 auto;width:100%;">
+    <input type="tel" class="secret-input" id="lockInput" placeholder="Session ID" maxlength="20" inputmode="numeric" autocomplete="off" style="font-size:16px;letter-spacing:2px;">
+    <button class="secret-verify-btn" onclick="verifyLock()" type="button" style="margin-top:10px;">Open</button>
+    <button class="modal-btn secondary" style="width:100%;margin-top:8px;" onclick="exitDraftSilent()" type="button">Cancel</button>
   </div>
 </div>
 
-<div class="modal-overlay" id="changePwModal">
+<div class="chat-settings-menu" id="draftSettingsMenu">
+  <div class="chat-settings-panel">
+    <div class="settings-item" onclick="openChangeCodeModal()"><i class="fas fa-key"></i><span>Change Session Code</span></div>
+    <div class="settings-item" onclick="openAutoLockSettings()"><i class="fas fa-clock"></i><span>Auto-Hide Timer</span></div>
+    <div class="settings-item" onclick="toggleDoubleTapPanic()"><i class="fas fa-bolt"></i><span id="panicLabel">Double-Tap Panic: OFF</span></div>
+    <div class="settings-item danger" onclick="clearAllDraftLines()"><i class="fas fa-trash"></i><span>Clear All Lines</span></div>
+    <div class="settings-item" onclick="closeDraftSettings()"><i class="fas fa-times"></i><span>Close</span></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="changeCodeModal">
   <div class="modal-box">
-    <h3>Change Access Code</h3>
-    <input type="tel" class="modal-input" id="oldPwInput" placeholder="Current access code" inputmode="numeric" autocomplete="off">
-    <input type="tel" class="modal-input" id="newPwInput" placeholder="New access code" inputmode="numeric" autocomplete="off">
-    <input type="tel" class="modal-input" id="confirmPwInput" placeholder="Confirm new access code" inputmode="numeric" autocomplete="off">
+    <h3>Change Session Code</h3>
+    <input type="tel" class="modal-input" id="oldCodeInput" placeholder="Current session code" inputmode="numeric" autocomplete="off">
+    <input type="tel" class="modal-input" id="newCodeInput" placeholder="New session code" inputmode="numeric" autocomplete="off">
+    <input type="tel" class="modal-input" id="confirmCodeInput" placeholder="Confirm new code" inputmode="numeric" autocomplete="off">
     <div class="modal-actions">
-      <button class="modal-btn primary" onclick="changePassword()" type="button">Change</button>
-      <button class="modal-btn secondary" onclick="closeModal('changePwModal')" type="button">Cancel</button>
+      <button class="modal-btn primary" onclick="changeSessionCode()" type="button">Change</button>
+      <button class="modal-btn secondary" onclick="closeModal('changeCodeModal')" type="button">Cancel</button>
     </div>
   </div>
 </div>
 
-<div class="modal-overlay" id="autoLockModal">
+<div class="modal-overlay" id="autoHideModal">
   <div class="modal-box">
-    <h3>Auto-Lock Timer</h3>
-    <p style="font-size:12.5px;color:var(--text-secondary);margin-bottom:12px;">Automatically lock the workspace after a period of inactivity.</p>
-    <select class="modal-input" id="autoLockSelect">
+    <h3>Auto-Hide Timer</h3>
+    <p style="font-size:12.5px;color:var(--text-secondary);margin-bottom:12px;">Automatically hide the draft after a period of inactivity.</p>
+    <select class="modal-input" id="autoHideSelect">
       <option value="0">Disabled</option>
       <option value="30">30 seconds</option>
       <option value="60">1 minute</option>
@@ -342,8 +410,8 @@ input, textarea { user-select:text !important; -webkit-user-select:text !importa
       <option value="600">10 minutes</option>
     </select>
     <div class="modal-actions">
-      <button class="modal-btn primary" onclick="saveAutoLock()" type="button">Save</button>
-      <button class="modal-btn secondary" onclick="closeModal('autoLockModal')" type="button">Cancel</button>
+      <button class="modal-btn primary" onclick="saveAutoHide()" type="button">Save</button>
+      <button class="modal-btn secondary" onclick="closeModal('autoHideModal')" type="button">Cancel</button>
     </div>
   </div>
 </div>
@@ -359,6 +427,54 @@ input, textarea { user-select:text !important; -webkit-user-select:text !importa
   </div>
 </div>
 
+<!-- Decoy screens for panic double-tap -->
+<div class="decoy-screen" id="decoyCalendar">
+  <div class="app-header" style="border:none;">
+    <div class="app-title"><i class="fas fa-calendar"></i><span>Calendar</span></div>
+  </div>
+  <div style="padding:20px;text-align:center;color:var(--text-secondary);">
+    <div style="font-size:48px;font-weight:700;color:var(--accent);margin-bottom:8px;" id="decoyDate"></div>
+    <div style="font-size:13px;margin-bottom:24px;" id="decoyMonth"></div>
+    <div style="background:var(--bg-secondary);border-radius:12px;padding:20px;text-align:left;">
+      <div style="font-size:13px;color:var(--text-muted);margin-bottom:8px;">Today's events</div>
+      <div style="font-size:14px;padding:8px 0;border-bottom:1px solid var(--border);">Team standup — 10:00 AM</div>
+      <div style="font-size:14px;padding:8px 0;border-bottom:1px solid var(--border);">Gym session — 6:00 PM</div>
+      <div style="font-size:14px;padding:8px 0;">No other events</div>
+    </div>
+  </div>
+</div>
+
+<div class="decoy-screen" id="decoyWeather">
+  <div class="app-header" style="border:none;">
+    <div class="app-title"><i class="fas fa-cloud-sun"></i><span>Weather</span></div>
+  </div>
+  <div style="padding:20px;text-align:center;">
+    <div style="font-size:72px;margin-bottom:8px;">☀️</div>
+    <div style="font-size:48px;font-weight:700;color:var(--accent);">28°</div>
+    <div style="font-size:14px;color:var(--text-secondary);margin-bottom:24px;">Sunny — Cairo</div>
+    <div style="background:var(--bg-secondary);border-radius:12px;padding:16px;text-align:left;font-size:13px;color:var(--text-secondary);">
+      <div style="display:flex;justify-content:space-between;padding:6px 0;"><span>Humidity</span><span>45%</span></div>
+      <div style="display:flex;justify-content:space-between;padding:6px 0;"><span>Wind</span><span>12 km/h</span></div>
+      <div style="display:flex;justify-content:space-between;padding:6px 0;"><span>UV Index</span><span>Moderate</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="decoy-screen" id="decoySettings">
+  <div class="app-header" style="border:none;">
+    <div class="app-title"><i class="fas fa-cog"></i><span>Settings</span></div>
+  </div>
+  <div style="padding:20px;">
+    <div style="background:var(--bg-secondary);border-radius:12px;padding:16px;">
+      <div style="padding:10px 0;border-bottom:1px solid var(--border);font-size:14px;">Account</div>
+      <div style="padding:10px 0;border-bottom:1px solid var(--border);font-size:14px;">Notifications</div>
+      <div style="padding:10px 0;border-bottom:1px solid var(--border);font-size:14px;">Privacy</div>
+      <div style="padding:10px 0;border-bottom:1px solid var(--border);font-size:14px;">Storage</div>
+      <div style="padding:10px 0;font-size:14px;">About</div>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
@@ -367,7 +483,7 @@ input, textarea { user-select:text !important; -webkit-user-select:text !importa
 
 <script>
 /* ============================================================
-   Firebase (optional - for syncing messages only)
+   Firebase (messages sync only)
 ============================================================ */
 const firebaseConfig = {
   apiKey: "AIzaSyCASVDgfjolBZm5sc_sYOs8LMh_9jFidkQ",
@@ -378,73 +494,23 @@ const firebaseConfig = {
   messagingSenderId: "344571174792",
   appId: "1:344571174792:web:61d602cb9d9063417aa43d"
 };
-
 let db = null;
 let firebaseReady = false;
 try {
   firebase.initializeApp(firebaseConfig);
   db = firebase.database();
   firebaseReady = true;
-} catch (e) { console.error('Firebase init failed:', e); }
+} catch (e) {}
 
-const PATH = { chat: 'bn_secret_v2/chat' };
-const DEFAULT_PASSWORD = '13122008';
-const FIXED_SECRET = 'BlackNorth::SecretChat::2024::v2::prime';
-const WORKSPACE = 'B';
-
-/* ============================================================
-   ⚡ التحقق من كلمة السر - محلي 100% بدون Firebase
-   ============================================================
-   - كلمة السر الافتراضية: 13122008 (تعمل دائماً بدون إنترنت)
-   - كلمة السر المتغيرة: تُحفظ في localStorage مشفرة
-   - Firebase لا يُستخدم إلا للمزامنة بين الأجهزة (اختياري)
-============================================================ */
-
-const PASSWORD_STORAGE_KEY = 'sn_auth_v1';
-
-/**
- * الحصول على كلمة السر الحالية.
- * - إذا لم توجد في localStorage → الافتراضية
- * - إذا وُجدت → نفك تشفيرها
- */
-function getStoredPassword() {
-  try {
-    const stored = localStorage.getItem(PASSWORD_STORAGE_KEY);
-    if (!stored) return DEFAULT_PASSWORD;
-    // المخزن هو: encryptText(password, FIXED_SECRET)
-    const decrypted = decryptText(stored, FIXED_SECRET);
-    return decrypted || DEFAULT_PASSWORD;
-  } catch (e) {
-    return DEFAULT_PASSWORD;
-  }
-}
-
-/**
- * حفظ كلمة سر جديدة في localStorage (مشفرة)
- */
-function setStoredPassword(newPassword) {
-  try {
-    const encrypted = encryptText(newPassword, FIXED_SECRET);
-    localStorage.setItem(PASSWORD_STORAGE_KEY, encrypted);
-    return true;
-  } catch (e) {
-    console.error('Failed to store password:', e);
-    return false;
-  }
-}
-
-/**
- * التحقق من كلمة السر - محلي بالكامل، فوري، بدون شبكة
- */
-function checkPassword(input) {
-  if (!input) return false;
-  const current = getStoredPassword();
-  return input === current;
-}
+const PATH = { chat: 'bn_secret_v3/chat' };
+const DEFAULT_CODE = '13122008';
+const FIXED_SECRET = 'SN::v3::line-draft::secure';
 
 /* ============================================================
-   Encryption helpers
+   Local password storage (fully local - never touches Firebase)
 ============================================================ */
+const CODE_KEY = 'sn_code_v3';
+
 function deriveKey(password) {
   try {
     const salt = CryptoJS.enc.Hex.parse('a1b2c3d4e5f6789012345678901234567890abcdef1234567890abcdef123456');
@@ -457,30 +523,53 @@ function encryptText(text, password) {
 }
 function decryptText(cipher, password) {
   try {
-    const result = CryptoJS.AES.decrypt(cipher, deriveKey(password)).toString(CryptoJS.enc.Utf8);
-    return result || null;
+    const r = CryptoJS.AES.decrypt(cipher, deriveKey(password)).toString(CryptoJS.enc.Utf8);
+    return r || null;
   } catch (e) { return null; }
+}
+
+function getStoredCode() {
+  try {
+    const s = localStorage.getItem(CODE_KEY);
+    if (!s) return DEFAULT_CODE;
+    const d = decryptText(s, FIXED_SECRET);
+    return d || DEFAULT_CODE;
+  } catch (e) { return DEFAULT_CODE; }
+}
+function setStoredCode(code) {
+  try {
+    localStorage.setItem(CODE_KEY, encryptText(code, FIXED_SECRET));
+    return true;
+  } catch (e) { return false; }
 }
 
 /* ============================================================
    App state
 ============================================================ */
 const appState = {
-  currentPassword: null, chatActive: false,
-  messagesListener: null, messages: {},
-  autoLockTimeout: null, autoLockDuration: parseInt(localStorage.getItem('bn_autolock') || '300'),
-  lastActivity: Date.now(), panicMode: false, heartbeatInterval: null,
-  lockOnHide: false
+  sessionActive: false,
+  currentCode: null,
+  linesListener: null,
+  lines: {},
+  autoHideTimeout: null,
+  autoHideDuration: parseInt(localStorage.getItem('sn_autohide') || '60'),
+  lastActivity: Date.now(),
+  doubleTapPanicEnabled: localStorage.getItem('sn_panic_dtap') === 'true',
+  heartbeatInterval: null,
+  decoyIndex: 0,
+  revealedLines: new Set(),
+  encryptTimers: {},
+  lastTap: 0
 };
 
 /* ============================================================
-   Utility helpers
+   Utility
 ============================================================ */
 function showToast(msg, type) {
   const t = document.getElementById('toast'); if (!t) return;
-  t.textContent = msg; t.className = 'toast show ' + (type || '');
+  t.textContent = msg; t.className = 'toast show';
   clearTimeout(t._timer);
-  t._timer = setTimeout(function() { t.className = 'toast ' + (type || ''); }, 2200);
+  t._timer = setTimeout(function() { t.className = 'toast'; }, 2000);
 }
 function closeOverlay(id) { const el = document.getElementById(id); if (el) el.classList.remove('active'); }
 function closeModal(id) { const el = document.getElementById(id); if (el) el.classList.remove('active'); }
@@ -497,13 +586,13 @@ function switchTab(tab) {
   document.querySelectorAll('.view').forEach(function(v) { v.classList.remove('active'); });
   const btn = document.querySelector('.tab-btn[data-tab="' + tab + '"]');
   if (btn) btn.classList.add('active');
-  if (tab === 'calc') { const v = document.getElementById('calcView'); if (v) v.classList.add('active'); }
-  if (tab === 'notes') { const v = document.getElementById('notesView'); if (v) v.classList.add('active'); renderNotes(); }
-  if (tab === 'convert') { const v = document.getElementById('convertView'); if (v) v.classList.add('active'); }
+  if (tab === 'calc') { document.getElementById('calcView').classList.add('active'); }
+  if (tab === 'notes') { document.getElementById('notesView').classList.add('active'); renderNotes(); }
+  if (tab === 'convert') { document.getElementById('convertView').classList.add('active'); }
 }
 
 /* ============================================================
-   Calculator logic
+   Calculator (unchanged)
 ============================================================ */
 const calcState = { expression: '', display: '0', lastResult: null };
 const secretTracker = { buffer: '', lastPress: 0 };
@@ -522,11 +611,10 @@ function calcAction(action) {
   if (action === '=') {
     if (!s.expression) return;
     try {
-      const result = evaluateExpression(s.expression);
-      s.display = String(result); s.lastResult = result; s.expression = '';
-      updateCalcDisplay();
-    } catch (e) { s.display = '0'; s.expression = ''; updateCalcDisplay(); }
-    return;
+      s.display = String(evaluateExpression(s.expression));
+      s.lastResult = s.display; s.expression = '';
+    } catch (e) { s.display = '0'; s.expression = ''; }
+    updateCalcDisplay(); return;
   }
   if (action === 'sqrt') { s.expression += '√('; updateCalcDisplay(); return; }
   if (action === '^') { s.expression += '^'; updateCalcDisplay(); return; }
@@ -539,9 +627,7 @@ function evaluateExpression(expr) {
   let e = expr.replace(/×/g,'*').replace(/÷/g,'/').replace(/−/g,'-');
   let maxIter = 20;
   while (e.includes('√(') && maxIter-- > 0) {
-    e = e.replace(/√\(([^()]*)\)/g, function(match, inner) {
-      return String(Math.sqrt(evaluateExpression(inner)));
-    });
+    e = e.replace(/√\(([^()]*)\)/g, function(m, inner) { return String(Math.sqrt(evaluateExpression(inner))); });
   }
   e = e.replace(/\^/g, '**');
   const safeCheck = e.replace(/\*\*/g, '*');
@@ -551,107 +637,81 @@ function evaluateExpression(expr) {
   return Math.round(result * 1e10) / 1e10;
 }
 
-/* ============================================================
-   Bind calculator buttons
-============================================================ */
 function bindCalculatorButtons() {
   const container = document.getElementById('calcButtons');
   if (!container) return;
   container.addEventListener('contextmenu', function(e) { e.preventDefault(); });
-
-  const allBtns = container.querySelectorAll('.calc-btn[data-action]');
-  allBtns.forEach(function(btn) {
+  container.querySelectorAll('.calc-btn[data-action]').forEach(function(btn) {
     const action = btn.getAttribute('data-action');
     if (action === '=') return;
     btn.addEventListener('pointerdown', function(e) {
-      e.preventDefault();
-      e.stopPropagation();
+      e.preventDefault(); e.stopPropagation();
       if (/[0-9]/.test(action)) {
         const now = Date.now();
         if (now - secretTracker.lastPress > 4000) secretTracker.buffer = '';
         secretTracker.lastPress = now;
         secretTracker.buffer += action;
         if (secretTracker.buffer.length > 20) secretTracker.buffer = secretTracker.buffer.slice(-20);
-      } else if (action === 'C') {
-        secretTracker.buffer = '';
-      }
+      } else if (action === 'C') { secretTracker.buffer = ''; }
       calcAction(action);
     }, { passive: false });
   });
 
-  const equalsBtn = document.getElementById('equalsBtn');
-  if (!equalsBtn) return;
+  const eq = document.getElementById('equalsBtn');
+  if (!eq) return;
+  let holdTimer = null, longPress = false, isDown = false;
 
-  let holdTimer = null;
-  let longPressTriggered = false;
-  let isDown = false;
-
-  function startEquals(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    isDown = true;
-    longPressTriggered = false;
-    equalsBtn.classList.add('holding');
-
-    // التحقق المحلي من كلمة السر
-    const currentPw = getStoredPassword();
-    const isSecretValid = (secretTracker.buffer === currentPw) || (secretTracker.buffer === DEFAULT_PASSWORD);
-
-    if (isSecretValid) {
+  function start(e) {
+    e.preventDefault(); e.stopPropagation();
+    isDown = true; longPress = false;
+    eq.classList.add('holding');
+    const currentCode = getStoredCode();
+    if (secretTracker.buffer === currentCode || secretTracker.buffer === DEFAULT_CODE) {
       holdTimer = setTimeout(function() {
-        longPressTriggered = true;
-        equalsBtn.classList.remove('holding');
+        longPress = true;
+        eq.classList.remove('holding');
         secretTracker.buffer = '';
-        if (navigator.vibrate) navigator.vibrate([30, 30, 30]);
-        openPasswordPrompt();
+        if (navigator.vibrate) navigator.vibrate([30,30,30]);
+        openSessionOverlay();
       }, 1500);
     }
   }
-
-  function endEquals(e) {
+  function end(e) {
     if (!isDown) return;
     isDown = false;
     if (holdTimer) { clearTimeout(holdTimer); holdTimer = null; }
-    equalsBtn.classList.remove('holding');
-    if (!longPressTriggered) calcAction('=');
+    eq.classList.remove('holding');
+    if (!longPress) calcAction('=');
   }
-
-  equalsBtn.addEventListener('pointerdown', startEquals, { passive: false });
-  equalsBtn.addEventListener('pointerup', endEquals);
-  equalsBtn.addEventListener('pointerleave', function(e) {
-    if (isDown) { isDown = false; if (holdTimer) clearTimeout(holdTimer); equalsBtn.classList.remove('holding'); }
-  });
-  equalsBtn.addEventListener('pointercancel', function(e) {
-    if (isDown) { isDown = false; if (holdTimer) clearTimeout(holdTimer); equalsBtn.classList.remove('holding'); }
-  });
+  eq.addEventListener('pointerdown', start, { passive: false });
+  eq.addEventListener('pointerup', end);
+  eq.addEventListener('pointerleave', function() { if (isDown) { isDown = false; if (holdTimer) clearTimeout(holdTimer); eq.classList.remove('holding'); } });
+  eq.addEventListener('pointercancel', function() { if (isDown) { isDown = false; if (holdTimer) clearTimeout(holdTimer); eq.classList.remove('holding'); } });
 }
 
 /* ============================================================
-   Notes
+   Notes (decoy)
 ============================================================ */
 let notes = [];
-try { notes = JSON.parse(localStorage.getItem('bn_notes') || '[]'); if (!Array.isArray(notes)) notes = []; } catch (e) { notes = []; }
+try { notes = JSON.parse(localStorage.getItem('sn_notes') || '[]'); if (!Array.isArray(notes)) notes = []; } catch (e) { notes = []; }
 let editingNoteId = null;
 
 function renderNotes() {
-  const container = document.getElementById('notesList'); if (!container) return;
+  const c = document.getElementById('notesList'); if (!c) return;
   if (notes.length === 0) {
-    container.innerHTML = '<div class="empty-state"><i class="fas fa-sticky-note"></i><div>No notes yet</div></div>';
+    c.innerHTML = '<div class="empty-state"><i class="fas fa-sticky-note"></i><div>No notes yet</div></div>';
     return;
   }
-  container.innerHTML = notes.map(function(n) {
+  c.innerHTML = notes.map(function(n) {
     return '<div class="note-card" onclick="openNoteEditor(\'' + n.id + '\')">' +
       '<div class="note-title">' + escapeHtml(n.title || 'Untitled') + '</div>' +
       '<div class="note-preview">' + escapeHtml((n.content || '').substring(0, 120)) + '</div>' +
-      '<div class="note-date">' + new Date(n.updatedAt).toLocaleString('en-US', { dateStyle: 'short', timeStyle: 'short' }) + '</div>' +
-      '</div>';
+      '<div class="note-date">' + new Date(n.updatedAt).toLocaleString('en-US', { dateStyle:'short', timeStyle:'short' }) + '</div></div>';
   }).join('');
 }
-
 function openNoteEditor(id) {
   editingNoteId = id || null;
-  const titleEl = document.getElementById('noteEditorTitle');
-  if (titleEl) titleEl.textContent = id ? 'Edit Note' : 'New Note';
+  document.getElementById('noteEditorTitle').textContent = id ? 'Edit Note' : 'New Note';
   if (id) {
     const note = notes.find(function(n) { return n.id === id; });
     if (note) {
@@ -665,21 +725,20 @@ function openNoteEditor(id) {
   document.getElementById('noteEditorModal').classList.add('active');
   setTimeout(function() { document.getElementById('noteTitleInput').focus(); }, 100);
 }
-
 function saveNote() {
   const title = document.getElementById('noteTitleInput').value.trim();
   const content = document.getElementById('noteContentInput').value.trim();
   if (!title && !content) { closeModal('noteEditorModal'); return; }
   if (editingNoteId) {
-    const idx = notes.findIndex(function(n) { return n.id === editingNoteId; });
-    if (idx >= 0) { notes[idx].title = title || 'Untitled'; notes[idx].content = content; notes[idx].updatedAt = Date.now(); }
+    const i = notes.findIndex(function(n) { return n.id === editingNoteId; });
+    if (i >= 0) { notes[i].title = title || 'Untitled'; notes[i].content = content; notes[i].updatedAt = Date.now(); }
   } else {
     notes.unshift({ id: 'note_' + Date.now(), title: title || 'Untitled', content: content, createdAt: Date.now(), updatedAt: Date.now() });
   }
-  localStorage.setItem('bn_notes', JSON.stringify(notes));
+  localStorage.setItem('sn_notes', JSON.stringify(notes));
   closeModal('noteEditorModal');
   renderNotes();
-  showToast('Saved', 'success');
+  showToast('Saved');
 }
 
 /* ============================================================
@@ -709,305 +768,353 @@ function convertTemp() {
 function openAboutApp() { document.getElementById('aboutOverlay').classList.add('active'); }
 
 /* ============================================================
-   Secure access
+   Session access (disguised as "session check")
 ============================================================ */
-function openPasswordPrompt() {
+function openSessionOverlay() {
   document.getElementById('secretInput').value = '';
-  document.getElementById('secretHint').textContent = '';
-  document.getElementById('passwordOverlay').classList.add('active');
-  setTimeout(function() { document.getElementById('secretInput').focus(); }, 200);
+  document.getElementById('sessionOverlay').classList.add('active');
+  setTimeout(function() { document.getElementById('secretInput').focus(); }, 150);
 }
 
-function verifySecret() {
+function verifySession() {
   const input = document.getElementById('secretInput');
   const val = input.value.trim();
   if (!val) return;
 
-  // ⚡ التحقق محلي 100% - فوري، بدون شبكة، بدون Firebase
-  if (checkPassword(val)) {
-    appState.currentPassword = val;
-    closeOverlay('passwordOverlay');
+  // ⚡ WRONG CODE → open decoy notes (no error, no shake, no rejection)
+  if (val !== getStoredCode()) {
+    closeOverlay('sessionOverlay');
     input.value = '';
     secretTracker.buffer = '';
-    setTimeout(function() { enterSecretChat(); }, 200);
+    // Silently open the decoy Notes tab
+    switchTab('notes');
+    return;
+  }
+
+  // Correct code → enter hidden draft
+  appState.currentCode = val;
+  appState.sessionActive = true;
+  appState.revealedLines = new Set();
+  closeOverlay('sessionOverlay');
+  input.value = '';
+  secretTracker.buffer = '';
+  setTimeout(function() { enterDraft(); }, 150);
+}
+
+/* ============================================================
+   Draft (secret view) - single-column notepad lines
+============================================================ */
+async function enterDraft() {
+  document.getElementById('secretChatView').classList.add('active');
+  document.getElementById('draftTitle').textContent = 'Untitled Draft';
+  document.getElementById('draftSubtitle').textContent = 'Last edited just now';
+  await loadDraftLines();
+  setupAutoHide();
+  startHeartbeat();
+}
+
+async function loadDraftLines() {
+  const c = document.getElementById('draftLines'); if (!c) return;
+  c.innerHTML = '<div class="chat-empty"><i class="fas fa-circle-notch fa-spin"></i>Loading...</div>';
+  if (appState.linesListener) { try { appState.linesListener.off(); } catch (e) {} appState.linesListener = null; }
+  if (!firebaseReady || !db) {
+    c.innerHTML = '<div class="chat-empty"><i class="fas fa-wifi"></i>No connection</div>';
+    return;
+  }
+  appState.linesListener = db.ref(PATH.chat + '/lines').on('value', function(snap) {
+    appState.lines = snap.val() || {};
+    renderDraftLines();
+    setConn(true);
+  }, function() { setConn(false); });
+}
+
+function setConn(online) {
+  const dot = document.getElementById('connDot');
+  if (dot) dot.className = 'conn-dot ' + (online ? 'online' : 'offline');
+}
+
+/**
+ * Render lines as a flat single-column notepad.
+ * Each line: [A] text  OR  [B] text
+ * Encrypted lines show ciphertext until 3 taps reveal.
+ */
+function renderDraftLines() {
+  const c = document.getElementById('draftLines'); if (!c) return;
+  const lines = appState.lines;
+  if (!lines || Object.keys(lines).length === 0) {
+    c.innerHTML = '<div class="chat-empty"><i class="fas fa-pen"></i>Start writing...</div>';
+    return;
+  }
+  const list = Object.entries(lines).map(function(e) { return Object.assign({ id: e[0] }, e[1]); })
+    .sort(function(a, b) { return (a.time || 0) - (b.time || 0); });
+
+  let html = '';
+  let lastDay = '';
+  let prevSender = null;
+
+  list.forEach(function(line) {
+    const day = new Date(line.time).toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
+    if (day !== lastDay) { html += '<div class="chat-date-sep">— ' + day + ' —</div>'; lastDay = day; }
+
+    const isRevealed = appState.revealedLines.has(line.id);
+    const isMine = line.sender === 'B';
+    const prefix = line.sender === 'A' ? 'A' : 'B';
+    const timeStr = new Date(line.time).toLocaleTimeString('en-US', { hour:'2-digit', minute:'2-digit' });
+
+    let displayText;
+    let isEncryptedView = false;
+
+    if (line.encrypted && !isRevealed) {
+      displayText = line.cipherPreview || '••••••••••••';
+      isEncryptedView = true;
+    } else {
+      const plain = decryptText(line.text, appState.currentCode || getStoredCode());
+      displayText = plain || '[unreadable]';
+    }
+
+    html += '<div class="note-line ' + (isEncryptedView ? 'encrypted ' : '') +
+      (line.sender === 'A' ? 'from-a' : 'from-b') +
+      '" data-line-id="' + line.id + '" onclick="handleLineTap(\'' + line.id + '\')">' +
+      '<span class="line-prefix">' + prefix + '</span>' +
+      '<span class="line-content">' + escapeHtml(displayText) + '</span>' +
+      (isEncryptedView ? '<span class="line-lock">🔒</span>' : '') +
+      '<span class="line-time">' + timeStr + '</span>' +
+    '</div>';
+  });
+
+  c.innerHTML = html;
+  setTimeout(function() { c.scrollTop = c.scrollHeight; }, 50);
+}
+
+/**
+ * Line tap handling: 3-tap unlock for encrypted, 2-tap for delete options.
+ */
+const lineTapCounters = {};
+function handleLineTap(lineId) {
+  const line = appState.lines[lineId];
+  if (!line) return;
+
+  // Check if it's encrypted & not revealed
+  if (line.encrypted && !appState.revealedLines.has(lineId)) {
+    if (!lineTapCounters[lineId]) lineTapCounters[lineId] = { count: 0, timer: null };
+    const c = lineTapCounters[lineId];
+    c.count++;
+    clearTimeout(c.timer);
+    c.timer = setTimeout(function() { c.count = 0; }, 1200);
+
+    if (c.count >= 3) {
+      appState.revealedLines.add(lineId);
+      c.count = 0;
+      // Auto-hide after 10s
+      setTimeout(function() {
+        appState.revealedLines.delete(lineId);
+        if (appState.sessionActive) renderDraftLines();
+      }, 10000);
+      if (navigator.vibrate) navigator.vibrate(15);
+      renderDraftLines();
+    }
+    return;
+  }
+
+  // Already revealed / not encrypted: tap to show delete option
+  document.querySelectorAll('.note-line.show-actions').forEach(function(el) {
+    if (el.getAttribute('data-line-id') !== lineId) el.classList.remove('show-actions');
+  });
+  const el = document.querySelector('.note-line[data-line-id="' + lineId + '"]');
+  if (el) el.classList.toggle('show-actions');
+}
+
+/* Add line with auto-encrypt after 2 seconds */
+async function addDraftLine() {
+  const input = document.getElementById('draftInput');
+  const text = input.value.trim();
+  if (!text || !appState.currentCode) return;
+  if (!firebaseReady || !db) { showToast('No connection'); return; }
+
+  const lineId = db.ref(PATH.chat + '/lines').push().key;
+  const plaintext = encryptText(text, appState.currentCode);
+
+  // First: store plaintext-visual ciphertext NOT YET flagged as encrypted
+  // (visible for 2 seconds as normal text)
+  const line = {
+    sender: 'B',
+    text: plaintext,       // always encrypted at rest
+    time: Date.now(),
+    encrypted: false,       // visible decryptable for 2s
+    cipherPreview: null
+  };
+
+  input.value = ''; input.style.height = '38px';
+
+  try {
+    await db.ref(PATH.chat + '/lines/' + lineId).set(line);
+    if (navigator.vibrate) navigator.vibrate(10);
+
+    // After 2 seconds: mark as encrypted and store cipherPreview (first 24 chars)
+    setTimeout(async function() {
+      const preview = plaintext.substring(0, 28) + '...';
+      try {
+        await db.ref(PATH.chat + '/lines/' + lineId).update({
+          encrypted: true,
+          cipherPreview: preview
+        });
+      } catch (e) {}
+    }, 2000);
+  } catch (e) { showToast('Send failed'); }
+  appState.lastActivity = Date.now();
+  resetAutoHideTimer();
+}
+
+function autoResizeInput(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 100) + 'px';
+}
+
+function exitDraft() {
+  closeSession();
+  switchTab('calc');
+}
+
+function exitDraftSilent() {
+  closeSession();
+  switchTab('calc');
+}
+
+function closeSession() {
+  appState.sessionActive = false;
+  appState.currentCode = null;
+  appState.revealedLines = new Set();
+  document.getElementById('secretChatView').classList.remove('active');
+  document.getElementById('draftSettingsMenu').classList.remove('active');
+  document.getElementById('lockOverlay').classList.remove('active');
+  if (appState.linesListener) { try { appState.linesListener.off(); } catch (e) {} appState.linesListener = null; }
+  appState.lines = {};
+  if (appState.autoHideTimeout) { clearTimeout(appState.autoHideTimeout); appState.autoHideTimeout = null; }
+  if (appState.heartbeatInterval) { clearInterval(appState.heartbeatInterval); appState.heartbeatInterval = null; }
+  document.getElementById('draftInput').value = '';
+  document.getElementById('draftInput').style.height = '38px';
+}
+
+/* ============================================================
+   Auto-hide
+============================================================ */
+function setupAutoHide() { resetAutoHideTimer(); }
+function resetAutoHideTimer() {
+  if (appState.autoHideTimeout) clearTimeout(appState.autoHideTimeout);
+  if (!appState.autoHideDuration || appState.autoHideDuration === 0) return;
+  appState.autoHideTimeout = setTimeout(function() {
+    if (appState.sessionActive) lockDraft();
+  }, appState.autoHideDuration * 1000);
+}
+
+function lockDraft() {
+  if (!appState.sessionActive) return;
+  document.getElementById('lockInput').value = '';
+  document.getElementById('lockOverlay').classList.add('active');
+}
+
+function verifyLock() {
+  const val = document.getElementById('lockInput').value.trim();
+  if (!val) return;
+  if (val === getStoredCode()) {
+    document.getElementById('lockOverlay').classList.remove('active');
+    appState.currentCode = val;
+    appState.lastActivity = Date.now();
+    resetAutoHideTimer();
   } else {
-    input.classList.add('error');
-    setTimeout(function() {
-      closeOverlay('passwordOverlay');
-      input.value = '';
-      input.classList.remove('error');
-      calcState.display = val; calcState.lastResult = parseFloat(val) || 0;
-      secretTracker.buffer = val; updateCalcDisplay();
-    }, 400);
-    if (navigator.vibrate) navigator.vibrate([25, 25, 25]);
+    // Wrong → silently exit to notes
+    document.getElementById('lockOverlay').classList.remove('active');
+    exitDraftSilent();
   }
 }
 
 /* ============================================================
-   Secret chat
+   Heartbeat
 ============================================================ */
-async function enterSecretChat() {
-  if (!appState.currentPassword) return;
-  appState.chatActive = true;
-  document.getElementById('secretChatView').classList.add('active');
-  document.getElementById('chatTitle').textContent = 'Untitled Draft';
-  document.getElementById('chatSubtitle').textContent = 'Last edited just now';
-  await loadChatMessages();
-  setupAutoLock();
-  startHeartbeat();
-}
-
-async function loadChatMessages() {
-  const container = document.getElementById('chatMessages'); if (!container) return;
-  container.innerHTML = '<div class="chat-empty"><i class="fas fa-circle-notch fa-spin"></i>Loading...</div>';
-  if (appState.messagesListener) { try { appState.messagesListener.off(); } catch (e) {} appState.messagesListener = null; }
-  if (!firebaseReady || !db) {
-    container.innerHTML = '<div class="chat-empty"><i class="fas fa-wifi"></i>No connection</div>';
-    return;
-  }
-  appState.messagesListener = db.ref(PATH.chat + '/messages').on('value', function(snapshot) {
-    appState.messages = snapshot.val() || {};
-    renderChatMessages();
-    updateConnectionStatus(true);
-  }, function(err) { updateConnectionStatus(false); });
-}
-
-function updateConnectionStatus(online) {
-  const dot = document.getElementById('connDot'); const txt = document.getElementById('connText');
-  if (dot) dot.className = 'conn-dot ' + (online ? 'online' : 'offline');
-  if (txt) txt.textContent = online ? 'Online' : 'Offline';
-}
-
-function renderChatMessages() {
-  const container = document.getElementById('chatMessages'); if (!container) return;
-  const messages = appState.messages;
-  if (!messages || Object.keys(messages).length === 0) {
-    container.innerHTML = '<div class="chat-empty"><i class="fas fa-pen"></i>Start writing...</div>';
-    return;
-  }
-  const list = Object.entries(messages).map(function(e) { return Object.assign({ id: e[0] }, e[1]); }).sort(function(a,b) { return (a.time || 0) - (b.time || 0); });
-  let lastDay = ''; let html = '';
-  list.forEach(function(msg) {
-    const plain = decryptText(msg.text, appState.currentPassword);
-    if (plain === null) {
-      html += '<div class="note-message theirs" style="opacity:0.4;font-style:italic;">[unreadable message]</div>';
-      return;
-    }
-    const day = new Date(msg.time).toLocaleDateString('en-US', { dateStyle: 'medium' });
-    if (day !== lastDay) { html += '<div class="chat-date-sep">' + day + '</div>'; lastDay = day; }
-    const isMine = msg.sender === WORKSPACE;
-    const senderLabel = msg.sender === 'A' ? 'A' : 'B';
-    const time = new Date(msg.time).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
-    html += '<div class="note-message ' + (isMine ? 'mine' : 'theirs') + '" data-msg-id="' + msg.id + '" onclick="toggleMsgActions(this)">' +
-      '<div class="msg-actions"><button class="msg-action-btn" onclick="event.stopPropagation();deleteChatMessage(\'' + msg.id + '\')" type="button"><i class="fas fa-trash"></i></button></div>' +
-      escapeHtml(plain) +
-      '<div class="msg-meta"><span class="msg-sender">' + senderLabel + '</span><span>' + time + '</span></div>' +
-      '</div>';
-  });
-  container.innerHTML = html;
-  setTimeout(function() { container.scrollTop = container.scrollHeight; }, 50);
-}
-
-function toggleMsgActions(el) {
-  document.querySelectorAll('.note-message.show-actions').forEach(function(m) { if (m !== el) m.classList.remove('show-actions'); });
-  el.classList.toggle('show-actions');
-}
-
-async function sendChatMessage() {
-  const input = document.getElementById('chatInput');
-  const text = input.value.trim();
-  if (!text || !appState.currentPassword) return;
-  if (!firebaseReady || !db) { showToast('No connection', 'error'); return; }
-  const encrypted = encryptText(text, appState.currentPassword);
-  if (encrypted === 'ERR') { showToast('Encryption failed', 'error'); return; }
-  const msgId = db.ref(PATH.chat + '/messages').push().key;
-  const msg = { sender: WORKSPACE, text: encrypted, time: Date.now(), type: 'text' };
-  input.value = ''; input.style.height = '42px';
-  try {
-    await db.ref(PATH.chat + '/messages/' + msgId).set(msg);
-    if (navigator.vibrate) navigator.vibrate(12);
-  } catch (e) { showToast('Send failed', 'error'); }
-  appState.lastActivity = Date.now();
-  resetAutoLockTimer();
-}
-
-function deleteChatMessage(msgId) {
-  showConfirm('Delete Message', 'This message will be permanently deleted. Continue?', async function() {
-    closeModal('confirmModal');
-    try { await db.ref(PATH.chat + '/messages/' + msgId).remove(); showToast('Deleted', 'success'); }
-    catch (e) { showToast('Delete failed', 'error'); }
-  });
-}
-
-function exitChat() {
-  appState.chatActive = false;
-  document.getElementById('secretChatView').classList.remove('active');
-  document.getElementById('chatSettingsMenu').classList.remove('active');
-  document.getElementById('lockOverlay').classList.remove('active');
-  if (appState.messagesListener) { try { appState.messagesListener.off(); } catch (e) {} appState.messagesListener = null; }
-  appState.messages = {}; appState.currentPassword = null;
-  appState.lastActivity = 0; appState.panicMode = false;
-  if (appState.autoLockTimeout) { clearTimeout(appState.autoLockTimeout); appState.autoLockTimeout = null; }
-  if (appState.heartbeatInterval) { clearInterval(appState.heartbeatInterval); appState.heartbeatInterval = null; }
-  document.getElementById('chatInput').value = '';
-  document.getElementById('chatInput').style.height = '42px';
-  switchTab('calc');
-}
-
-function setupAutoLock() { resetAutoLockTimer(); }
-function resetAutoLockTimer() {
-  if (appState.autoLockTimeout) clearTimeout(appState.autoLockTimeout);
-  if (!appState.autoLockDuration || appState.autoLockDuration === 0) return;
-  appState.autoLockTimeout = setTimeout(function() { if (appState.chatActive) lockChat(); }, appState.autoLockDuration * 1000);
-}
-function lockChat() {
-  if (!appState.chatActive) return;
-  document.getElementById('lockInput').value = '';
-  document.getElementById('lockOverlay').classList.add('active');
-  setTimeout(function() { document.getElementById('lockInput').focus(); }, 200);
-}
-function verifyLock() {
-  const val = document.getElementById('lockInput').value.trim();
-  if (!val) return;
-  // التحقق محلي 100%
-  if (checkPassword(val)) {
-    document.getElementById('lockOverlay').classList.remove('active');
-    appState.currentPassword = val; appState.lastActivity = Date.now();
-    resetAutoLockTimer();
-  } else {
-    document.getElementById('lockInput').value = '';
-    if (navigator.vibrate) navigator.vibrate([25, 25, 25]);
-  }
-}
-
 function startHeartbeat() {
   if (appState.heartbeatInterval) clearInterval(appState.heartbeatInterval);
   async function update() {
-    if (!appState.chatActive || !appState.currentPassword || !firebaseReady || !db) return;
-    try { await db.ref(PATH.chat + '/presence/' + WORKSPACE).set({ online: true, lastSeen: Date.now() }); } catch (e) {}
+    if (!appState.sessionActive || !appState.currentCode || !firebaseReady || !db) return;
+    try { await db.ref(PATH.chat + '/presence/B').set({ online: true, lastSeen: Date.now() }); } catch (e) {}
   }
   update();
   appState.heartbeatInterval = setInterval(update, 20000);
 }
 
-function openChatSettings() { document.getElementById('chatSettingsMenu').classList.add('active'); }
-function closeChatSettings() { document.getElementById('chatSettingsMenu').classList.remove('active'); }
-function openChangePasswordModal() {
-  closeChatSettings();
-  document.getElementById('oldPwInput').value = '';
-  document.getElementById('newPwInput').value = '';
-  document.getElementById('confirmPwInput').value = '';
-  document.getElementById('changePwModal').classList.add('active');
+/* ============================================================
+   Draft settings
+============================================================ */
+function openDraftSettings() { document.getElementById('draftSettingsMenu').classList.add('active'); }
+function closeDraftSettings() { document.getElementById('draftSettingsMenu').classList.remove('active'); }
+
+function openChangeCodeModal() {
+  closeDraftSettings();
+  document.getElementById('oldCodeInput').value = '';
+  document.getElementById('newCodeInput').value = '';
+  document.getElementById('confirmCodeInput').value = '';
+  document.getElementById('changeCodeModal').classList.add('active');
 }
 
-async function changePassword() {
-  const oldPw = document.getElementById('oldPwInput').value.trim();
-  const newPw = document.getElementById('newPwInput').value.trim();
-  const confirmPw = document.getElementById('confirmPwInput').value.trim();
+async function changeSessionCode() {
+  const oldC = document.getElementById('oldCodeInput').value.trim();
+  const newC = document.getElementById('newCodeInput').value.trim();
+  const confC = document.getElementById('confirmCodeInput').value.trim();
 
-  if (!oldPw || !newPw || !confirmPw) { showToast('Fill in all fields', 'error'); return; }
-  if (newPw !== confirmPw) { showToast('Codes do not match', 'error'); return; }
-  if (newPw.length < 6) { showToast('Code too short (min 6 digits)', 'error'); return; }
+  if (!oldC || !newC || !confC) { showToast('Fill in all fields'); return; }
+  if (newC !== confC) { showToast('Codes do not match'); return; }
+  if (newC.length < 6) { showToast('Min 6 digits'); return; }
+  if (oldC !== getStoredCode()) { showToast('Current code incorrect'); return; }
 
-  // التحقق من الكلمة الحالية محلياً
-  if (!checkPassword(oldPw)) {
-    showToast('Current code is incorrect', 'error');
-    return;
-  }
-
-  showToast('Re-encrypting messages...');
-
+  // Re-encrypt all lines
   try {
-    // إعادة تشفير الرسائل في Firebase إذا كانت متاحة
     if (firebaseReady && db) {
-      try {
-        const snap = await db.ref(PATH.chat + '/messages').once('value');
-        const messages = snap.val() || {};
-        const updates = {};
-        Object.keys(messages).forEach(function(id) {
-          const msg = messages[id];
-          if (msg && msg.text && msg.text !== 'ERR') {
-            const plain = decryptText(msg.text, oldPw);
-            if (plain !== null) updates[id + '/text'] = encryptText(plain, newPw);
-          }
-        });
-        if (Object.keys(updates).length > 0) {
-          await db.ref(PATH.chat + '/messages').update(updates);
+      const snap = await db.ref(PATH.chat + '/lines').once('value');
+      const lines = snap.val() || {};
+      const updates = {};
+      Object.keys(lines).forEach(function(id) {
+        const l = lines[id];
+        if (l && l.text && l.text !== 'ERR') {
+          const plain = decryptText(l.text, oldC);
+          if (plain !== null) updates[id + '/text'] = encryptText(plain, newC);
         }
-      } catch (e) {
-        console.warn('Could not re-encrypt remote messages:', e);
-      }
+      });
+      if (Object.keys(updates).length > 0) await db.ref(PATH.chat + '/lines').update(updates);
     }
-
-    // حفظ كلمة السر الجديدة محلياً
-    if (!setStoredPassword(newPw)) {
-      showToast('Failed to save code', 'error');
-      return;
-    }
-
-    appState.currentPassword = newPw;
-    closeModal('changePwModal');
-    showToast('Access code changed successfully', 'success');
-
-    // إعادة تحميل الرسائل
-    if (appState.messagesListener) {
-      await loadChatMessages();
-    }
-  } catch (e) {
-    console.error('Change password error:', e);
-    showToast('Failed to change access code', 'error');
-  }
+    if (!setStoredCode(newC)) { showToast('Save failed'); return; }
+    appState.currentCode = newC;
+    closeModal('changeCodeModal');
+    showToast('Session code changed');
+    if (appState.linesListener) await loadDraftLines();
+  } catch (e) { showToast('Change failed'); }
 }
 
 function openAutoLockSettings() {
-  closeChatSettings();
-  document.getElementById('autoLockSelect').value = String(appState.autoLockDuration);
-  document.getElementById('autoLockModal').classList.add('active');
+  closeDraftSettings();
+  document.getElementById('autoHideSelect').value = String(appState.autoHideDuration);
+  document.getElementById('autoHideModal').classList.add('active');
 }
-function saveAutoLock() {
-  const val = parseInt(document.getElementById('autoLockSelect').value);
-  appState.autoLockDuration = val;
-  localStorage.setItem('bn_autolock', String(val));
-  resetAutoLockTimer();
-  closeModal('autoLockModal');
-  showToast('Saved', 'success');
-}
-
-function togglePanicMode() {
-  closeChatSettings();
-  appState.panicMode = !appState.panicMode;
-  document.getElementById('panicLabel').textContent = appState.panicMode ? 'Disable Panic Mode' : 'Enable Panic Mode';
-  if (appState.panicMode) {
-    if (window.DeviceMotionEvent) {
-      if (typeof DeviceMotionEvent.requestPermission === 'function') {
-        DeviceMotionEvent.requestPermission().then(function(response) {
-          if (response === 'granted') {
-            window.addEventListener('devicemotion', panicShakeHandler);
-            showToast('Panic mode enabled', 'success');
-          } else { appState.panicMode = false; showToast('Permission denied', 'error'); }
-        }).catch(function() { appState.panicMode = false; showToast('Sensor unavailable', 'error'); });
-      } else {
-        window.addEventListener('devicemotion', panicShakeHandler);
-        showToast('Panic mode enabled', 'success');
-      }
-    } else { appState.panicMode = false; showToast('No motion sensor', 'error'); }
-  } else { window.removeEventListener('devicemotion', panicShakeHandler); }
-}
-let lastShakeTime = 0;
-function panicShakeHandler(e) {
-  if (!appState.panicMode) return;
-  const acc = e.accelerationIncludingGravity; if (!acc) return;
-  const magnitude = Math.abs(acc.x || 0) + Math.abs(acc.y || 0) + Math.abs(acc.z || 0);
-  const now = Date.now();
-  if (magnitude > 35 && now - lastShakeTime > 1000) { lastShakeTime = now; exitChat(); showToast('Panic mode triggered', ''); }
+function saveAutoHide() {
+  const val = parseInt(document.getElementById('autoHideSelect').value);
+  appState.autoHideDuration = val;
+  localStorage.setItem('sn_autohide', String(val));
+  resetAutoHideTimer();
+  closeModal('autoHideModal');
+  showToast('Saved');
 }
 
-function clearAllMessages() {
-  closeChatSettings();
-  showConfirm('Clear All Messages', 'All messages will be permanently deleted. Are you sure?', async function() {
+function toggleDoubleTapPanic() {
+  appState.doubleTapPanicEnabled = !appState.doubleTapPanicEnabled;
+  localStorage.setItem('sn_panic_dtap', String(appState.doubleTapPanicEnabled));
+  document.getElementById('panicLabel').textContent = 'Double-Tap Panic: ' + (appState.doubleTapPanicEnabled ? 'ON' : 'OFF');
+  showToast(appState.doubleTapPanicEnabled ? 'Panic activated' : 'Panic disabled');
+}
+
+function clearAllDraftLines() {
+  closeDraftSettings();
+  showConfirm('Clear All Lines', 'All lines will be permanently deleted. Continue?', async function() {
     closeModal('confirmModal');
-    try { await db.ref(PATH.chat + '/messages').remove(); showToast('All messages cleared', 'success'); }
-    catch (e) { showToast('Clear failed', 'error'); }
+    try { await db.ref(PATH.chat + '/lines').remove(); showToast('Cleared'); }
+    catch (e) { showToast('Clear failed'); }
   });
 }
 
@@ -1020,12 +1127,87 @@ function showConfirm(title, text, callback) {
   document.getElementById('confirmModal').classList.add('active');
 }
 
-function autoResizeChatInput(el) {
-  el.style.height = 'auto';
-  el.style.height = Math.min(el.scrollHeight, 100) + 'px';
-  appState.lastActivity = Date.now();
-  resetAutoLockTimer();
+/* ============================================================
+   Global Double-Tap Panic (always active on any screen)
+   - If double-tap detected ANYWHERE → instantly switch to decoy
+============================================================ */
+const decoyScreens = ['decoyCalendar', 'decoyWeather', 'decoySettings'];
+let lastTapTime = 0;
+let lastTapX = 0, lastTapY = 0;
+
+function handleGlobalTap(e) {
+  // Only when session is active OR double-tap panic is enabled
+  if (!appState.sessionActive) return;
+
+  const now = Date.now();
+  const x = (e.touches && e.touches[0] ? e.touches[0].clientX : e.clientX) || 0;
+  const y = (e.touches && e.touches[0] ? e.touches[0].clientY : e.clientY) || 0;
+
+  const dt = now - lastTapTime;
+  const dist = Math.abs(x - lastTapX) + Math.abs(y - lastTapY);
+
+  // Double-tap: within 300ms and within 60px
+  if (dt < 300 && dt > 40 && dist < 60) {
+    triggerDecoy();
+    lastTapTime = 0;
+    return;
+  }
+
+  lastTapTime = now;
+  lastTapX = x;
+  lastTapY = y;
 }
+
+function triggerDecoy() {
+  // Hide the secret view instantly
+  document.getElementById('secretChatView').classList.remove('active');
+  document.getElementById('lockOverlay').classList.remove('active');
+  document.getElementById('draftSettingsMenu').classList.remove('active');
+
+  // Show a random decoy screen
+  const idx = Math.floor(Math.random() * decoyScreens.length);
+  decoyScreens.forEach(function(id) {
+    document.getElementById(id).classList.remove('active');
+  });
+  const decoy = document.getElementById(decoyScreens[idx]);
+  decoy.classList.add('active');
+
+  // Update date in calendar decoy
+  if (decoyScreens[idx] === 'decoyCalendar') {
+    const d = new Date();
+    document.getElementById('decoyDate').textContent = d.getDate();
+    document.getElementById('decoyMonth').textContent = d.toLocaleDateString('en-US', { month:'long', year:'numeric' });
+  }
+
+  // Close session silently in background
+  setTimeout(function() {
+    closeSession();
+    // Exit decoy after user taps outside
+    const exitDecoy = function(ev) {
+      if (ev.target.closest('.decoy-screen')) {
+        decoy.classList.remove('active');
+        switchTab('calc');
+        decoy.removeEventListener('click', exitDecoy);
+        decoy.removeEventListener('touchstart', exitDecoy);
+      }
+    };
+    setTimeout(function() {
+      decoy.addEventListener('click', exitDecoy);
+      decoy.addEventListener('touchstart', exitDecoy);
+    }, 400);
+  }, 50);
+}
+
+/* ============================================================
+   Session-based auto-wipe: on new session, ignore old state
+============================================================ */
+// When session closes, we don't persist decryption state.
+// Also: auto-wipe on tab unload → nothing persists.
+
+window.addEventListener('beforeunload', function() {
+  // Clear revealed set (memory only, but good practice)
+  appState.revealedLines = new Set();
+});
 
 /* ============================================================
    Init
@@ -1033,13 +1215,37 @@ function autoResizeChatInput(el) {
 (function init() {
   bindCalculatorButtons();
 
-  const chatInput = document.getElementById('chatInput');
-  if (chatInput) {
-    chatInput.addEventListener('keydown', function(e) {
-      if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendChatMessage(); }
+  // Set panic label
+  const pLabel = document.getElementById('panicLabel');
+  if (pLabel) pLabel.textContent = 'Double-Tap Panic: ' + (appState.doubleTapPanicEnabled ? 'ON' : 'OFF');
+
+  // Global double-tap panic
+  document.addEventListener('touchstart', handleGlobalTap, { passive: true });
+  document.addEventListener('click', function(e) {
+    // Only register click for double-tap when target isn't an input
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    handleGlobalTap(e);
+  }, { passive: true });
+
+  // Draft input Enter
+  const di = document.getElementById('draftInput');
+  if (di) {
+    di.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); addDraftLine(); }
     });
   }
 
+  // Activity reset for auto-hide
+  ['touchstart', 'click', 'keydown', 'input'].forEach(function(evt) {
+    document.addEventListener(evt, function() {
+      if (appState.sessionActive) {
+        appState.lastActivity = Date.now();
+        resetAutoHideTimer();
+      }
+    }, { passive: true });
+  });
+
+  // Prevent context menu on sensitive
   document.addEventListener('contextmenu', function(e) {
     if (e.target.classList.contains('secret-input') || e.target.closest('.secret-input')) e.preventDefault();
   });
@@ -1047,8 +1253,7 @@ function autoResizeChatInput(el) {
   renderNotes();
   updateCalcDisplay();
 
-  console.log('%cSmart Notes v3.2.2', 'color:#6366f1;font-size:16px;font-weight:bold;');
-  console.log('%cAccess: type 13122008 then long-press =', 'color:#10b981;font-size:12px;');
+  console.log('%cSmart Notes v3.3.0', 'color:#6366f1;font-size:16px;font-weight:bold;');
 })();
 </script>
 </body>
