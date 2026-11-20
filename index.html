@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en" dir="ltr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
@@ -65,7 +65,7 @@ input, textarea { user-select:text !important; -webkit-user-select:text !importa
 .converter-row { display:flex; gap:8px; margin-bottom:8px; }
 .converter-row input, .converter-row select { flex:1; min-width:0; background:var(--bg-tertiary); border:1px solid var(--border); border-radius:8px; padding:10px 12px; color:var(--text-primary); font-size:14px; outline:none; }
 .converter-row input:focus, .converter-row select:focus { border-color:var(--accent); }
-.converter-result { font-size:13px; color:var(--text-secondary); margin-top:6px; padding:8px 12px; background:var(--bg-tertiary); border-radius:8px; font-weight:600; direction:ltr; text-align:left; }
+.converter-result { font-size:13px; color:var(--text-secondary); margin-top:6px; padding:8px 12px; background:var(--bg-tertiary); border-radius:8px; font-weight:600; text-align:left; }
 
 .overlay { position:fixed; inset:0; background:rgba(0,0,0,0.82); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); display:none; align-items:center; justify-content:center; z-index:100; padding:20px; }
 .overlay.active { display:flex; animation:fadeIn 0.18s ease; }
@@ -74,15 +74,9 @@ input, textarea { user-select:text !important; -webkit-user-select:text !importa
 @keyframes slideUp { from{transform:translateY(24px); opacity:0} to{transform:translateY(0); opacity:1} }
 .overlay-content h2 { font-size:18px; margin-bottom:6px; font-weight:700; }
 .overlay-subtitle { font-size:12.5px; color:var(--text-secondary); margin-bottom:18px; line-height:1.55; }
-.workspace-options { display:flex; gap:10px; margin-top:6px; }
-.workspace-card { flex:1; background:var(--bg-tertiary); border:2px solid var(--border); border-radius:18px; padding:20px 10px; text-align:center; cursor:pointer; touch-action:manipulation; }
-.workspace-card:active { transform:scale(0.96); border-color:var(--accent); }
-.workspace-card .ws-icon { font-size:26px; color:var(--accent-light); margin-bottom:8px; display:block; }
-.workspace-card .ws-label { font-size:14px; font-weight:700; margin-bottom:3px; }
-.workspace-card .ws-sub { font-size:10.5px; color:var(--text-muted); }
 .secret-input-wrap { margin-top:16px; }
 .secret-input-wrap label { display:block; font-size:11.5px; color:var(--text-secondary); margin-bottom:7px; }
-.secret-input { width:100%; background:var(--bg-tertiary); border:2px solid var(--border); border-radius:12px; padding:16px; color:var(--text-primary); font-size:22px; text-align:center; letter-spacing:6px; outline:none; direction:ltr; font-weight:700; }
+.secret-input { width:100%; background:var(--bg-tertiary); border:2px solid var(--border); border-radius:12px; padding:16px; color:var(--text-primary); font-size:22px; text-align:center; letter-spacing:6px; outline:none; font-weight:700; }
 .secret-input:focus { border-color:var(--accent); }
 .secret-input.error { border-color:var(--danger); animation:shake 0.35s; }
 @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
@@ -103,11 +97,11 @@ input, textarea { user-select:text !important; -webkit-user-select:text !importa
 .chat-header-btn:active { background:var(--bg-tertiary); }
 .chat-messages { flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; padding:14px 12px; display:flex; flex-direction:column; gap:6px; min-height:0; }
 .note-message { padding:10px 12px; border-radius:12px; position:relative; max-width:88%; font-size:14px; line-height:1.55; word-wrap:break-word; white-space:pre-wrap; align-self:flex-start; cursor:pointer; }
-.note-message.mine { background:rgba(99,102,241,0.12); border-right:3px solid var(--accent); }
-.note-message.theirs { background:rgba(16,185,129,0.10); border-right:3px solid var(--success); }
+.note-message.mine { background:rgba(99,102,241,0.12); border-left:3px solid var(--accent); }
+.note-message.theirs { background:rgba(16,185,129,0.10); border-left:3px solid var(--success); }
 .msg-meta { font-size:9.5px; color:var(--text-muted); margin-top:4px; display:flex; gap:6px; align-items:center; opacity:0.75; }
 .msg-sender { font-weight:700; color:var(--text-secondary); }
-.msg-actions { position:absolute; top:4px; left:4px; display:none; gap:3px; }
+.msg-actions { position:absolute; top:4px; right:4px; display:none; gap:3px; }
 .note-message.show-actions .msg-actions { display:flex; }
 .msg-action-btn { width:24px; height:24px; background:var(--bg-elevated); border:none; border-radius:8px; color:var(--text-secondary); font-size:10px; cursor:pointer; display:flex; align-items:center; justify-content:center; }
 .msg-action-btn:active { background:var(--danger); color:white; }
@@ -170,9 +164,9 @@ input, textarea { user-select:text !important; -webkit-user-select:text !importa
     <button class="header-menu-btn" onclick="openAboutApp()" type="button"><i class="fas fa-ellipsis-v"></i></button>
   </div>
   <div class="tab-bar">
-    <button class="tab-btn active" data-tab="calc" onclick="switchTab('calc')" type="button"><i class="fas fa-calculator"></i><span>الحاسبة</span></button>
-    <button class="tab-btn" data-tab="notes" onclick="switchTab('notes')" type="button"><i class="fas fa-sticky-note"></i><span>المذكرات</span></button>
-    <button class="tab-btn" data-tab="convert" onclick="switchTab('convert')" type="button"><i class="fas fa-exchange-alt"></i><span>المحول</span></button>
+    <button class="tab-btn active" data-tab="calc" onclick="switchTab('calc')" type="button"><i class="fas fa-calculator"></i><span>Calculator</span></button>
+    <button class="tab-btn" data-tab="notes" onclick="switchTab('notes')" type="button"><i class="fas fa-sticky-note"></i><span>Notes</span></button>
+    <button class="tab-btn" data-tab="convert" onclick="switchTab('convert')" type="button"><i class="fas fa-exchange-alt"></i><span>Converter</span></button>
   </div>
   <div class="view-container">
     <div class="view active" id="calcView">
@@ -208,36 +202,36 @@ input, textarea { user-select:text !important; -webkit-user-select:text !importa
     </div>
     <div class="view" id="notesView">
       <div class="notes-toolbar">
-        <h3>ملاحظاتي</h3>
-        <button class="add-note-btn" onclick="openNoteEditor()" type="button"><i class="fas fa-plus"></i> جديدة</button>
+        <h3>My Notes</h3>
+        <button class="add-note-btn" onclick="openNoteEditor()" type="button"><i class="fas fa-plus"></i> New</button>
       </div>
       <div id="notesList"></div>
     </div>
     <div class="view" id="convertView">
       <div class="converter-section">
-        <h4>الطول</h4>
+        <h4>Length</h4>
         <div class="converter-row">
           <input type="number" id="lenInput" placeholder="0" oninput="convertLength()">
-          <select id="lenFrom" onchange="convertLength()"><option value="m">متر</option><option value="km">كيلومتر</option><option value="cm">سنتيمتر</option><option value="mi">ميل</option></select>
-          <select id="lenTo" onchange="convertLength()"><option value="cm">سنتيمتر</option><option value="m">متر</option><option value="km">كيلومتر</option><option value="mi">ميل</option></select>
+          <select id="lenFrom" onchange="convertLength()"><option value="m">Meters</option><option value="km">Kilometers</option><option value="cm">Centimeters</option><option value="mi">Miles</option></select>
+          <select id="lenTo" onchange="convertLength()"><option value="cm">Centimeters</option><option value="m">Meters</option><option value="km">Kilometers</option><option value="mi">Miles</option></select>
         </div>
         <div class="converter-result" id="lenResult">= 0</div>
       </div>
       <div class="converter-section">
-        <h4>الوزن</h4>
+        <h4>Weight</h4>
         <div class="converter-row">
           <input type="number" id="wInput" placeholder="0" oninput="convertWeight()">
-          <select id="wFrom" onchange="convertWeight()"><option value="kg">كيلوجرام</option><option value="g">جرام</option><option value="lb">باوند</option></select>
-          <select id="wTo" onchange="convertWeight()"><option value="g">جرام</option><option value="kg">كيلوجرام</option><option value="lb">باوند</option></select>
+          <select id="wFrom" onchange="convertWeight()"><option value="kg">Kilograms</option><option value="g">Grams</option><option value="lb">Pounds</option></select>
+          <select id="wTo" onchange="convertWeight()"><option value="g">Grams</option><option value="kg">Kilograms</option><option value="lb">Pounds</option></select>
         </div>
         <div class="converter-result" id="wResult">= 0</div>
       </div>
       <div class="converter-section">
-        <h4>الحرارة</h4>
+        <h4>Temperature</h4>
         <div class="converter-row">
           <input type="number" id="tempInput" placeholder="0" oninput="convertTemp()">
-          <select id="tempFrom" onchange="convertTemp()"><option value="c">مئوية</option><option value="f">فهرنهايت</option><option value="k">كلفن</option></select>
-          <select id="tempTo" onchange="convertTemp()"><option value="f">فهرنهايت</option><option value="c">مئوية</option><option value="k">كلفن</option></select>
+          <select id="tempFrom" onchange="convertTemp()"><option value="c">Celsius</option><option value="f">Fahrenheit</option><option value="k">Kelvin</option></select>
+          <select id="tempTo" onchange="convertTemp()"><option value="f">Fahrenheit</option><option value="c">Celsius</option><option value="k">Kelvin</option></select>
         </div>
         <div class="converter-result" id="tempResult">= 0</div>
       </div>
@@ -248,141 +242,122 @@ input, textarea { user-select:text !important; -webkit-user-select:text !importa
 <div class="overlay" id="aboutOverlay">
   <div class="overlay-content">
     <h2>Smart Notes & Calculator</h2>
-    <p class="overlay-subtitle">تطبيق مذكرات وآلة حاسبة احترافي يعمل بدون إنترنت. جميع ملاحظاتك محفوظة على جهازك فقط.</p>
+    <p class="overlay-subtitle">A professional notes and calculator application that works offline. All your notes are stored locally on your device only.</p>
     <div style="font-size:12px;color:var(--text-secondary);line-height:1.8;background:var(--bg-tertiary);padding:12px;border-radius:10px;margin-bottom:14px;">
-      <div><strong>الإصدار:</strong> 3.2.1</div>
-      <div><strong>المطور:</strong> SmartApps Studio</div>
-      <div><strong>الخصوصية:</strong> لا يتم إرسال أي بيانات</div>
+      <div><strong>Version:</strong> 3.2.1</div>
+      <div><strong>Developer:</strong> SmartApps Studio</div>
+      <div><strong>Privacy:</strong> No data is transmitted</div>
     </div>
-    <button class="modal-btn primary" style="width:100%;" onclick="closeOverlay('aboutOverlay')" type="button">إغلاق</button>
+    <button class="modal-btn primary" style="width:100%;" onclick="closeOverlay('aboutOverlay')" type="button">Close</button>
   </div>
 </div>
 
 <div class="modal-overlay" id="noteEditorModal">
   <div class="modal-box">
-    <h3 id="noteEditorTitle">ملاحظة جديدة</h3>
-    <input type="text" class="modal-input" id="noteTitleInput" placeholder="العنوان">
-    <textarea class="modal-input" id="noteContentInput" placeholder="اكتب هنا..." rows="6" style="resize:none;"></textarea>
+    <h3 id="noteEditorTitle">New Note</h3>
+    <input type="text" class="modal-input" id="noteTitleInput" placeholder="Title">
+    <textarea class="modal-input" id="noteContentInput" placeholder="Write here..." rows="6" style="resize:none;"></textarea>
     <div class="modal-actions">
-      <button class="modal-btn primary" onclick="saveNote()" type="button">حفظ</button>
-      <button class="modal-btn secondary" onclick="closeModal('noteEditorModal')" type="button">إلغاء</button>
+      <button class="modal-btn primary" onclick="saveNote()" type="button">Save</button>
+      <button class="modal-btn secondary" onclick="closeModal('noteEditorModal')" type="button">Cancel</button>
     </div>
   </div>
 </div>
 
-<div class="overlay" id="workspaceOverlay">
-  <div class="overlay-content">
-    <h2>إعدادات متقدمة</h2>
-    <p class="overlay-subtitle">اختر مساحة العمل التي تريد فتحها. سيتم استخدام كلمة السر المشتركة للوصول.</p>
-    <div class="workspace-options">
-      <div class="workspace-card" onclick="selectWorkspace('A')">
-        <i class="fas fa-cube ws-icon"></i>
-        <div class="ws-label">المسألة A</div>
-        <div class="ws-sub">Workspace A</div>
-      </div>
-      <div class="workspace-card" onclick="selectWorkspace('B')">
-        <i class="fas fa-cubes ws-icon"></i>
-        <div class="ws-label">المسألة B</div>
-        <div class="ws-sub">Workspace B</div>
-      </div>
-    </div>
-    <button class="modal-btn secondary" style="width:100%;margin-top:14px;" onclick="closeOverlay('workspaceOverlay')" type="button">إلغاء</button>
-  </div>
-</div>
-
+<!-- Secure access prompt (no workspace chooser - B is automatic) -->
 <div class="overlay" id="passwordOverlay">
   <div class="overlay-content">
-    <h2 id="pwTitle">التحقق</h2>
-    <p class="overlay-subtitle" id="pwSubtitle">أدخل رمز التحقق لإكمال العملية</p>
+    <h2>Workspace Verification</h2>
+    <p class="overlay-subtitle">Enter your access code to continue to your workspace.</p>
     <div class="secret-input-wrap">
-      <label>الرمز السري</label>
+      <label>Access Code</label>
       <input type="tel" class="secret-input" id="secretInput" placeholder="••••••••" maxlength="20" inputmode="numeric" autocomplete="off">
     </div>
     <div class="secret-hint" id="secretHint"></div>
-    <button class="secret-verify-btn" onclick="verifySecret()" type="button">تحقق</button>
-    <button class="modal-btn secondary" style="width:100%;margin-top:8px;" onclick="closeOverlay('passwordOverlay')" type="button">إلغاء</button>
+    <button class="secret-verify-btn" onclick="verifySecret()" type="button">Verify</button>
+    <button class="modal-btn secondary" style="width:100%;margin-top:8px;" onclick="closeOverlay('passwordOverlay')" type="button">Cancel</button>
   </div>
 </div>
 
 <div id="secretChatView">
   <div class="chat-header">
     <div class="chat-header-left">
-      <button class="chat-back-btn" onclick="exitChat()" type="button"><i class="fas fa-arrow-right"></i></button>
+      <button class="chat-back-btn" onclick="exitChat()" type="button"><i class="fas fa-arrow-left"></i></button>
       <div class="chat-title">
-        <h3 id="chatTitle">مشروع جديد</h3>
-        <p id="chatSubtitle">آخر تعديل الآن</p>
+        <h3 id="chatTitle">Untitled Draft</h3>
+        <p id="chatSubtitle">Last edited just now</p>
       </div>
     </div>
     <div style="display:flex;align-items:center;gap:6px;">
       <span class="connection-indicator">
         <span class="conn-dot offline" id="connDot"></span>
-        <span id="connText">غير متصل</span>
+        <span id="connText">Offline</span>
       </span>
       <button class="chat-header-btn" onclick="openChatSettings()" type="button"><i class="fas fa-ellipsis-v"></i></button>
     </div>
   </div>
   <div class="chat-messages" id="chatMessages"></div>
   <div class="chat-input-area">
-    <textarea class="chat-input" id="chatInput" placeholder="أضف سطراً..." rows="1" oninput="autoResizeChatInput(this)"></textarea>
+    <textarea class="chat-input" id="chatInput" placeholder="Add a line..." rows="1" oninput="autoResizeChatInput(this)"></textarea>
     <button class="chat-send-btn" onclick="sendChatMessage()" type="button"><i class="fas fa-paper-plane"></i></button>
   </div>
 </div>
 
 <div class="lock-overlay" id="lockOverlay">
   <i class="fas fa-lock lock-icon"></i>
-  <p>أدخل رمز التحقق للمتابعة</p>
+  <p>Session locked. Enter your access code to continue.</p>
   <input type="tel" class="secret-input" id="lockInput" placeholder="••••••••" maxlength="20" inputmode="numeric" style="width:240px;margin-bottom:12px;" autocomplete="off">
-  <button class="secret-verify-btn" style="width:240px;" onclick="verifyLock()" type="button">فتح</button>
+  <button class="secret-verify-btn" style="width:240px;" onclick="verifyLock()" type="button">Unlock</button>
 </div>
 
 <div class="chat-settings-menu" id="chatSettingsMenu">
   <div class="chat-settings-panel">
-    <div class="settings-item" onclick="openChangePasswordModal()"><i class="fas fa-key"></i><span>تغيير كلمة السر</span></div>
-    <div class="settings-item" onclick="openAutoLockSettings()"><i class="fas fa-clock"></i><span>القفل التلقائي</span></div>
-    <div class="settings-item" onclick="togglePanicMode()"><i class="fas fa-bolt"></i><span id="panicLabel">تفعيل وضع الطوارئ</span></div>
-    <div class="settings-item danger" onclick="clearAllMessages()"><i class="fas fa-trash"></i><span>مسح كل الرسائل</span></div>
-    <div class="settings-item" onclick="closeChatSettings()"><i class="fas fa-times"></i><span>إغلاق</span></div>
+    <div class="settings-item" onclick="openChangePasswordModal()"><i class="fas fa-key"></i><span>Change Access Code</span></div>
+    <div class="settings-item" onclick="openAutoLockSettings()"><i class="fas fa-clock"></i><span>Auto-Lock Timer</span></div>
+    <div class="settings-item" onclick="togglePanicMode()"><i class="fas fa-bolt"></i><span id="panicLabel">Enable Panic Mode</span></div>
+    <div class="settings-item danger" onclick="clearAllMessages()"><i class="fas fa-trash"></i><span>Clear All Messages</span></div>
+    <div class="settings-item" onclick="closeChatSettings()"><i class="fas fa-times"></i><span>Close</span></div>
   </div>
 </div>
 
 <div class="modal-overlay" id="changePwModal">
   <div class="modal-box">
-    <h3>تغيير كلمة السر</h3>
-    <input type="tel" class="modal-input" id="oldPwInput" placeholder="كلمة السر الحالية" inputmode="numeric" autocomplete="off">
-    <input type="tel" class="modal-input" id="newPwInput" placeholder="كلمة السر الجديدة" inputmode="numeric" autocomplete="off">
-    <input type="tel" class="modal-input" id="confirmPwInput" placeholder="تأكيد كلمة السر" inputmode="numeric" autocomplete="off">
+    <h3>Change Access Code</h3>
+    <input type="tel" class="modal-input" id="oldPwInput" placeholder="Current access code" inputmode="numeric" autocomplete="off">
+    <input type="tel" class="modal-input" id="newPwInput" placeholder="New access code" inputmode="numeric" autocomplete="off">
+    <input type="tel" class="modal-input" id="confirmPwInput" placeholder="Confirm new access code" inputmode="numeric" autocomplete="off">
     <div class="modal-actions">
-      <button class="modal-btn primary" onclick="changePassword()" type="button">تغيير</button>
-      <button class="modal-btn secondary" onclick="closeModal('changePwModal')" type="button">إلغاء</button>
+      <button class="modal-btn primary" onclick="changePassword()" type="button">Change</button>
+      <button class="modal-btn secondary" onclick="closeModal('changePwModal')" type="button">Cancel</button>
     </div>
   </div>
 </div>
 
 <div class="modal-overlay" id="autoLockModal">
   <div class="modal-box">
-    <h3>القفل التلقائي</h3>
-    <p style="font-size:12.5px;color:var(--text-secondary);margin-bottom:12px;">اقفل الشات تلقائياً بعد فترة من عدم النشاط</p>
+    <h3>Auto-Lock Timer</h3>
+    <p style="font-size:12.5px;color:var(--text-secondary);margin-bottom:12px;">Automatically lock the workspace after a period of inactivity.</p>
     <select class="modal-input" id="autoLockSelect">
-      <option value="0">معطل</option>
-      <option value="30">30 ثانية</option>
-      <option value="60">دقيقة</option>
-      <option value="300">5 دقائق</option>
-      <option value="600">10 دقائق</option>
+      <option value="0">Disabled</option>
+      <option value="30">30 seconds</option>
+      <option value="60">1 minute</option>
+      <option value="300">5 minutes</option>
+      <option value="600">10 minutes</option>
     </select>
     <div class="modal-actions">
-      <button class="modal-btn primary" onclick="saveAutoLock()" type="button">حفظ</button>
-      <button class="modal-btn secondary" onclick="closeModal('autoLockModal')" type="button">إلغاء</button>
+      <button class="modal-btn primary" onclick="saveAutoLock()" type="button">Save</button>
+      <button class="modal-btn secondary" onclick="closeModal('autoLockModal')" type="button">Cancel</button>
     </div>
   </div>
 </div>
 
 <div class="modal-overlay" id="confirmModal">
   <div class="modal-box">
-    <h3 id="confirmTitle">تأكيد</h3>
+    <h3 id="confirmTitle">Confirm</h3>
     <p id="confirmText" style="font-size:13px;color:var(--text-secondary);margin-bottom:14px;line-height:1.6;"></p>
     <div class="modal-actions">
-      <button class="modal-btn danger" id="confirmYesBtn" type="button">نعم</button>
-      <button class="modal-btn secondary" onclick="closeModal('confirmModal')" type="button">إلغاء</button>
+      <button class="modal-btn danger" id="confirmYesBtn" type="button">Yes</button>
+      <button class="modal-btn secondary" onclick="closeModal('confirmModal')" type="button">Cancel</button>
     </div>
   </div>
 </div>
@@ -395,7 +370,7 @@ input, textarea { user-select:text !important; -webkit-user-select:text !importa
 
 <script>
 /* ============================================================
-   Firebase
+   Firebase initialization
 ============================================================ */
 const firebaseConfig = {
   apiKey: "AIzaSyCASVDgfjolBZm5sc_sYOs8LMh_9jFidkQ",
@@ -419,16 +394,19 @@ const PATH = { chat: 'bn_secret_v2/chat', config: 'bn_secret_v2/config' };
 const DEFAULT_PASSWORD = '13122008';
 const FIXED_SECRET = 'BlackNorth::SecretChat::2024::v2::prime';
 
+/* Workspace B is used automatically - no chooser */
+const WORKSPACE = 'B';
+
 const appState = {
-  workspace: null, currentPassword: null, chatActive: false,
+  currentPassword: null, chatActive: false,
   messagesListener: null, messages: {},
   autoLockTimeout: null, autoLockDuration: parseInt(localStorage.getItem('bn_autolock') || '300'),
   lastActivity: Date.now(), panicMode: false, heartbeatInterval: null,
-  lockOnHide: localStorage.getItem('bn_lock_on_hide') === 'true'
+  lockOnHide: false
 };
 
 /* ============================================================
-   أدوات عامة
+   Utility helpers
 ============================================================ */
 function showToast(msg, type) {
   const t = document.getElementById('toast'); if (!t) return;
@@ -444,7 +422,7 @@ function escapeHtml(s) {
 }
 
 /* ============================================================
-   التشفير
+   Encryption
 ============================================================ */
 function deriveKey(password) {
   try {
@@ -476,7 +454,7 @@ async function initializeConfig() {
 }
 
 /* ============================================================
-   التبويبات
+   Tabs
 ============================================================ */
 function switchTab(tab) {
   document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
@@ -489,11 +467,9 @@ function switchTab(tab) {
 }
 
 /* ============================================================
-   الآلة الحاسبة - منطق منفصل تماماً
+   Calculator logic
 ============================================================ */
 const calcState = { expression: '', display: '0', lastResult: null };
-
-// متتبع مستقل لكلمة السر - لا علاقة له بالحاسبة
 const secretTracker = { buffer: '', lastPress: 0 };
 
 function updateCalcDisplay() {
@@ -525,7 +501,6 @@ function calcAction(action) {
 
 function evaluateExpression(expr) {
   let e = expr.replace(/×/g,'*').replace(/÷/g,'/').replace(/−/g,'-');
-  // حل الأقواس المتداخلة بشكل متكرر
   let maxIter = 20;
   while (e.includes('√(') && maxIter-- > 0) {
     e = e.replace(/√\(([^()]*)\)/g, function(match, inner) {
@@ -542,30 +517,22 @@ function evaluateExpression(expr) {
 }
 
 /* ============================================================
-   ربط الأزرار - استخدام pointer events (يعمل على كل الأجهزة)
+   Bind calculator buttons
 ============================================================ */
 function bindCalculatorButtons() {
   const container = document.getElementById('calcButtons');
   if (!container) return;
-
-  // منع قائمة السياق
   container.addEventListener('contextmenu', function(e) { e.preventDefault(); });
 
-  // ربط كل زر على حدة (أضمن من delegation على الهواتف)
   const allBtns = container.querySelectorAll('.calc-btn[data-action]');
   allBtns.forEach(function(btn) {
     const action = btn.getAttribute('data-action');
-    if (action === '=') return; // يُعالَج منفصلاً
-
-    // استخدام pointerdown للاستجابة الفورية
+    if (action === '=') return;
     btn.addEventListener('pointerdown', function(e) {
       e.preventDefault();
       e.stopPropagation();
-
-      // تتبع كلمة السر - مستقل تماماً
       if (/[0-9]/.test(action)) {
         const now = Date.now();
-        // إذا مر أكثر من 4 ثوانٍ، ابدأ من جديد
         if (now - secretTracker.lastPress > 4000) secretTracker.buffer = '';
         secretTracker.lastPress = now;
         secretTracker.buffer += action;
@@ -573,17 +540,12 @@ function bindCalculatorButtons() {
       } else if (action === 'C') {
         secretTracker.buffer = '';
       }
-
-      // تنفيذ عمل الحاسبة
       calcAction(action);
-
-      // تأثير بصري
       btn.classList.add('pressed');
       setTimeout(function() { btn.classList.remove('pressed'); }, 100);
     }, { passive: false });
   });
 
-  // زر = - معالجة خاصة
   const equalsBtn = document.getElementById('equalsBtn');
   if (!equalsBtn) return;
 
@@ -597,18 +559,14 @@ function bindCalculatorButtons() {
     isDown = true;
     longPressTriggered = false;
     equalsBtn.classList.add('holding');
-
-    // تحقق من كلمة السر
-    const isSecretValid = (secretTracker.buffer === DEFAULT_PASSWORD) ||
-                          (secretTracker.buffer === appState.currentPassword);
-
+    const isSecretValid = (secretTracker.buffer === DEFAULT_PASSWORD) || (secretTracker.buffer === appState.currentPassword);
     if (isSecretValid) {
       holdTimer = setTimeout(function() {
         longPressTriggered = true;
         equalsBtn.classList.remove('holding');
         secretTracker.buffer = '';
         if (navigator.vibrate) navigator.vibrate([30, 30, 30]);
-        openWorkspaceSelector();
+        openPasswordPrompt();
       }, 1500);
     }
   }
@@ -618,10 +576,7 @@ function bindCalculatorButtons() {
     isDown = false;
     if (holdTimer) { clearTimeout(holdTimer); holdTimer = null; }
     equalsBtn.classList.remove('holding');
-    // إذا لم يكن ضغطاً مطولاً، نفّذ =
-    if (!longPressTriggered) {
-      calcAction('=');
-    }
+    if (!longPressTriggered) calcAction('=');
   }
 
   equalsBtn.addEventListener('pointerdown', startEquals, { passive: false });
@@ -635,7 +590,7 @@ function bindCalculatorButtons() {
 }
 
 /* ============================================================
-   المذكرات
+   Notes
 ============================================================ */
 let notes = [];
 try { notes = JSON.parse(localStorage.getItem('bn_notes') || '[]'); if (!Array.isArray(notes)) notes = []; } catch (e) { notes = []; }
@@ -644,14 +599,14 @@ let editingNoteId = null;
 function renderNotes() {
   const container = document.getElementById('notesList'); if (!container) return;
   if (notes.length === 0) {
-    container.innerHTML = '<div class="empty-state"><i class="fas fa-sticky-note"></i><div>لا توجد ملاحظات بعد</div></div>';
+    container.innerHTML = '<div class="empty-state"><i class="fas fa-sticky-note"></i><div>No notes yet</div></div>';
     return;
   }
   container.innerHTML = notes.map(function(n) {
     return '<div class="note-card" onclick="openNoteEditor(\'' + n.id + '\')">' +
-      '<div class="note-title">' + escapeHtml(n.title || 'بدون عنوان') + '</div>' +
+      '<div class="note-title">' + escapeHtml(n.title || 'Untitled') + '</div>' +
       '<div class="note-preview">' + escapeHtml((n.content || '').substring(0, 120)) + '</div>' +
-      '<div class="note-date">' + new Date(n.updatedAt).toLocaleString('ar-EG', { dateStyle: 'short', timeStyle: 'short' }) + '</div>' +
+      '<div class="note-date">' + new Date(n.updatedAt).toLocaleString('en-US', { dateStyle: 'short', timeStyle: 'short' }) + '</div>' +
       '</div>';
   }).join('');
 }
@@ -659,7 +614,7 @@ function renderNotes() {
 function openNoteEditor(id) {
   editingNoteId = id || null;
   const titleEl = document.getElementById('noteEditorTitle');
-  if (titleEl) titleEl.textContent = id ? 'تعديل الملاحظة' : 'ملاحظة جديدة';
+  if (titleEl) titleEl.textContent = id ? 'Edit Note' : 'New Note';
   if (id) {
     const note = notes.find(function(n) { return n.id === id; });
     if (note) {
@@ -680,18 +635,18 @@ function saveNote() {
   if (!title && !content) { closeModal('noteEditorModal'); return; }
   if (editingNoteId) {
     const idx = notes.findIndex(function(n) { return n.id === editingNoteId; });
-    if (idx >= 0) { notes[idx].title = title || 'بدون عنوان'; notes[idx].content = content; notes[idx].updatedAt = Date.now(); }
+    if (idx >= 0) { notes[idx].title = title || 'Untitled'; notes[idx].content = content; notes[idx].updatedAt = Date.now(); }
   } else {
-    notes.unshift({ id: 'note_' + Date.now(), title: title || 'بدون عنوان', content: content, createdAt: Date.now(), updatedAt: Date.now() });
+    notes.unshift({ id: 'note_' + Date.now(), title: title || 'Untitled', content: content, createdAt: Date.now(), updatedAt: Date.now() });
   }
   localStorage.setItem('bn_notes', JSON.stringify(notes));
   closeModal('noteEditorModal');
   renderNotes();
-  showToast('تم الحفظ', 'success');
+  showToast('Saved', 'success');
 }
 
 /* ============================================================
-   المحول
+   Converter
 ============================================================ */
 const lengthRates = { m: 1, km: 1000, cm: 0.01, mi: 1609.344 };
 const weightRates = { kg: 1, g: 0.001, lb: 0.453592 };
@@ -717,20 +672,9 @@ function convertTemp() {
 function openAboutApp() { document.getElementById('aboutOverlay').classList.add('active'); }
 
 /* ============================================================
-   الوصول السري
+   Secure access - no workspace chooser, B is automatic
 ============================================================ */
-function openWorkspaceSelector() {
-  const ws = document.getElementById('workspaceOverlay');
-  if (ws) ws.classList.add('active');
-}
-function selectWorkspace(ws) {
-  appState.workspace = ws;
-  closeOverlay('workspaceOverlay');
-  openPasswordPrompt(ws);
-}
-function openPasswordPrompt(ws) {
-  document.getElementById('pwTitle').textContent = 'التحقق';
-  document.getElementById('pwSubtitle').textContent = ws === 'A' ? 'مساحة العمل A - تحقق من الحساب' : 'مساحة العمل B - تحقق من الحساب';
+function openPasswordPrompt() {
   document.getElementById('secretInput').value = '';
   document.getElementById('secretHint').textContent = '';
   document.getElementById('passwordOverlay').classList.add('active');
@@ -763,25 +707,22 @@ async function verifySecret() {
       closeOverlay('passwordOverlay');
       input.value = '';
       input.classList.remove('error');
-      if (appState.workspace === 'B') {
-        calcState.display = val; calcState.lastResult = parseFloat(val) || 0;
-        secretTracker.buffer = val; updateCalcDisplay();
-      }
+      calcState.display = val; calcState.lastResult = parseFloat(val) || 0;
+      secretTracker.buffer = val; updateCalcDisplay();
     }, 400);
     if (navigator.vibrate) navigator.vibrate([25, 25, 25]);
   }
 }
 
 /* ============================================================
-   الشات
+   Secret chat
 ============================================================ */
 async function enterSecretChat() {
   if (!appState.currentPassword) return;
   appState.chatActive = true;
   document.getElementById('secretChatView').classList.add('active');
-  const titles = { A: 'مشروع جديد', B: 'مسودة العمل' };
-  document.getElementById('chatTitle').textContent = titles[appState.workspace] || 'مذكرة';
-  document.getElementById('chatSubtitle').textContent = 'آخر تعديل الآن';
+  document.getElementById('chatTitle').textContent = 'Untitled Draft';
+  document.getElementById('chatSubtitle').textContent = 'Last edited just now';
   await loadChatMessages();
   setupAutoLock();
   startHeartbeat();
@@ -789,10 +730,10 @@ async function enterSecretChat() {
 
 async function loadChatMessages() {
   const container = document.getElementById('chatMessages'); if (!container) return;
-  container.innerHTML = '<div class="chat-empty"><i class="fas fa-circle-notch fa-spin"></i>جاري التحميل...</div>';
+  container.innerHTML = '<div class="chat-empty"><i class="fas fa-circle-notch fa-spin"></i>Loading...</div>';
   if (appState.messagesListener) { try { appState.messagesListener.off(); } catch (e) {} appState.messagesListener = null; }
   if (!firebaseReady || !db) {
-    container.innerHTML = '<div class="chat-empty"><i class="fas fa-wifi"></i>لا يوجد اتصال</div>';
+    container.innerHTML = '<div class="chat-empty"><i class="fas fa-wifi"></i>No connection</div>';
     return;
   }
   appState.messagesListener = db.ref(PATH.chat + '/messages').on('value', function(snapshot) {
@@ -805,14 +746,14 @@ async function loadChatMessages() {
 function updateConnectionStatus(online) {
   const dot = document.getElementById('connDot'); const txt = document.getElementById('connText');
   if (dot) dot.className = 'conn-dot ' + (online ? 'online' : 'offline');
-  if (txt) txt.textContent = online ? 'متصل' : 'غير متصل';
+  if (txt) txt.textContent = online ? 'Online' : 'Offline';
 }
 
 function renderChatMessages() {
   const container = document.getElementById('chatMessages'); if (!container) return;
   const messages = appState.messages;
   if (!messages || Object.keys(messages).length === 0) {
-    container.innerHTML = '<div class="chat-empty"><i class="fas fa-pen"></i>ابدأ الكتابة...</div>';
+    container.innerHTML = '<div class="chat-empty"><i class="fas fa-pen"></i>Start writing...</div>';
     return;
   }
   const list = Object.entries(messages).map(function(e) { return Object.assign({ id: e[0] }, e[1]); }).sort(function(a,b) { return (a.time || 0) - (b.time || 0); });
@@ -820,14 +761,14 @@ function renderChatMessages() {
   list.forEach(function(msg) {
     const plain = decryptText(msg.text, appState.currentPassword);
     if (plain === null) {
-      html += '<div class="note-message theirs" style="opacity:0.4;font-style:italic;">[رسالة غير قابلة للقراءة]</div>';
+      html += '<div class="note-message theirs" style="opacity:0.4;font-style:italic;">[unreadable message]</div>';
       return;
     }
-    const day = new Date(msg.time).toLocaleDateString('ar-EG', { dateStyle: 'medium' });
+    const day = new Date(msg.time).toLocaleDateString('en-US', { dateStyle: 'medium' });
     if (day !== lastDay) { html += '<div class="chat-date-sep">' + day + '</div>'; lastDay = day; }
-    const isMine = msg.sender === appState.workspace;
+    const isMine = msg.sender === WORKSPACE;
     const senderLabel = msg.sender === 'A' ? 'A' : 'B';
-    const time = new Date(msg.time).toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' });
+    const time = new Date(msg.time).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
     html += '<div class="note-message ' + (isMine ? 'mine' : 'theirs') + '" data-msg-id="' + msg.id + '" onclick="toggleMsgActions(this)">' +
       '<div class="msg-actions"><button class="msg-action-btn" onclick="event.stopPropagation();deleteChatMessage(\'' + msg.id + '\')" type="button"><i class="fas fa-trash"></i></button></div>' +
       escapeHtml(plain) +
@@ -847,25 +788,25 @@ async function sendChatMessage() {
   const input = document.getElementById('chatInput');
   const text = input.value.trim();
   if (!text || !appState.currentPassword) return;
-  if (!firebaseReady || !db) { showToast('لا يوجد اتصال', 'error'); return; }
+  if (!firebaseReady || !db) { showToast('No connection', 'error'); return; }
   const encrypted = encryptText(text, appState.currentPassword);
-  if (encrypted === 'ERR') { showToast('فشل التشفير', 'error'); return; }
+  if (encrypted === 'ERR') { showToast('Encryption failed', 'error'); return; }
   const msgId = db.ref(PATH.chat + '/messages').push().key;
-  const msg = { sender: appState.workspace, text: encrypted, time: Date.now(), type: 'text' };
+  const msg = { sender: WORKSPACE, text: encrypted, time: Date.now(), type: 'text' };
   input.value = ''; input.style.height = '42px';
   try {
     await db.ref(PATH.chat + '/messages/' + msgId).set(msg);
     if (navigator.vibrate) navigator.vibrate(12);
-  } catch (e) { showToast('فشل الإرسال', 'error'); }
+  } catch (e) { showToast('Send failed', 'error'); }
   appState.lastActivity = Date.now();
   resetAutoLockTimer();
 }
 
 function deleteChatMessage(msgId) {
-  showConfirm('حذف الرسالة', 'هل تريد حذف هذه الرسالة نهائياً؟', async function() {
+  showConfirm('Delete Message', 'This message will be permanently deleted. Continue?', async function() {
     closeModal('confirmModal');
-    try { await db.ref(PATH.chat + '/messages/' + msgId).remove(); showToast('تم الحذف', 'success'); }
-    catch (e) { showToast('فشل الحذف', 'error'); }
+    try { await db.ref(PATH.chat + '/messages/' + msgId).remove(); showToast('Deleted', 'success'); }
+    catch (e) { showToast('Delete failed', 'error'); }
   });
 }
 
@@ -875,7 +816,7 @@ function exitChat() {
   document.getElementById('chatSettingsMenu').classList.remove('active');
   document.getElementById('lockOverlay').classList.remove('active');
   if (appState.messagesListener) { try { appState.messagesListener.off(); } catch (e) {} appState.messagesListener = null; }
-  appState.messages = {}; appState.currentPassword = null; appState.workspace = null;
+  appState.messages = {}; appState.currentPassword = null;
   appState.lastActivity = 0; appState.panicMode = false;
   if (appState.autoLockTimeout) { clearTimeout(appState.autoLockTimeout); appState.autoLockTimeout = null; }
   if (appState.heartbeatInterval) { clearInterval(appState.heartbeatInterval); appState.heartbeatInterval = null; }
@@ -920,7 +861,7 @@ function startHeartbeat() {
   if (appState.heartbeatInterval) clearInterval(appState.heartbeatInterval);
   async function update() {
     if (!appState.chatActive || !appState.currentPassword || !firebaseReady || !db) return;
-    try { await db.ref(PATH.chat + '/presence/' + appState.workspace).set({ online: true, lastSeen: Date.now() }); } catch (e) {}
+    try { await db.ref(PATH.chat + '/presence/' + WORKSPACE).set({ online: true, lastSeen: Date.now() }); } catch (e) {}
   }
   update();
   appState.heartbeatInterval = setInterval(update, 20000);
@@ -939,17 +880,17 @@ async function changePassword() {
   const oldPw = document.getElementById('oldPwInput').value.trim();
   const newPw = document.getElementById('newPwInput').value.trim();
   const confirmPw = document.getElementById('confirmPwInput').value.trim();
-  if (!oldPw || !newPw || !confirmPw) { showToast('املأ كل الحقول', 'error'); return; }
-  if (newPw !== confirmPw) { showToast('كلمتا السر غير متطابقتين', 'error'); return; }
-  if (newPw.length < 6) { showToast('كلمة السر قصيرة جداً', 'error'); return; }
-  if (!firebaseReady || !db) { showToast('لا يوجد اتصال', 'error'); return; }
+  if (!oldPw || !newPw || !confirmPw) { showToast('Fill in all fields', 'error'); return; }
+  if (newPw !== confirmPw) { showToast('Codes do not match', 'error'); return; }
+  if (newPw.length < 6) { showToast('Code too short', 'error'); return; }
+  if (!firebaseReady || !db) { showToast('No connection', 'error'); return; }
   let isValid = false;
   try {
     const snap = await db.ref(PATH.config + '/passwordHash').once('value');
     if (hashPassword(oldPw) === snap.val()) isValid = true;
   } catch (e) { if (oldPw === DEFAULT_PASSWORD) isValid = true; }
-  if (!isValid) { showToast('كلمة السر الحالية خاطئة', 'error'); return; }
-  showToast('جاري إعادة التشفير...');
+  if (!isValid) { showToast('Current code is incorrect', 'error'); return; }
+  showToast('Re-encrypting messages...');
   try {
     const snap = await db.ref(PATH.chat + '/messages').once('value');
     const messages = snap.val() || {};
@@ -965,9 +906,9 @@ async function changePassword() {
     await db.ref(PATH.config).update({ passwordHash: hashPassword(newPw), updatedAt: Date.now() });
     appState.currentPassword = newPw;
     closeModal('changePwModal');
-    showToast('تم تغيير كلمة السر بنجاح', 'success');
+    showToast('Access code changed successfully', 'success');
     await loadChatMessages();
-  } catch (e) { showToast('فشل تغيير كلمة السر', 'error'); }
+  } catch (e) { showToast('Failed to change access code', 'error'); }
 }
 
 function openAutoLockSettings() {
@@ -981,27 +922,27 @@ function saveAutoLock() {
   localStorage.setItem('bn_autolock', String(val));
   resetAutoLockTimer();
   closeModal('autoLockModal');
-  showToast('تم الحفظ', 'success');
+  showToast('Saved', 'success');
 }
 
 function togglePanicMode() {
   closeChatSettings();
   appState.panicMode = !appState.panicMode;
-  document.getElementById('panicLabel').textContent = appState.panicMode ? 'إيقاف وضع الطوارئ' : 'تفعيل وضع الطوارئ';
+  document.getElementById('panicLabel').textContent = appState.panicMode ? 'Disable Panic Mode' : 'Enable Panic Mode';
   if (appState.panicMode) {
     if (window.DeviceMotionEvent) {
       if (typeof DeviceMotionEvent.requestPermission === 'function') {
         DeviceMotionEvent.requestPermission().then(function(response) {
           if (response === 'granted') {
             window.addEventListener('devicemotion', panicShakeHandler);
-            showToast('وضع الطوارئ مفعل', 'success');
-          } else { appState.panicMode = false; showToast('لم يتم منح الصلاحية', 'error'); }
-        }).catch(function() { appState.panicMode = false; showToast('فشل تفعيل المستشعر', 'error'); });
+            showToast('Panic mode enabled', 'success');
+          } else { appState.panicMode = false; showToast('Permission denied', 'error'); }
+        }).catch(function() { appState.panicMode = false; showToast('Sensor unavailable', 'error'); });
       } else {
         window.addEventListener('devicemotion', panicShakeHandler);
-        showToast('وضع الطوارئ مفعل', 'success');
+        showToast('Panic mode enabled', 'success');
       }
-    } else { appState.panicMode = false; showToast('الجهاز لا يدعم المستشعر', 'error'); }
+    } else { appState.panicMode = false; showToast('Device does not support motion sensor', 'error'); }
   } else { window.removeEventListener('devicemotion', panicShakeHandler); }
 }
 let lastShakeTime = 0;
@@ -1010,15 +951,15 @@ function panicShakeHandler(e) {
   const acc = e.accelerationIncludingGravity; if (!acc) return;
   const magnitude = Math.abs(acc.x || 0) + Math.abs(acc.y || 0) + Math.abs(acc.z || 0);
   const now = Date.now();
-  if (magnitude > 35 && now - lastShakeTime > 1000) { lastShakeTime = now; exitChat(); showToast('تم تفعيل الطوارئ', ''); }
+  if (magnitude > 35 && now - lastShakeTime > 1000) { lastShakeTime = now; exitChat(); showToast('Panic mode triggered', ''); }
 }
 
 function clearAllMessages() {
   closeChatSettings();
-  showConfirm('مسح كل الرسائل', 'سيتم حذف جميع الرسائل نهائياً. هل أنت متأكد؟', async function() {
+  showConfirm('Clear All Messages', 'All messages will be permanently deleted. Are you sure?', async function() {
     closeModal('confirmModal');
-    try { await db.ref(PATH.chat + '/messages').remove(); showToast('تم مسح كل الرسائل', 'success'); }
-    catch (e) { showToast('فشل المسح', 'error'); }
+    try { await db.ref(PATH.chat + '/messages').remove(); showToast('All messages cleared', 'success'); }
+    catch (e) { showToast('Clear failed', 'error'); }
   });
 }
 
@@ -1039,7 +980,7 @@ function autoResizeChatInput(el) {
 }
 
 /* ============================================================
-   التهيئة
+   Init
 ============================================================ */
 (function init() {
   bindCalculatorButtons();
@@ -1055,15 +996,11 @@ function autoResizeChatInput(el) {
     if (e.target.classList.contains('secret-input') || e.target.closest('.secret-input')) e.preventDefault();
   });
 
-  document.addEventListener('visibilitychange', function() {
-    if (document.hidden && appState.chatActive && appState.lockOnHide) lockChat();
-  });
-
   renderNotes();
   updateCalcDisplay();
 
   if (firebaseReady) initializeConfig();
-  else console.warn('⚠️ Firebase غير متاح');
+  else console.warn('Firebase unavailable');
 
   console.log('%cSmart Notes v3.2.1', 'color:#6366f1;font-size:16px;font-weight:bold;');
 })();
