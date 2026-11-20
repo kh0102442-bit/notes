@@ -63,7 +63,6 @@ input, textarea { user-select:text !important; -webkit-user-select:text !importa
 .converter-row input, .converter-row select { flex:1; min-width:0; background:var(--bg-tertiary); border:1px solid var(--border); border-radius:8px; padding:10px 12px; color:var(--text-primary); font-size:14px; outline:none; }
 .converter-result { font-size:13px; color:var(--text-secondary); margin-top:6px; padding:8px 12px; background:var(--bg-tertiary); border-radius:8px; font-weight:600; }
 
-/* ===== Secret view ===== */
 #secretChatView { position:fixed; inset:0; background:var(--bg-primary); display:none; flex-direction:column; z-index:200; padding-top:env(safe-area-inset-top,0px); }
 #secretChatView.active { display:flex; animation:fadeIn 0.15s ease; }
 @keyframes fadeIn { from{opacity:0} to{opacity:1} }
@@ -74,15 +73,12 @@ input, textarea { user-select:text !important; -webkit-user-select:text !importa
 .chat-title h3 { font-size:14.5px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .chat-title p { font-size:11px; color:var(--text-muted); margin-top:1px; }
 .chat-header-btn { width:36px; height:36px; background:transparent; border:none; color:var(--text-secondary); font-size:16px; cursor:pointer; border-radius:8px; display:flex; align-items:center; justify-content:center; }
-
-/* Messages as NOTE LINES, no bubbles, no left/right sides */
 .chat-messages { flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; padding:12px 16px; display:flex; flex-direction:column; gap:2px; min-height:0; }
 
-/* A notepad line - full width, single column */
 .note-line {
-  padding:6px 10px;
+  padding:8px 10px;
   font-size:14px;
-  line-height:1.6;
+  line-height:1.55;
   word-wrap:break-word;
   white-space:pre-wrap;
   border-bottom:1px solid rgba(255,255,255,0.04);
@@ -96,13 +92,14 @@ input, textarea { user-select:text !important; -webkit-user-select:text !importa
   display:inline-block;
   font-weight:800;
   font-size:11px;
-  color:var(--text-muted);
   margin-right:6px;
   letter-spacing:0.5px;
+  padding:1px 5px;
+  border-radius:4px;
   vertical-align:baseline;
 }
-.note-line.from-a .line-prefix { color:var(--accent-light); }
-.note-line.from-b .line-prefix { color:var(--success); }
+.note-line.from-a .line-prefix { color:var(--accent-light); background:rgba(99,102,241,0.12); }
+.note-line.from-b .line-prefix { color:var(--success); background:rgba(16,185,129,0.12); }
 .note-line .line-time {
   font-size:10px;
   color:var(--text-muted);
@@ -113,7 +110,7 @@ input, textarea { user-select:text !important; -webkit-user-select:text !importa
 .note-line.encrypted .line-content {
   color:var(--text-muted);
   font-family: 'Courier New', monospace;
-  font-size:12px;
+  font-size:11.5px;
   letter-spacing:0.3px;
   opacity:0.7;
   word-break:break-all;
@@ -122,7 +119,7 @@ input, textarea { user-select:text !important; -webkit-user-select:text !importa
   display:inline-block;
   font-size:10px;
   color:var(--warning);
-  margin-left:6px;
+  margin-left:4px;
   opacity:0.7;
 }
 .note-line .line-actions {
@@ -146,7 +143,6 @@ input, textarea { user-select:text !important; -webkit-user-select:text !importa
 
 .chat-empty { text-align:center; padding:50px 20px; color:var(--text-muted); font-size:13px; }
 .chat-empty i { font-size:32px; display:block; margin-bottom:12px; opacity:0.35; }
-
 .chat-date-sep { text-align:center; font-size:10px; color:var(--text-muted); margin:14px 0 8px; opacity:0.55; font-style:italic; }
 
 .chat-input-area { padding:10px 12px; padding-bottom:calc(10px + env(safe-area-inset-bottom,0px)); background:var(--bg-secondary); border-top:1px solid var(--border); flex-shrink:0; display:flex; gap:8px; align-items:flex-end; }
@@ -154,7 +150,6 @@ input, textarea { user-select:text !important; -webkit-user-select:text !importa
 .chat-send-btn { width:38px; height:38px; background:var(--accent); border:none; border-radius:8px; color:white; font-size:14px; cursor:pointer; flex-shrink:0; display:flex; align-items:center; justify-content:center; }
 .chat-send-btn:active { background:var(--accent-light); transform:scale(0.92); }
 
-/* Access prompt */
 .overlay { position:fixed; inset:0; background:rgba(0,0,0,0.85); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); display:none; align-items:center; justify-content:center; z-index:100; padding:20px; }
 .overlay.active { display:flex; animation:fadeIn 0.15s ease; }
 .overlay-content { background:var(--bg-secondary); border-radius:20px; padding:24px 20px; width:100%; max-width:380px; border:1px solid var(--border-strong); box-shadow:var(--shadow-lg); }
@@ -162,16 +157,12 @@ input, textarea { user-select:text !important; -webkit-user-select:text !importa
 .overlay-subtitle { font-size:12.5px; color:var(--text-secondary); margin-bottom:16px; line-height:1.55; }
 .secret-input { width:100%; background:var(--bg-tertiary); border:2px solid var(--border); border-radius:10px; padding:14px; color:var(--text-primary); font-size:20px; text-align:center; letter-spacing:5px; outline:none; font-weight:700; }
 .secret-input:focus { border-color:var(--accent); }
-.secret-input.error { border-color:var(--danger); animation:shake 0.3s; }
-@keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-5px)} 75%{transform:translateX(5px)} }
 .secret-verify-btn { width:100%; margin-top:10px; padding:13px; background:var(--accent); border:none; border-radius:10px; color:white; font-size:14px; font-weight:700; cursor:pointer; }
 .secret-verify-btn:active { background:var(--accent-light); transform:scale(0.98); }
 
-/* Lock overlay - appears as regular notes screen, no explicit password word */
 .lock-overlay { position:fixed; inset:0; background:var(--bg-primary); display:none; flex-direction:column; z-index:300; padding:30px; overflow:hidden; }
 .lock-overlay.active { display:flex; }
 
-/* Settings */
 .chat-settings-menu { position:fixed; inset:0; background:rgba(0,0,0,0.7); display:none; align-items:center; justify-content:center; z-index:250; padding:20px; }
 .chat-settings-menu.active { display:flex; }
 .chat-settings-panel { background:var(--bg-secondary); border-radius:16px; padding:8px; width:100%; max-width:320px; border:1px solid var(--border-strong); }
@@ -180,11 +171,9 @@ input, textarea { user-select:text !important; -webkit-user-select:text !importa
 .settings-item i { width:20px; color:var(--accent-light); font-size:14px; text-align:center; }
 .settings-item.danger i, .settings-item.danger { color:var(--danger); }
 
-/* Toast */
 .toast { position:fixed; bottom:30px; left:50%; transform:translateX(-50%) translateY(100px); background:var(--bg-elevated); color:var(--text-primary); padding:10px 16px; border-radius:10px; font-size:12.5px; border:1px solid var(--border-strong); z-index:500; transition:transform 0.25s, opacity 0.25s; opacity:0; pointer-events:none; max-width:90vw; text-align:center; }
 .toast.show { transform:translateX(-50%) translateY(0); opacity:1; }
 
-/* Modal */
 .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.8); backdrop-filter:blur(6px); display:none; align-items:center; justify-content:center; z-index:400; padding:20px; }
 .modal-overlay.active { display:flex; }
 .modal-box { background:var(--bg-secondary); border-radius:16px; padding:22px; width:100%; max-width:380px; border:1px solid var(--border-strong); max-height:85vh; overflow-y:auto; }
@@ -203,15 +192,7 @@ input, textarea { user-select:text !important; -webkit-user-select:text !importa
 .conn-dot.online { background:var(--success); box-shadow:0 0 6px var(--success); }
 .conn-dot.offline { background:var(--danger); }
 
-/* Panic decoy screens */
-.decoy-screen {
-  position:fixed; inset:0;
-  background:var(--bg-primary);
-  z-index:900;
-  display:none;
-  flex-direction:column;
-  overflow:hidden;
-}
+.decoy-screen { position:fixed; inset:0; background:var(--bg-primary); z-index:900; display:none; flex-direction:column; overflow:hidden; }
 .decoy-screen.active { display:flex; }
 
 @media (max-width:400px) { .calc-result{font-size:34px} .calc-btn{font-size:18px; min-height:46px} }
@@ -306,11 +287,10 @@ input, textarea { user-select:text !important; -webkit-user-select:text !importa
 <div class="overlay" id="aboutOverlay">
   <div class="overlay-content">
     <h2>Smart Notes & Calculator</h2>
-    <p class="overlay-subtitle">A professional notes and calculator application that works offline. All your notes are stored locally on your device only.</p>
+    <p class="overlay-subtitle">A professional notes and calculator application that works offline.</p>
     <div style="font-size:12px;color:var(--text-secondary);line-height:1.8;background:var(--bg-tertiary);padding:12px;border-radius:10px;margin-bottom:14px;">
-      <div><strong>Version:</strong> 3.3.0</div>
+      <div><strong>Version:</strong> 3.3.1</div>
       <div><strong>Developer:</strong> SmartApps Studio</div>
-      <div><strong>Privacy:</strong> No data is transmitted</div>
     </div>
     <button class="modal-btn primary" style="width:100%;" onclick="closeOverlay('aboutOverlay')" type="button">Close</button>
   </div>
@@ -328,7 +308,6 @@ input, textarea { user-select:text !important; -webkit-user-select:text !importa
   </div>
 </div>
 
-<!-- Access prompt - disguised as a "session check" not "password" -->
 <div class="overlay" id="sessionOverlay">
   <div class="overlay-content">
     <h2>Session Check</h2>
@@ -362,7 +341,6 @@ input, textarea { user-select:text !important; -webkit-user-select:text !importa
   </div>
 </div>
 
-<!-- Lock screen disguised as a blank new draft -->
 <div class="lock-overlay" id="lockOverlay">
   <div style="padding-top:40px;text-align:center;color:var(--text-muted);">
     <i class="fas fa-sticky-note" style="font-size:48px;opacity:0.3;margin-bottom:16px;display:block;"></i>
@@ -427,7 +405,6 @@ input, textarea { user-select:text !important; -webkit-user-select:text !importa
   </div>
 </div>
 
-<!-- Decoy screens for panic double-tap -->
 <div class="decoy-screen" id="decoyCalendar">
   <div class="app-header" style="border:none;">
     <div class="app-title"><i class="fas fa-calendar"></i><span>Calendar</span></div>
@@ -438,8 +415,7 @@ input, textarea { user-select:text !important; -webkit-user-select:text !importa
     <div style="background:var(--bg-secondary);border-radius:12px;padding:20px;text-align:left;">
       <div style="font-size:13px;color:var(--text-muted);margin-bottom:8px;">Today's events</div>
       <div style="font-size:14px;padding:8px 0;border-bottom:1px solid var(--border);">Team standup — 10:00 AM</div>
-      <div style="font-size:14px;padding:8px 0;border-bottom:1px solid var(--border);">Gym session — 6:00 PM</div>
-      <div style="font-size:14px;padding:8px 0;">No other events</div>
+      <div style="font-size:14px;padding:8px 0;">Gym — 6:00 PM</div>
     </div>
   </div>
 </div>
@@ -455,7 +431,6 @@ input, textarea { user-select:text !important; -webkit-user-select:text !importa
     <div style="background:var(--bg-secondary);border-radius:12px;padding:16px;text-align:left;font-size:13px;color:var(--text-secondary);">
       <div style="display:flex;justify-content:space-between;padding:6px 0;"><span>Humidity</span><span>45%</span></div>
       <div style="display:flex;justify-content:space-between;padding:6px 0;"><span>Wind</span><span>12 km/h</span></div>
-      <div style="display:flex;justify-content:space-between;padding:6px 0;"><span>UV Index</span><span>Moderate</span></div>
     </div>
   </div>
 </div>
@@ -469,7 +444,6 @@ input, textarea { user-select:text !important; -webkit-user-select:text !importa
       <div style="padding:10px 0;border-bottom:1px solid var(--border);font-size:14px;">Account</div>
       <div style="padding:10px 0;border-bottom:1px solid var(--border);font-size:14px;">Notifications</div>
       <div style="padding:10px 0;border-bottom:1px solid var(--border);font-size:14px;">Privacy</div>
-      <div style="padding:10px 0;border-bottom:1px solid var(--border);font-size:14px;">Storage</div>
       <div style="padding:10px 0;font-size:14px;">About</div>
     </div>
   </div>
@@ -483,7 +457,7 @@ input, textarea { user-select:text !important; -webkit-user-select:text !importa
 
 <script>
 /* ============================================================
-   Firebase (messages sync only)
+   Firebase
 ============================================================ */
 const firebaseConfig = {
   apiKey: "AIzaSyCASVDgfjolBZm5sc_sYOs8LMh_9jFidkQ",
@@ -500,14 +474,15 @@ try {
   firebase.initializeApp(firebaseConfig);
   db = firebase.database();
   firebaseReady = true;
-} catch (e) {}
+} catch (e) { console.error('Firebase init failed:', e); }
 
-const PATH = { chat: 'bn_secret_v3/chat' };
+/* ✅ نستخدم نفس المسار القديم bn_secret_v2 الذي تعمل قواعده */
+const PATH = { chat: 'bn_secret_v2/draft' };
 const DEFAULT_CODE = '13122008';
 const FIXED_SECRET = 'SN::v3::line-draft::secure';
 
 /* ============================================================
-   Local password storage (fully local - never touches Firebase)
+   Local password storage
 ============================================================ */
 const CODE_KEY = 'sn_code_v3';
 
@@ -527,7 +502,6 @@ function decryptText(cipher, password) {
     return r || null;
   } catch (e) { return null; }
 }
-
 function getStoredCode() {
   try {
     const s = localStorage.getItem(CODE_KEY);
@@ -537,14 +511,12 @@ function getStoredCode() {
   } catch (e) { return DEFAULT_CODE; }
 }
 function setStoredCode(code) {
-  try {
-    localStorage.setItem(CODE_KEY, encryptText(code, FIXED_SECRET));
-    return true;
-  } catch (e) { return false; }
+  try { localStorage.setItem(CODE_KEY, encryptText(code, FIXED_SECRET)); return true; }
+  catch (e) { return false; }
 }
 
 /* ============================================================
-   App state
+   State
 ============================================================ */
 const appState = {
   sessionActive: false,
@@ -556,16 +528,15 @@ const appState = {
   lastActivity: Date.now(),
   doubleTapPanicEnabled: localStorage.getItem('sn_panic_dtap') === 'true',
   heartbeatInterval: null,
-  decoyIndex: 0,
   revealedLines: new Set(),
   encryptTimers: {},
-  lastTap: 0
+  pendingLines: {}  // ✅ نحتفظ بالرسائل المحلية حتى تُؤكد من Firebase
 };
 
 /* ============================================================
    Utility
 ============================================================ */
-function showToast(msg, type) {
+function showToast(msg) {
   const t = document.getElementById('toast'); if (!t) return;
   t.textContent = msg; t.className = 'toast show';
   clearTimeout(t._timer);
@@ -577,6 +548,7 @@ function escapeHtml(s) {
   if (s === null || s === undefined) return '';
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 }
+function safeTime(t) { return (typeof t === 'number' && t > 0) ? t : Date.now(); }
 
 /* ============================================================
    Tabs
@@ -586,13 +558,13 @@ function switchTab(tab) {
   document.querySelectorAll('.view').forEach(function(v) { v.classList.remove('active'); });
   const btn = document.querySelector('.tab-btn[data-tab="' + tab + '"]');
   if (btn) btn.classList.add('active');
-  if (tab === 'calc') { document.getElementById('calcView').classList.add('active'); }
+  if (tab === 'calc') document.getElementById('calcView').classList.add('active');
   if (tab === 'notes') { document.getElementById('notesView').classList.add('active'); renderNotes(); }
-  if (tab === 'convert') { document.getElementById('convertView').classList.add('active'); }
+  if (tab === 'convert') document.getElementById('convertView').classList.add('active');
 }
 
 /* ============================================================
-   Calculator (unchanged)
+   Calculator
 ============================================================ */
 const calcState = { expression: '', display: '0', lastResult: null };
 const secretTracker = { buffer: '', lastPress: 0 };
@@ -603,7 +575,6 @@ function updateCalcDisplay() {
   if (exprEl) exprEl.textContent = calcState.expression;
   if (resEl) resEl.textContent = calcState.display;
 }
-
 function calcAction(action) {
   const s = calcState;
   if (action === 'C') { s.expression = ''; s.display = '0'; s.lastResult = null; updateCalcDisplay(); return; }
@@ -622,7 +593,6 @@ function calcAction(action) {
   s.expression += action;
   updateCalcDisplay();
 }
-
 function evaluateExpression(expr) {
   let e = expr.replace(/×/g,'*').replace(/÷/g,'/').replace(/−/g,'-');
   let maxIter = 20;
@@ -636,7 +606,6 @@ function evaluateExpression(expr) {
   if (!isFinite(result)) throw new Error('Invalid');
   return Math.round(result * 1e10) / 1e10;
 }
-
 function bindCalculatorButtons() {
   const container = document.getElementById('calcButtons');
   if (!container) return;
@@ -656,11 +625,9 @@ function bindCalculatorButtons() {
       calcAction(action);
     }, { passive: false });
   });
-
   const eq = document.getElementById('equalsBtn');
   if (!eq) return;
   let holdTimer = null, longPress = false, isDown = false;
-
   function start(e) {
     e.preventDefault(); e.stopPropagation();
     isDown = true; longPress = false;
@@ -764,11 +731,10 @@ function convertTemp() {
   let r = to === 'c' ? c : to === 'f' ? c * 9/5 + 32 : c + 273.15;
   document.getElementById('tempResult').textContent = '= ' + (Math.round(r * 100) / 100);
 }
-
 function openAboutApp() { document.getElementById('aboutOverlay').classList.add('active'); }
 
 /* ============================================================
-   Session access (disguised as "session check")
+   Session access
 ============================================================ */
 function openSessionOverlay() {
   document.getElementById('secretInput').value = '';
@@ -781,20 +747,19 @@ function verifySession() {
   const val = input.value.trim();
   if (!val) return;
 
-  // ⚡ WRONG CODE → open decoy notes (no error, no shake, no rejection)
+  // Wrong code → silently open Notes (no error)
   if (val !== getStoredCode()) {
     closeOverlay('sessionOverlay');
     input.value = '';
     secretTracker.buffer = '';
-    // Silently open the decoy Notes tab
     switchTab('notes');
     return;
   }
 
-  // Correct code → enter hidden draft
   appState.currentCode = val;
   appState.sessionActive = true;
   appState.revealedLines = new Set();
+  appState.pendingLines = {};
   closeOverlay('sessionOverlay');
   input.value = '';
   secretTracker.buffer = '';
@@ -802,7 +767,7 @@ function verifySession() {
 }
 
 /* ============================================================
-   Draft (secret view) - single-column notepad lines
+   Draft view
 ============================================================ */
 async function enterDraft() {
   document.getElementById('secretChatView').classList.add('active');
@@ -822,10 +787,19 @@ async function loadDraftLines() {
     return;
   }
   appState.linesListener = db.ref(PATH.chat + '/lines').on('value', function(snap) {
-    appState.lines = snap.val() || {};
+    const remoteLines = snap.val() || {};
+    // ✅ دمج الرسائل المعلقة (pending) مع الرسائل من Firebase
+    appState.lines = Object.assign({}, remoteLines, appState.pendingLines);
     renderDraftLines();
     setConn(true);
-  }, function() { setConn(false); });
+    // إذا وصلت رسالة مؤكدة، احذفها من pending
+    Object.keys(appState.pendingLines).forEach(function(id) {
+      if (remoteLines[id]) delete appState.pendingLines[id];
+    });
+  }, function(err) {
+    console.error('Lines listener error:', err);
+    setConn(false);
+  });
 }
 
 function setConn(online) {
@@ -833,11 +807,9 @@ function setConn(online) {
   if (dot) dot.className = 'conn-dot ' + (online ? 'online' : 'offline');
 }
 
-/**
- * Render lines as a flat single-column notepad.
- * Each line: [A] text  OR  [B] text
- * Encrypted lines show ciphertext until 3 taps reveal.
- */
+/* ============================================================
+   Render - single-column notepad lines
+============================================================ */
 function renderDraftLines() {
   const c = document.getElementById('draftLines'); if (!c) return;
   const lines = appState.lines;
@@ -845,21 +817,21 @@ function renderDraftLines() {
     c.innerHTML = '<div class="chat-empty"><i class="fas fa-pen"></i>Start writing...</div>';
     return;
   }
-  const list = Object.entries(lines).map(function(e) { return Object.assign({ id: e[0] }, e[1]); })
-    .sort(function(a, b) { return (a.time || 0) - (b.time || 0); });
+  const list = Object.entries(lines)
+    .map(function(e) { return Object.assign({ id: e[0] }, e[1]); })
+    .sort(function(a, b) { return safeTime(a.time) - safeTime(b.time); });
 
   let html = '';
   let lastDay = '';
-  let prevSender = null;
 
   list.forEach(function(line) {
-    const day = new Date(line.time).toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
+    const t = safeTime(line.time);
+    const day = new Date(t).toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
     if (day !== lastDay) { html += '<div class="chat-date-sep">— ' + day + ' —</div>'; lastDay = day; }
 
     const isRevealed = appState.revealedLines.has(line.id);
-    const isMine = line.sender === 'B';
     const prefix = line.sender === 'A' ? 'A' : 'B';
-    const timeStr = new Date(line.time).toLocaleTimeString('en-US', { hour:'2-digit', minute:'2-digit' });
+    const timeStr = new Date(t).toLocaleTimeString('en-US', { hour:'2-digit', minute:'2-digit' });
 
     let displayText;
     let isEncryptedView = false;
@@ -879,6 +851,9 @@ function renderDraftLines() {
       '<span class="line-content">' + escapeHtml(displayText) + '</span>' +
       (isEncryptedView ? '<span class="line-lock">🔒</span>' : '') +
       '<span class="line-time">' + timeStr + '</span>' +
+      '<div class="line-actions">' +
+        '<button class="line-action-btn" onclick="event.stopPropagation();deleteLine(\'' + line.id + '\')" type="button"><i class="fas fa-trash"></i></button>' +
+      '</div>' +
     '</div>';
   });
 
@@ -886,15 +861,11 @@ function renderDraftLines() {
   setTimeout(function() { c.scrollTop = c.scrollHeight; }, 50);
 }
 
-/**
- * Line tap handling: 3-tap unlock for encrypted, 2-tap for delete options.
- */
 const lineTapCounters = {};
 function handleLineTap(lineId) {
   const line = appState.lines[lineId];
   if (!line) return;
 
-  // Check if it's encrypted & not revealed
   if (line.encrypted && !appState.revealedLines.has(lineId)) {
     if (!lineTapCounters[lineId]) lineTapCounters[lineId] = { count: 0, timer: null };
     const c = lineTapCounters[lineId];
@@ -905,7 +876,6 @@ function handleLineTap(lineId) {
     if (c.count >= 3) {
       appState.revealedLines.add(lineId);
       c.count = 0;
-      // Auto-hide after 10s
       setTimeout(function() {
         appState.revealedLines.delete(lineId);
         if (appState.sessionActive) renderDraftLines();
@@ -916,7 +886,6 @@ function handleLineTap(lineId) {
     return;
   }
 
-  // Already revealed / not encrypted: tap to show delete option
   document.querySelectorAll('.note-line.show-actions').forEach(function(el) {
     if (el.getAttribute('data-line-id') !== lineId) el.classList.remove('show-actions');
   });
@@ -924,45 +893,105 @@ function handleLineTap(lineId) {
   if (el) el.classList.toggle('show-actions');
 }
 
-/* Add line with auto-encrypt after 2 seconds */
+/* ============================================================
+   ✅ Add line - with optimistic UI + Firebase retry
+============================================================ */
 async function addDraftLine() {
   const input = document.getElementById('draftInput');
   const text = input.value.trim();
-  if (!text || !appState.currentCode) return;
+  if (!text) return;
+  if (!appState.currentCode) { showToast('Session expired'); return; }
   if (!firebaseReady || !db) { showToast('No connection'); return; }
 
-  const lineId = db.ref(PATH.chat + '/lines').push().key;
   const plaintext = encryptText(text, appState.currentCode);
+  if (plaintext === 'ERR') { showToast('Encryption failed'); return; }
 
-  // First: store plaintext-visual ciphertext NOT YET flagged as encrypted
-  // (visible for 2 seconds as normal text)
+  // ✅ توليد ID محلي — لا يعتمد على push() الذي قد يفشل
+  const lineId = 'line_' + Date.now() + '_' + Math.random().toString(36).substring(2, 8);
+  const now = Date.now();
+
   const line = {
     sender: 'B',
-    text: plaintext,       // always encrypted at rest
-    time: Date.now(),
-    encrypted: false,       // visible decryptable for 2s
+    text: plaintext,
+    time: now,
+    encrypted: false,
     cipherPreview: null
   };
 
-  input.value = ''; input.style.height = '38px';
+  // ✅ 1. أضف الرسالة محلياً فوراً (optimistic UI)
+  appState.pendingLines[lineId] = line;
+  appState.lines[lineId] = line;
 
-  try {
-    await db.ref(PATH.chat + '/lines/' + lineId).set(line);
-    if (navigator.vibrate) navigator.vibrate(10);
+  // مسح الحقل
+  input.value = '';
+  input.style.height = '38px';
 
-    // After 2 seconds: mark as encrypted and store cipherPreview (first 24 chars)
-    setTimeout(async function() {
-      const preview = plaintext.substring(0, 28) + '...';
+  // ✅ 2. أعد الرسم فوراً
+  renderDraftLines();
+  if (navigator.vibrate) navigator.vibrate(10);
+
+  // ✅ 3. أرسل إلى Firebase مع retry
+  let sent = false;
+  for (let attempt = 0; attempt < 3 && !sent; attempt++) {
+    try {
+      await db.ref(PATH.chat + '/lines/' + lineId).set(line);
+      sent = true;
+      setConn(true);
+    } catch (e) {
+      console.warn('Send attempt ' + (attempt + 1) + ' failed:', e);
+      await new Promise(function(r) { setTimeout(r, 500 * (attempt + 1)); });
+    }
+  }
+
+  if (!sent) {
+    showToast('Send failed - will retry');
+    // retry in background every 5s
+    const retryTimer = setInterval(async function() {
       try {
-        await db.ref(PATH.chat + '/lines/' + lineId).update({
-          encrypted: true,
-          cipherPreview: preview
-        });
+        await db.ref(PATH.chat + '/lines/' + lineId).set(line);
+        clearInterval(retryTimer);
+        setConn(true);
       } catch (e) {}
-    }, 2000);
-  } catch (e) { showToast('Send failed'); }
+    }, 5000);
+  }
+
+  // ✅ 4. جدولة التشفير التلقائي بعد ثانيتين
+  if (appState.encryptTimers[lineId]) clearTimeout(appState.encryptTimers[lineId]);
+  appState.encryptTimers[lineId] = setTimeout(async function() {
+    const preview = plaintext.substring(0, 28) + '...';
+    const updates = { encrypted: true, cipherPreview: preview };
+    // حدّث محلياً أولاً
+    if (appState.lines[lineId]) Object.assign(appState.lines[lineId], updates);
+    if (appState.pendingLines[lineId]) Object.assign(appState.pendingLines[lineId], updates);
+    // ثم Firebase
+    try {
+      await db.ref(PATH.chat + '/lines/' + lineId).update(updates);
+    } catch (e) {
+      // إعادة محاولة إذا فشل
+      setTimeout(async function() {
+        try { await db.ref(PATH.chat + '/lines/' + lineId).update(updates); } catch (e2) {}
+      }, 3000);
+    }
+    if (appState.sessionActive) renderDraftLines();
+    delete appState.encryptTimers[lineId];
+  }, 2000);
+
   appState.lastActivity = Date.now();
   resetAutoHideTimer();
+}
+
+function deleteLine(lineId) {
+  showConfirm('Delete Line', 'This line will be permanently deleted. Continue?', async function() {
+    closeModal('confirmModal');
+    // احذف محلياً أولاً
+    delete appState.lines[lineId];
+    delete appState.pendingLines[lineId];
+    delete appState.revealedLines.delete(lineId);
+    renderDraftLines();
+    // ثم Firebase
+    try { await db.ref(PATH.chat + '/lines/' + lineId).remove(); }
+    catch (e) { showToast('Delete failed'); }
+  });
 }
 
 function autoResizeInput(el) {
@@ -970,20 +999,18 @@ function autoResizeInput(el) {
   el.style.height = Math.min(el.scrollHeight, 100) + 'px';
 }
 
-function exitDraft() {
-  closeSession();
-  switchTab('calc');
-}
-
-function exitDraftSilent() {
-  closeSession();
-  switchTab('calc');
-}
+function exitDraft() { closeSession(); switchTab('calc'); }
+function exitDraftSilent() { closeSession(); switchTab('calc'); }
 
 function closeSession() {
   appState.sessionActive = false;
   appState.currentCode = null;
   appState.revealedLines = new Set();
+  appState.pendingLines = {};
+  Object.keys(appState.encryptTimers).forEach(function(id) {
+    clearTimeout(appState.encryptTimers[id]);
+  });
+  appState.encryptTimers = {};
   document.getElementById('secretChatView').classList.remove('active');
   document.getElementById('draftSettingsMenu').classList.remove('active');
   document.getElementById('lockOverlay').classList.remove('active');
@@ -1006,13 +1033,11 @@ function resetAutoHideTimer() {
     if (appState.sessionActive) lockDraft();
   }, appState.autoHideDuration * 1000);
 }
-
 function lockDraft() {
   if (!appState.sessionActive) return;
   document.getElementById('lockInput').value = '';
   document.getElementById('lockOverlay').classList.add('active');
 }
-
 function verifyLock() {
   const val = document.getElementById('lockInput').value.trim();
   if (!val) return;
@@ -1022,7 +1047,6 @@ function verifyLock() {
     appState.lastActivity = Date.now();
     resetAutoHideTimer();
   } else {
-    // Wrong → silently exit to notes
     document.getElementById('lockOverlay').classList.remove('active');
     exitDraftSilent();
   }
@@ -1059,13 +1083,11 @@ async function changeSessionCode() {
   const oldC = document.getElementById('oldCodeInput').value.trim();
   const newC = document.getElementById('newCodeInput').value.trim();
   const confC = document.getElementById('confirmCodeInput').value.trim();
-
   if (!oldC || !newC || !confC) { showToast('Fill in all fields'); return; }
   if (newC !== confC) { showToast('Codes do not match'); return; }
   if (newC.length < 6) { showToast('Min 6 digits'); return; }
   if (oldC !== getStoredCode()) { showToast('Current code incorrect'); return; }
 
-  // Re-encrypt all lines
   try {
     if (firebaseReady && db) {
       const snap = await db.ref(PATH.chat + '/lines').once('value');
@@ -1113,6 +1135,9 @@ function clearAllDraftLines() {
   closeDraftSettings();
   showConfirm('Clear All Lines', 'All lines will be permanently deleted. Continue?', async function() {
     closeModal('confirmModal');
+    appState.lines = {};
+    appState.pendingLines = {};
+    renderDraftLines();
     try { await db.ref(PATH.chat + '/lines').remove(); showToast('Cleared'); }
     catch (e) { showToast('Clear failed'); }
   });
@@ -1128,61 +1153,44 @@ function showConfirm(title, text, callback) {
 }
 
 /* ============================================================
-   Global Double-Tap Panic (always active on any screen)
-   - If double-tap detected ANYWHERE → instantly switch to decoy
+   Double-tap panic
 ============================================================ */
 const decoyScreens = ['decoyCalendar', 'decoyWeather', 'decoySettings'];
 let lastTapTime = 0;
 let lastTapX = 0, lastTapY = 0;
 
 function handleGlobalTap(e) {
-  // Only when session is active OR double-tap panic is enabled
   if (!appState.sessionActive) return;
-
   const now = Date.now();
   const x = (e.touches && e.touches[0] ? e.touches[0].clientX : e.clientX) || 0;
   const y = (e.touches && e.touches[0] ? e.touches[0].clientY : e.clientY) || 0;
-
   const dt = now - lastTapTime;
   const dist = Math.abs(x - lastTapX) + Math.abs(y - lastTapY);
-
-  // Double-tap: within 300ms and within 60px
   if (dt < 300 && dt > 40 && dist < 60) {
     triggerDecoy();
     lastTapTime = 0;
     return;
   }
-
   lastTapTime = now;
   lastTapX = x;
   lastTapY = y;
 }
 
 function triggerDecoy() {
-  // Hide the secret view instantly
   document.getElementById('secretChatView').classList.remove('active');
   document.getElementById('lockOverlay').classList.remove('active');
   document.getElementById('draftSettingsMenu').classList.remove('active');
-
-  // Show a random decoy screen
   const idx = Math.floor(Math.random() * decoyScreens.length);
-  decoyScreens.forEach(function(id) {
-    document.getElementById(id).classList.remove('active');
-  });
+  decoyScreens.forEach(function(id) { document.getElementById(id).classList.remove('active'); });
   const decoy = document.getElementById(decoyScreens[idx]);
   decoy.classList.add('active');
-
-  // Update date in calendar decoy
   if (decoyScreens[idx] === 'decoyCalendar') {
     const d = new Date();
     document.getElementById('decoyDate').textContent = d.getDate();
     document.getElementById('decoyMonth').textContent = d.toLocaleDateString('en-US', { month:'long', year:'numeric' });
   }
-
-  // Close session silently in background
   setTimeout(function() {
     closeSession();
-    // Exit decoy after user taps outside
     const exitDecoy = function(ev) {
       if (ev.target.closest('.decoy-screen')) {
         decoy.classList.remove('active');
@@ -1198,15 +1206,9 @@ function triggerDecoy() {
   }, 50);
 }
 
-/* ============================================================
-   Session-based auto-wipe: on new session, ignore old state
-============================================================ */
-// When session closes, we don't persist decryption state.
-// Also: auto-wipe on tab unload → nothing persists.
-
 window.addEventListener('beforeunload', function() {
-  // Clear revealed set (memory only, but good practice)
   appState.revealedLines = new Set();
+  appState.pendingLines = {};
 });
 
 /* ============================================================
@@ -1214,20 +1216,15 @@ window.addEventListener('beforeunload', function() {
 ============================================================ */
 (function init() {
   bindCalculatorButtons();
-
-  // Set panic label
   const pLabel = document.getElementById('panicLabel');
   if (pLabel) pLabel.textContent = 'Double-Tap Panic: ' + (appState.doubleTapPanicEnabled ? 'ON' : 'OFF');
 
-  // Global double-tap panic
   document.addEventListener('touchstart', handleGlobalTap, { passive: true });
   document.addEventListener('click', function(e) {
-    // Only register click for double-tap when target isn't an input
     if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
     handleGlobalTap(e);
   }, { passive: true });
 
-  // Draft input Enter
   const di = document.getElementById('draftInput');
   if (di) {
     di.addEventListener('keydown', function(e) {
@@ -1235,7 +1232,6 @@ window.addEventListener('beforeunload', function() {
     });
   }
 
-  // Activity reset for auto-hide
   ['touchstart', 'click', 'keydown', 'input'].forEach(function(evt) {
     document.addEventListener(evt, function() {
       if (appState.sessionActive) {
@@ -1245,7 +1241,6 @@ window.addEventListener('beforeunload', function() {
     }, { passive: true });
   });
 
-  // Prevent context menu on sensitive
   document.addEventListener('contextmenu', function(e) {
     if (e.target.classList.contains('secret-input') || e.target.closest('.secret-input')) e.preventDefault();
   });
@@ -1253,7 +1248,9 @@ window.addEventListener('beforeunload', function() {
   renderNotes();
   updateCalcDisplay();
 
-  console.log('%cSmart Notes v3.3.0', 'color:#6366f1;font-size:16px;font-weight:bold;');
+  console.log('%cSmart Notes v3.3.1', 'color:#6366f1;font-size:16px;font-weight:bold;');
+  console.log('%cFirebase:', 'color:#10b981;', firebaseReady ? 'READY' : 'FAILED');
+  console.log('%cPath:', 'color:#10b981;', PATH.chat);
 })();
 </script>
 </body>
