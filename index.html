@@ -43,6 +43,7 @@ input, textarea { user-select:text !important; -webkit-user-select:text !importa
 .calc-btn:active { background:var(--accent); transform:scale(0.96); }
 .calc-btn.op { background:var(--bg-secondary); color:var(--accent-light); font-weight:700; }
 .calc-btn.equals { background:var(--accent); color:white; grid-column:span 2; font-weight:700; }
+.calc-btn.equals.holding { background:var(--warning); transform:scale(0.97); }
 .calc-btn.clear { color:var(--danger); font-weight:700; }
 .calc-btn.fn { background:var(--bg-secondary); color:var(--text-secondary); font-size:15px; font-weight:600; }
 
@@ -50,6 +51,7 @@ input, textarea { user-select:text !important; -webkit-user-select:text !importa
 .notes-toolbar h3 { font-size:15px; color:var(--text-secondary); font-weight:600; }
 .add-note-btn { background:var(--accent); border:none; color:white; padding:9px 14px; border-radius:8px; cursor:pointer; font-size:13px; font-weight:600; display:flex; align-items:center; gap:6px; }
 .note-card { background:var(--bg-secondary); border:1px solid var(--border); border-radius:12px; padding:14px 16px; margin-bottom:10px; cursor:pointer; }
+.note-card:active { background:var(--bg-tertiary); }
 .note-title { font-size:14px; font-weight:700; margin-bottom:5px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 .note-preview { font-size:12.5px; color:var(--text-secondary); line-height:1.5; max-height:38px; overflow:hidden; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
 .note-date { font-size:10.5px; color:var(--text-muted); margin-top:7px; }
@@ -83,7 +85,7 @@ input, textarea { user-select:text !important; -webkit-user-select:text !importa
   white-space:pre-wrap;
   border-bottom:1px solid rgba(255,255,255,0.04);
   cursor:pointer;
-  transition: background 0.15s;
+  transition: background 0.15s, transform 0.3s, opacity 0.3s;
   position:relative;
   user-select:none;
 }
@@ -115,13 +117,6 @@ input, textarea { user-select:text !important; -webkit-user-select:text !importa
   opacity:0.7;
   word-break:break-all;
 }
-.note-line .line-lock {
-  display:inline-block;
-  font-size:10px;
-  color:var(--warning);
-  margin-left:4px;
-  opacity:0.7;
-}
 .note-line .line-actions {
   position:absolute;
   top:4px;
@@ -139,6 +134,16 @@ input, textarea { user-select:text !important; -webkit-user-select:text !importa
   font-size:10px;
   cursor:pointer;
   display:flex; align-items:center; justify-content:center;
+}
+
+/* Pull-to-reveal animation */
+@keyframes revealPulse {
+  0% { background: rgba(99,102,241,0); }
+  50% { background: rgba(99,102,241,0.15); }
+  100% { background: rgba(99,102,241,0.08); }
+}
+.note-line.just-revealed {
+  animation: revealPulse 0.6s ease;
 }
 
 .chat-empty { text-align:center; padding:50px 20px; color:var(--text-muted); font-size:13px; }
@@ -289,7 +294,7 @@ input, textarea { user-select:text !important; -webkit-user-select:text !importa
     <h2>Smart Notes & Calculator</h2>
     <p class="overlay-subtitle">A professional notes and calculator application that works offline.</p>
     <div style="font-size:12px;color:var(--text-secondary);line-height:1.8;background:var(--bg-tertiary);padding:12px;border-radius:10px;margin-bottom:14px;">
-      <div><strong>Version:</strong> 3.3.1</div>
+      <div><strong>Version:</strong> 3.4.0</div>
       <div><strong>Developer:</strong> SmartApps Studio</div>
     </div>
     <button class="modal-btn primary" style="width:100%;" onclick="closeOverlay('aboutOverlay')" type="button">Close</button>
@@ -476,21 +481,18 @@ try {
   firebaseReady = true;
 } catch (e) { console.error('Firebase init failed:', e); }
 
-/* ✅ نستخدم نفس المسار القديم bn_secret_v2 الذي تعمل قواعده */
 const PATH = { chat: 'bn_secret_v2/draft' };
 const DEFAULT_CODE = '13122008';
-const FIXED_SECRET = 'SN::v3::line-draft::secure';
+const FIXED_SECRET = 'SN::v4::line-draft::secure';
 
 /* ============================================================
-   Local password storage
+   Crypto
 ============================================================ */
-const CODE_KEY = 'sn_code_v3';
-
+const CODE_KEY = 'sn_code_v4';
 function deriveKey(password) {
   try {
     const salt = CryptoJS.enc.Hex.parse('a1b2c3d4e5f6789012345678901234567890abcdef1234567890abcdef123456');
-    const key = CryptoJS.PBKDF2(password, salt, { keySize: 256/32, iterations: 5000, hasher: CryptoJS.algo.SHA256 });
-    return key.toString();
+    return CryptoJS.PBKDF2(password, salt, { keySize: 256/32, iterations: 5000, hasher: CryptoJS.algo.SHA256 }).toString();
   } catch (e) { return CryptoJS.SHA256(password + FIXED_SECRET).toString(); }
 }
 function encryptText(text, password) {
@@ -506,8 +508,7 @@ function getStoredCode() {
   try {
     const s = localStorage.getItem(CODE_KEY);
     if (!s) return DEFAULT_CODE;
-    const d = decryptText(s, FIXED_SECRET);
-    return d || DEFAULT_CODE;
+    return decryptText(s, FIXED_SECRET) || DEFAULT_CODE;
   } catch (e) { return DEFAULT_CODE; }
 }
 function setStoredCode(code) {
@@ -523,18 +524,18 @@ const appState = {
   currentCode: null,
   linesListener: null,
   lines: {},
+  pendingLines: {},
+  encryptTimers: {},
   autoHideTimeout: null,
   autoHideDuration: parseInt(localStorage.getItem('sn_autohide') || '60'),
   lastActivity: Date.now(),
   doubleTapPanicEnabled: localStorage.getItem('sn_panic_dtap') === 'true',
   heartbeatInterval: null,
-  revealedLines: new Set(),
-  encryptTimers: {},
-  pendingLines: {}  // ✅ نحتفظ بالرسائل المحلية حتى تُؤكد من Firebase
+  revealedLines: new Set()
 };
 
 /* ============================================================
-   Utility
+   Utilities
 ============================================================ */
 function showToast(msg) {
   const t = document.getElementById('toast'); if (!t) return;
@@ -570,10 +571,8 @@ const calcState = { expression: '', display: '0', lastResult: null };
 const secretTracker = { buffer: '', lastPress: 0 };
 
 function updateCalcDisplay() {
-  const exprEl = document.getElementById('calcExpression');
-  const resEl = document.getElementById('calcResult');
-  if (exprEl) exprEl.textContent = calcState.expression;
-  if (resEl) resEl.textContent = calcState.display;
+  document.getElementById('calcExpression').textContent = calcState.expression;
+  document.getElementById('calcResult').textContent = calcState.display;
 }
 function calcAction(action) {
   const s = calcState;
@@ -581,10 +580,8 @@ function calcAction(action) {
   if (action === 'back') { s.expression = s.expression.slice(0, -1); if (s.expression === '') s.display = '0'; updateCalcDisplay(); return; }
   if (action === '=') {
     if (!s.expression) return;
-    try {
-      s.display = String(evaluateExpression(s.expression));
-      s.lastResult = s.display; s.expression = '';
-    } catch (e) { s.display = '0'; s.expression = ''; }
+    try { s.display = String(evaluateExpression(s.expression)); s.lastResult = s.display; s.expression = ''; }
+    catch (e) { s.display = '0'; s.expression = ''; }
     updateCalcDisplay(); return;
   }
   if (action === 'sqrt') { s.expression += '√('; updateCalcDisplay(); return; }
@@ -600,12 +597,21 @@ function evaluateExpression(expr) {
     e = e.replace(/√\(([^()]*)\)/g, function(m, inner) { return String(Math.sqrt(evaluateExpression(inner))); });
   }
   e = e.replace(/\^/g, '**');
-  const safeCheck = e.replace(/\*\*/g, '*');
-  if (!/^[0-9+\-*/().%\s]+$/.test(safeCheck)) throw new Error('Invalid');
+  if (!/^[0-9+\-*/().%\s]+$/.test(e.replace(/\*\*/g, '*'))) throw new Error('Invalid');
   const result = Function('"use strict";return (' + e + ')')();
   if (!isFinite(result)) throw new Error('Invalid');
   return Math.round(result * 1e10) / 1e10;
 }
+
+/* ✅ إصلاح: تفريغ الآلة الحاسبة عند الخروج من المسودة */
+function resetCalculator() {
+  calcState.expression = '';
+  calcState.display = '0';
+  calcState.lastResult = null;
+  secretTracker.buffer = '';
+  updateCalcDisplay();
+}
+
 function bindCalculatorButtons() {
   const container = document.getElementById('calcButtons');
   if (!container) return;
@@ -657,7 +663,7 @@ function bindCalculatorButtons() {
 }
 
 /* ============================================================
-   Notes (decoy)
+   Notes
 ============================================================ */
 let notes = [];
 try { notes = JSON.parse(localStorage.getItem('sn_notes') || '[]'); if (!Array.isArray(notes)) notes = []; } catch (e) { notes = []; }
@@ -734,20 +740,17 @@ function convertTemp() {
 function openAboutApp() { document.getElementById('aboutOverlay').classList.add('active'); }
 
 /* ============================================================
-   Session access
+   Session
 ============================================================ */
 function openSessionOverlay() {
   document.getElementById('secretInput').value = '';
   document.getElementById('sessionOverlay').classList.add('active');
   setTimeout(function() { document.getElementById('secretInput').focus(); }, 150);
 }
-
 function verifySession() {
   const input = document.getElementById('secretInput');
   const val = input.value.trim();
   if (!val) return;
-
-  // Wrong code → silently open Notes (no error)
   if (val !== getStoredCode()) {
     closeOverlay('sessionOverlay');
     input.value = '';
@@ -755,7 +758,6 @@ function verifySession() {
     switchTab('notes');
     return;
   }
-
   appState.currentCode = val;
   appState.sessionActive = true;
   appState.revealedLines = new Set();
@@ -767,7 +769,7 @@ function verifySession() {
 }
 
 /* ============================================================
-   Draft view
+   Draft
 ============================================================ */
 async function enterDraft() {
   document.getElementById('secretChatView').classList.add('active');
@@ -788,16 +790,14 @@ async function loadDraftLines() {
   }
   appState.linesListener = db.ref(PATH.chat + '/lines').on('value', function(snap) {
     const remoteLines = snap.val() || {};
-    // ✅ دمج الرسائل المعلقة (pending) مع الرسائل من Firebase
     appState.lines = Object.assign({}, remoteLines, appState.pendingLines);
     renderDraftLines();
     setConn(true);
-    // إذا وصلت رسالة مؤكدة، احذفها من pending
     Object.keys(appState.pendingLines).forEach(function(id) {
       if (remoteLines[id]) delete appState.pendingLines[id];
     });
   }, function(err) {
-    console.error('Lines listener error:', err);
+    console.error('Listener error:', err);
     setConn(false);
   });
 }
@@ -808,7 +808,7 @@ function setConn(online) {
 }
 
 /* ============================================================
-   Render - single-column notepad lines
+   Render lines - NO lock icon, no visible encrypted flag
 ============================================================ */
 function renderDraftLines() {
   const c = document.getElementById('draftLines'); if (!c) return;
@@ -837,19 +837,21 @@ function renderDraftLines() {
     let isEncryptedView = false;
 
     if (line.encrypted && !isRevealed) {
-      displayText = line.cipherPreview || '••••••••••••';
+      displayText = line.cipherPreview || '...';
       isEncryptedView = true;
     } else {
       const plain = decryptText(line.text, appState.currentCode || getStoredCode());
-      displayText = plain || '[unreadable]';
+      displayText = plain || '...';
     }
 
-    html += '<div class="note-line ' + (isEncryptedView ? 'encrypted ' : '') +
+    // ✅ لا علامة قفل، لا مؤشر "encrypted" - فقط النص بخط مختلف قليلاً
+    const justRevealed = appState.revealedLines.has(line.id) && line.encrypted ? 'just-revealed' : '';
+
+    html += '<div class="note-line ' + (isEncryptedView ? 'encrypted ' : '') + justRevealed + ' ' +
       (line.sender === 'A' ? 'from-a' : 'from-b') +
-      '" data-line-id="' + line.id + '" onclick="handleLineTap(\'' + line.id + '\')">' +
+      '" data-line-id="' + line.id + '" onclick="handleLineTap(\'' + line.id + '\', event)">' +
       '<span class="line-prefix">' + prefix + '</span>' +
       '<span class="line-content">' + escapeHtml(displayText) + '</span>' +
-      (isEncryptedView ? '<span class="line-lock">🔒</span>' : '') +
       '<span class="line-time">' + timeStr + '</span>' +
       '<div class="line-actions">' +
         '<button class="line-action-btn" onclick="event.stopPropagation();deleteLine(\'' + line.id + '\')" type="button"><i class="fas fa-trash"></i></button>' +
@@ -861,31 +863,52 @@ function renderDraftLines() {
   setTimeout(function() { c.scrollTop = c.scrollHeight; }, 50);
 }
 
-const lineTapCounters = {};
-function handleLineTap(lineId) {
+/* ============================================================
+   ✅ كشف التشفير: سحب لأسفل (pull-down) بدلاً من 3 نقرات
+============================================================ */
+const pullState = {};
+function handleLineTap(lineId, event) {
   const line = appState.lines[lineId];
   if (!line) return;
 
   if (line.encrypted && !appState.revealedLines.has(lineId)) {
-    if (!lineTapCounters[lineId]) lineTapCounters[lineId] = { count: 0, timer: null };
-    const c = lineTapCounters[lineId];
-    c.count++;
-    clearTimeout(c.timer);
-    c.timer = setTimeout(function() { c.count = 0; }, 1200);
+    // ✅ حركة السحب لأسفل لكشف النص - غير متوقعة وآمنة
+    if (!pullState[lineId]) pullState[lineId] = { startY: null, startTime: 0 };
+    const ps = pullState[lineId];
+    const touchY = event.touches ? event.touches[0].clientY : (event.clientY || 0);
+    const now = Date.now();
 
-    if (c.count >= 3) {
+    if (ps.startY === null) {
+      ps.startY = touchY;
+      ps.startTime = now;
+      return;
+    }
+
+    const deltaY = touchY - ps.startY;
+    const deltaT = now - ps.startTime;
+
+    // سحب لأسفل > 80px خلال 800ms
+    if (deltaY > 80 && deltaT < 800) {
       appState.revealedLines.add(lineId);
-      c.count = 0;
+      ps.startY = null;
+      if (navigator.vibrate) navigator.vibrate(15);
+      renderDraftLines();
+      // إعادة إخفاء بعد 15 ثانية
       setTimeout(function() {
         appState.revealedLines.delete(lineId);
         if (appState.sessionActive) renderDraftLines();
-      }, 10000);
-      if (navigator.vibrate) navigator.vibrate(15);
-      renderDraftLines();
+      }, 15000);
+      return;
+    }
+
+    // إعادة ضبط إذا طال الوقت
+    if (deltaT > 1000) {
+      ps.startY = null;
     }
     return;
   }
 
+  // السطر غير مشفر أو تم كشفه - اعرض زر الحذف
   document.querySelectorAll('.note-line.show-actions').forEach(function(el) {
     if (el.getAttribute('data-line-id') !== lineId) el.classList.remove('show-actions');
   });
@@ -894,7 +917,7 @@ function handleLineTap(lineId) {
 }
 
 /* ============================================================
-   ✅ Add line - with optimistic UI + Firebase retry
+   Add line
 ============================================================ */
 async function addDraftLine() {
   const input = document.getElementById('draftInput');
@@ -906,7 +929,6 @@ async function addDraftLine() {
   const plaintext = encryptText(text, appState.currentCode);
   if (plaintext === 'ERR') { showToast('Encryption failed'); return; }
 
-  // ✅ توليد ID محلي — لا يعتمد على push() الذي قد يفشل
   const lineId = 'line_' + Date.now() + '_' + Math.random().toString(36).substring(2, 8);
   const now = Date.now();
 
@@ -918,19 +940,13 @@ async function addDraftLine() {
     cipherPreview: null
   };
 
-  // ✅ 1. أضف الرسالة محلياً فوراً (optimistic UI)
   appState.pendingLines[lineId] = line;
   appState.lines[lineId] = line;
-
-  // مسح الحقل
   input.value = '';
   input.style.height = '38px';
-
-  // ✅ 2. أعد الرسم فوراً
   renderDraftLines();
   if (navigator.vibrate) navigator.vibrate(10);
 
-  // ✅ 3. أرسل إلى Firebase مع retry
   let sent = false;
   for (let attempt = 0; attempt < 3 && !sent; attempt++) {
     try {
@@ -938,14 +954,11 @@ async function addDraftLine() {
       sent = true;
       setConn(true);
     } catch (e) {
-      console.warn('Send attempt ' + (attempt + 1) + ' failed:', e);
       await new Promise(function(r) { setTimeout(r, 500 * (attempt + 1)); });
     }
   }
-
   if (!sent) {
-    showToast('Send failed - will retry');
-    // retry in background every 5s
+    showToast('Send failed - retrying');
     const retryTimer = setInterval(async function() {
       try {
         await db.ref(PATH.chat + '/lines/' + lineId).set(line);
@@ -955,19 +968,15 @@ async function addDraftLine() {
     }, 5000);
   }
 
-  // ✅ 4. جدولة التشفير التلقائي بعد ثانيتين
+  // تشفير بعد ثانيتين
   if (appState.encryptTimers[lineId]) clearTimeout(appState.encryptTimers[lineId]);
   appState.encryptTimers[lineId] = setTimeout(async function() {
     const preview = plaintext.substring(0, 28) + '...';
     const updates = { encrypted: true, cipherPreview: preview };
-    // حدّث محلياً أولاً
     if (appState.lines[lineId]) Object.assign(appState.lines[lineId], updates);
     if (appState.pendingLines[lineId]) Object.assign(appState.pendingLines[lineId], updates);
-    // ثم Firebase
-    try {
-      await db.ref(PATH.chat + '/lines/' + lineId).update(updates);
-    } catch (e) {
-      // إعادة محاولة إذا فشل
+    try { await db.ref(PATH.chat + '/lines/' + lineId).update(updates); }
+    catch (e) {
       setTimeout(async function() {
         try { await db.ref(PATH.chat + '/lines/' + lineId).update(updates); } catch (e2) {}
       }, 3000);
@@ -983,12 +992,10 @@ async function addDraftLine() {
 function deleteLine(lineId) {
   showConfirm('Delete Line', 'This line will be permanently deleted. Continue?', async function() {
     closeModal('confirmModal');
-    // احذف محلياً أولاً
     delete appState.lines[lineId];
     delete appState.pendingLines[lineId];
-    delete appState.revealedLines.delete(lineId);
+    appState.revealedLines.delete(lineId);
     renderDraftLines();
-    // ثم Firebase
     try { await db.ref(PATH.chat + '/lines/' + lineId).remove(); }
     catch (e) { showToast('Delete failed'); }
   });
@@ -999,17 +1006,27 @@ function autoResizeInput(el) {
   el.style.height = Math.min(el.scrollHeight, 100) + 'px';
 }
 
-function exitDraft() { closeSession(); switchTab('calc'); }
-function exitDraftSilent() { closeSession(); switchTab('calc'); }
+/* ============================================================
+   Exit - ✅ تفريغ الآلة الحاسبة
+============================================================ */
+function exitDraft() {
+  closeSession();
+  resetCalculator();      // ✅ تفريغ الآلة الحاسبة
+  switchTab('calc');
+}
+
+function exitDraftSilent() {
+  closeSession();
+  resetCalculator();      // ✅ تفريغ الآلة الحاسبة
+  switchTab('calc');
+}
 
 function closeSession() {
   appState.sessionActive = false;
   appState.currentCode = null;
   appState.revealedLines = new Set();
   appState.pendingLines = {};
-  Object.keys(appState.encryptTimers).forEach(function(id) {
-    clearTimeout(appState.encryptTimers[id]);
-  });
+  Object.keys(appState.encryptTimers).forEach(function(id) { clearTimeout(appState.encryptTimers[id]); });
   appState.encryptTimers = {};
   document.getElementById('secretChatView').classList.remove('active');
   document.getElementById('draftSettingsMenu').classList.remove('active');
@@ -1078,7 +1095,6 @@ function openChangeCodeModal() {
   document.getElementById('confirmCodeInput').value = '';
   document.getElementById('changeCodeModal').classList.add('active');
 }
-
 async function changeSessionCode() {
   const oldC = document.getElementById('oldCodeInput').value.trim();
   const newC = document.getElementById('newCodeInput').value.trim();
@@ -1087,7 +1103,6 @@ async function changeSessionCode() {
   if (newC !== confC) { showToast('Codes do not match'); return; }
   if (newC.length < 6) { showToast('Min 6 digits'); return; }
   if (oldC !== getStoredCode()) { showToast('Current code incorrect'); return; }
-
   try {
     if (firebaseReady && db) {
       const snap = await db.ref(PATH.chat + '/lines').once('value');
@@ -1194,6 +1209,7 @@ function triggerDecoy() {
     const exitDecoy = function(ev) {
       if (ev.target.closest('.decoy-screen')) {
         decoy.classList.remove('active');
+        resetCalculator();   // ✅ تفريغ الآلة الحاسبة
         switchTab('calc');
         decoy.removeEventListener('click', exitDecoy);
         decoy.removeEventListener('touchstart', exitDecoy);
@@ -1248,9 +1264,7 @@ window.addEventListener('beforeunload', function() {
   renderNotes();
   updateCalcDisplay();
 
-  console.log('%cSmart Notes v3.3.1', 'color:#6366f1;font-size:16px;font-weight:bold;');
-  console.log('%cFirebase:', 'color:#10b981;', firebaseReady ? 'READY' : 'FAILED');
-  console.log('%cPath:', 'color:#10b981;', PATH.chat);
+  console.log('%cSmart Notes v3.4.0', 'color:#6366f1;font-size:16px;font-weight:bold;');
 })();
 </script>
 </body>
